@@ -1,0 +1,2654 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VietnamPatent Core - Tra cứu & ETL Sáng chế Việt Nam (Full-Page Web Demo)</title>
+  <style id="vnpatent-standalone-theme">
+    :where(:root) {
+      --background: #0b1120;
+      --card: #111827;
+      --foreground: #f8fafc;
+      --muted-foreground: #94a3b8;
+      --border: #1e293b;
+    }
+  </style>
+  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+</head>
+<body class="bg-[var(--background)] text-[var(--foreground)] antialiased p-3 md:p-5 m-0">
+  <div class="max-w-7xl mx-auto space-y-4">
+
+    <!-- TOP HEADER BANNER -->
+    <header class="bg-[var(--card)] border border-[var(--border)] rounded-xl p-4 md:p-5 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+      <div class="space-y-1.5">
+        <div class="flex flex-wrap items-center gap-1.5">
+          <span class="px-2.5 py-0.5 rounded text-xs font-semibold bg-emerald-500/15 text-emerald-500 border border-emerald-500/30">
+            ZERO-AI RUNTIME (0 TOKEN COST)
+          </span>
+          <span class="px-2.5 py-0.5 rounded text-xs font-medium bg-blue-500/15 text-blue-400 border border-blue-500/30">
+            Luật SHTT 67/VBHN-VPQH & TT 06/VBHN-BKHCN (2026)
+          </span>
+          <span class="px-2.5 py-0.5 rounded text-xs font-medium bg-amber-500/15 text-amber-400 border border-amber-500/30">
+            Full-Page Standalone Web Demo (Tương thích Google Sites Embed)
+          </span>
+        </div>
+        <h1 class="text-lg md:text-2xl font-bold tracking-tight text-[var(--foreground)]">
+          VietnamPatent Core - Hệ thống Tra cứu, Bóc tách ETL & Khai thác Sáng chế Việt Nam
+        </h1>
+        <p class="text-xs text-[var(--muted-foreground)] leading-relaxed">
+          Kiến trúc đối xứng từ <code class="px-1.5 py-0.5 rounded bg-[var(--background)] border border-[var(--border)]">vietnamtrademark.net</code> theo phương pháp REA: Truy vấn Lucene, 9 Bộ lọc Pháp lý <code class="px-1 py-0.5 rounded bg-[var(--background)]">SC-F01..SC-F09</code>, Đối sánh Prior Art RRF + Claim Chart, Khung đọc PDF Toàn văn trực tiếp từ Cục SHTT (0 MB DB), Bóc tách Công báo Tập A/B & Cổng MCP 8 Công cụ.
+        </p>
+      </div>
+
+      <div class="flex flex-wrap items-center gap-2 shrink-0">
+        <button onclick="triggerAutomatedEtlScan()" class="px-3.5 py-2 rounded-lg text-xs font-semibold bg-emerald-600 hover:bg-emerald-500 text-white transition cursor-pointer">
+          ⚡ Chạy Quét Đồng bộ Cục SHTT (+3 Hồ sơ)
+        </button>
+        <button onclick="copyStandaloneHtmlEmbed()" id="btnCopyEmbed" class="px-3.5 py-2 rounded-lg text-xs font-semibold bg-blue-600 hover:bg-blue-500 text-white transition cursor-pointer">
+          📋 Sao chép Mã Nhúng Google Sites
+        </button>
+        <button onclick="downloadStandaloneHtmlEmbed()" class="px-3 py-2 rounded-lg text-xs font-semibold bg-[var(--background)] hover:opacity-90 text-[var(--foreground)] border border-[var(--border)] transition cursor-pointer">
+          ⬇️ Tải HTML
+        </button>
+      </div>
+    </header>
+
+    <!-- KPI ROW -->
+    <section class="grid grid-cols-2 md:grid-cols-6 gap-2.5" id="kpiContainer"></section>
+
+    <!-- 6-SUBSYSTEM NAVIGATION TABS -->
+    <nav class="bg-[var(--card)] border border-[var(--border)] rounded-xl p-1.5 flex flex-wrap gap-1.5">
+      <button onclick="switchTab('search')" id="tabBtn-search" class="px-3 py-2 rounded-lg text-xs font-semibold transition cursor-pointer">
+        1. Tra cứu Lucene & 9 Bộ lọc Pháp lý
+      </button>
+      <button onclick="switchTab('nlg')" id="tabBtn-nlg" class="px-3 py-2 rounded-lg text-xs font-semibold transition cursor-pointer">
+        2. Hỏi-Đáp NLG 3 Tầng & Prior Art RRF
+      </button>
+      <button onclick="switchTab('etl')" id="tabBtn-etl" class="px-3 py-2 rounded-lg text-xs font-semibold transition cursor-pointer">
+        3. Trung tâm ETL (INID / ST.96 XML / Bitmask)
+      </button>
+      <button onclick="switchTab('articles')" id="tabBtn-articles" class="px-3 py-2 rounded-lg text-xs font-semibold transition cursor-pointer">
+        4. Điểm tin Công nghệ Doanh nghiệp
+      </button>
+      <button onclick="switchTab('map')" id="tabBtn-map" class="px-3 py-2 rounded-lg text-xs font-semibold transition cursor-pointer">
+        5. Patent Map, Độ trễ IPC & Tín hiệu 3 Tầng
+      </button>
+      <button onclick="switchTab('mcp')" id="tabBtn-mcp" class="px-3 py-2 rounded-lg text-xs font-semibold transition cursor-pointer">
+        6. Cổng MCP Server (8 Công cụ Agent)
+      </button>
+    </nav>
+
+    <!-- =================================================================== -->
+    <!-- TAB 1: LUCENE SEARCH + IPC CONCORDANCE + 9 LEGAL DEADLINE FILTERS   -->
+    <!-- =================================================================== -->
+    <main id="tabPanel-search" class="space-y-4">
+      <div class="bg-[var(--card)] border border-[var(--border)] rounded-xl p-4 space-y-3.5">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-3">
+          <div class="lg:col-span-6 space-y-1">
+            <label class="block text-xs font-semibold text-[var(--foreground)]">
+              Truy vấn Cú pháp Lucene (<code class="text-emerald-500">title:</code>, <code class="text-emerald-500">claims:</code>, <code class="text-emerald-500">ipc:</code>, <code class="text-emerald-500">applicant:</code>, <code class="text-emerald-500">"cụm từ"~5</code>, <code class="text-emerald-500">*</code>, <code class="text-emerald-500">~1</code>, <code class="text-emerald-500">^4</code>)
+            </label>
+            <input id="searchQueryInput" type="text" oninput="runSearch()" placeholder="Ví dụ: title:pin^4 OR claims:curcuminoit~1 OR applicant:VinES" class="w-full px-3 py-2 rounded-lg text-xs bg-[var(--background)] border border-[var(--border)] text-[var(--foreground)] focus:outline-none" />
+          </div>
+
+          <div class="lg:col-span-3 space-y-1">
+            <label class="block text-xs font-semibold text-[var(--foreground)]">Phân loại Sáng chế Quốc tế (IPC)</label>
+            <select id="ipcFilterSelect" onchange="runSearch()" class="w-full px-3 py-2 rounded-lg text-xs bg-[var(--background)] border border-[var(--border)] text-[var(--foreground)]">
+              <option value="">Tất cả phân nhóm IPC</option>
+              <option value="H01M">H01M - Pin, Ắc quy & Lưu trữ điện hóa</option>
+              <option value="A61K">A61K - Chế phẩm Y Dược & Dược liệu</option>
+              <option value="C04B">C04B - Vật liệu xây dựng, Xi măng & Geopolyme</option>
+              <option value="C02F">C02F - Xử lý nước, nước thải & Môi trường</option>
+              <option value="A01G">A01G - Nông nghiệp thông minh & Thủy lợi</option>
+              <option value="G06N">G06N - AI, Học sâu & Điều khiển thông minh</option>
+              <option value="F04D">F04D - Cơ khí Bơm, Quạt & Động lực</option>
+              <option value="C25B">C25B - Điện phân sản xuất Hydro xanh</option>
+              <option value="F26B">F26B - Kỹ thuật Sấy thăng hoa & Nhiệt lạnh</option>
+              <option value="F28D">F28D - Thiết bị Trao đổi nhiệt & Lò hơi</option>
+              <option value="A43B">A43B - Công nghệ Da giày & Vật liệu đàn hồi</option>
+              <option value="B01J">B01J - Vật liệu Xúc tác Quang hóa Nano</option>
+            </select>
+          </div>
+
+          <div class="lg:col-span-3 space-y-1">
+            <label class="block text-xs font-semibold text-[var(--foreground)]">Trạng thái Khai thác Thương mại</label>
+            <select id="commFilterSelect" onchange="runSearch()" class="w-full px-3 py-2 rounded-lg text-xs bg-[var(--background)] border border-[var(--border)] text-[var(--foreground)]">
+              <option value="">Tất cả trạng thái khai thác</option>
+              <option value="IN_HOUSE_PRODUCTION">Đang ứng dụng sản xuất nội bộ</option>
+              <option value="OPEN_FOR_LICENSING">Đang mở chào chuyển giao / Li-xăng</option>
+              <option value="LICENSED_OR_ASSIGNED">Đã ký hợp đồng Li-xăng / Chuyển nhượng</option>
+              <option value="PILOT_RND">Đang thử nghiệm Pilot / R&D</option>
+              <option value="UNEXPLOITED">Chưa khai thác / Phạm vi công cộng (FTO)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-[var(--border)]">
+          <div class="flex flex-wrap items-center gap-1.5">
+            <span class="text-xs text-[var(--muted-foreground)]">Truy vấn mẫu:</span>
+            <button onclick="setQuickLucene('title:&quot;quản lý nhiệt&quot;^4 AND ipc:H01M*')" class="px-2 py-1 rounded text-xs bg-[var(--background)] border border-[var(--border)] cursor-pointer">
+              title:"quản lý nhiệt"^4 AND ipc:H01M*
+            </button>
+            <button onclick="setQuickLucene('claims:curcuminoit~1 OR claims:geopolyme')" class="px-2 py-1 rounded text-xs bg-[var(--background)] border border-[var(--border)] cursor-pointer">
+              claims:curcuminoit~1 OR claims:geopolyme
+            </button>
+            <button onclick="setQuickLucene('applicant:Viện OR applicant:Trường NOT status:TERMINATED')" class="px-2 py-1 rounded text-xs bg-[var(--background)] border border-[var(--border)] cursor-pointer">
+              applicant:Viện OR applicant:Trường NOT status:TERMINATED
+            </button>
+            <button onclick="resetAllFilters()" class="px-2 py-1 rounded text-xs text-rose-400 bg-rose-500/10 border border-rose-500/30 cursor-pointer">
+              Xóa bộ lọc
+            </button>
+          </div>
+
+          <label class="inline-flex items-center gap-2 text-xs font-medium cursor-pointer select-none">
+            <input type="checkbox" id="expandIpcCheckbox" onchange="runSearch()" checked />
+            <span>Mở rộng nhóm IPC liên quan (IPC Concordance Matrix)</span>
+          </label>
+        </div>
+
+        <div id="expandedIpcNotice" class="hidden px-3 py-2 rounded-lg text-xs bg-blue-500/10 text-blue-400 border border-blue-500/30"></div>
+
+        <!-- 9 SPECIALIZED LEGAL FILTERS -->
+        <div class="space-y-2 pt-2 border-t border-[var(--border)]">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <span class="text-xs font-bold uppercase tracking-wider text-[var(--muted-foreground)]">
+              9 Bộ lọc Pháp lý Chuyên biệt theo Thời hạn Luật SHTT 67/VBHN-VPQH (2026):
+            </span>
+            <span class="text-xs text-[var(--muted-foreground)]">Tính hạn tự động bằng LegalDeadlineEngine (0 Token AI)</span>
+          </div>
+          <div class="flex flex-wrap gap-1.5" id="specialFilterButtons">
+            <button onclick="toggleSpecialFilter('')" data-sf="" class="sf-btn px-2.5 py-1.5 rounded-lg text-xs font-semibold border border-blue-500 bg-blue-600 text-white cursor-pointer">
+              Tất cả hồ sơ
+            </button>
+            <button onclick="toggleSpecialFilter('SC-F01')" data-sf="SC-F01" class="sf-btn px-2.5 py-1.5 rounded-lg text-xs font-medium border border-[var(--border)] bg-[var(--background)] cursor-pointer">
+              SC-F01: Hạn 36T yêu cầu TĐND (Điều 113)
+            </button>
+            <button onclick="toggleSpecialFilter('SC-F02')" data-sf="SC-F02" class="sf-btn px-2.5 py-1.5 rounded-lg text-xs font-medium border border-[var(--border)] bg-[var(--background)] cursor-pointer">
+              SC-F02: Đóng phí duy trì / Ân hạn 6T (Điều 94)
+            </button>
+            <button onclick="toggleSpecialFilter('SC-F03')" data-sf="SC-F03" class="sf-btn px-2.5 py-1.5 rounded-lg text-xs font-medium border border-[var(--border)] bg-[var(--background)] cursor-pointer">
+              SC-F03: Đơn PCT sắp hết hạn 31T vào VN
+            </button>
+            <button onclick="toggleSpecialFilter('SC-F04')" data-sf="SC-F04" class="sf-btn px-2.5 py-1.5 rounded-lg text-xs font-medium border border-[var(--border)] bg-[var(--background)] cursor-pointer">
+              SC-F04: TB kết quả TĐND chờ trả lời (Hạn 3T)
+            </button>
+            <button onclick="toggleSpecialFilter('SC-F05')" data-sf="SC-F05" class="sf-btn px-2.5 py-1.5 rounded-lg text-xs font-medium border border-[var(--border)] bg-[var(--background)] cursor-pointer">
+              SC-F05: Dự định cấp bằng quá hạn đóng phí
+            </button>
+            <button onclick="toggleSpecialFilter('SC-F06')" data-sf="SC-F06" class="sf-btn px-2.5 py-1.5 rounded-lg text-xs font-medium border border-[var(--border)] bg-[var(--background)] cursor-pointer">
+              SC-F06: Đơn bị từ chối trong hạn 90 ngày KN
+            </button>
+            <button onclick="toggleSpecialFilter('SC-F07')" data-sf="SC-F07" class="sf-btn px-2.5 py-1.5 rounded-lg text-xs font-medium border border-[var(--border)] bg-[var(--background)] cursor-pointer">
+              SC-F07: Quá hạn 12T thẩm định (Điều 119.2a)
+            </button>
+            <button onclick="toggleSpecialFilter('SC-F08')" data-sf="SC-F08" class="sf-btn px-2.5 py-1.5 rounded-lg text-xs font-medium border border-[var(--border)] bg-[var(--background)] cursor-pointer">
+              SC-F08: Phạm vi Công cộng (FTO Clear)
+            </button>
+            <button onclick="toggleSpecialFilter('SC-F09')" data-sf="SC-F09" class="sf-btn px-2.5 py-1.5 rounded-lg text-xs font-medium border border-[var(--border)] bg-[var(--background)] cursor-pointer">
+              SC-F09: Cần cập nhật ĐKKD / Ghi nhận Li-xăng
+            </button>
+          </div>
+          <div id="specialFilterExplainBox" class="hidden p-3 rounded-lg bg-amber-500/10 border border-amber-500/30 text-xs space-y-1"></div>
+        </div>
+      </div>
+
+      <!-- SPLIT VIEW: LIST + DETAIL -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-4">
+        <div class="lg:col-span-6 space-y-2.5">
+          <div class="flex items-center justify-between px-1">
+            <h2 class="text-sm font-bold" id="searchResultCountLabel">Danh sách Hồ sơ Sáng chế & GPHI</h2>
+            <span class="text-xs text-[var(--muted-foreground)]">Nhấp vào hồ sơ để xem Claims, Diff Tập A/B & Niên liễm</span>
+          </div>
+          <div id="patentListContainer" class="space-y-2.5"></div>
+        </div>
+
+        <div class="lg:col-span-6">
+          <div id="patentDetailPanel" class="bg-[var(--card)] border border-[var(--border)] rounded-xl p-4 sticky top-4 space-y-3"></div>
+        </div>
+      </div>
+    </main>
+
+    <!-- =================================================================== -->
+    <!-- TAB 2: 3-STAGE DETERMINISTIC NLG & HYBRID RRF PRIOR ART ENGINE      -->
+    <!-- =================================================================== -->
+    <section id="tabPanel-nlg" class="hidden space-y-4">
+      <div class="bg-[var(--card)] border border-[var(--border)] rounded-xl p-4 space-y-3.5">
+        <div class="space-y-1">
+          <div class="flex flex-wrap items-center gap-2">
+            <span class="px-2 py-0.5 rounded text-xs font-semibold bg-emerald-500/15 text-emerald-500 border border-emerald-500/30">
+              3-STAGE RULE-AST NLG ENGINE (0 TOKEN AI)
+            </span>
+            <span class="text-xs text-[var(--muted-foreground)]">
+              Tầng 1: Regex Thực thể & Ý định -> Tầng 2: Suy diễn Quy tắc Luật SHTT 2026 -> Tầng 3: Null-Safe Slot Realization
+            </span>
+          </div>
+          <h2 class="text-base font-bold">2A. Hỏi-Đáp Pháp lý & Kỹ thuật Tự nhiên (Kèm Dấu vết Suy diễn 3 Tầng)</h2>
+        </div>
+
+        <div class="flex flex-col md:flex-row gap-2">
+          <input id="nlgQuestionInput" type="text" placeholder="Nhập câu hỏi tiếng Việt (ví dụ: Đơn 1-2023-02410 còn hiệu lực không và phạm vi yêu cầu bảo hộ là gì?)" class="flex-1 px-3.5 py-2 rounded-lg text-xs bg-[var(--background)] border border-[var(--border)] text-[var(--foreground)]" />
+          <button onclick="runDeterministicNlg()" class="px-4 py-2 rounded-lg text-xs font-semibold bg-blue-600 hover:bg-blue-500 text-white cursor-pointer">
+            Phân tích & Sinh câu trả lời (0 Token)
+          </button>
+        </div>
+
+        <div class="flex flex-wrap gap-1.5">
+          <button onclick="askSampleQuestion('Đơn 1-2023-02410 của VinES còn hiệu lực bảo hộ không và phạm vi yêu cầu bảo hộ là gì?')" class="px-2.5 py-1 rounded text-xs bg-[var(--background)] border border-[var(--border)] cursor-pointer">
+            Hiệu lực, niên liễm & Claims đơn 1-2023-02410
+          </button>
+          <button onclick="askSampleQuestion('Đơn 1-2024-00215 của Đại học Cần Thơ bao giờ hết hạn 36 tháng yêu cầu thẩm định nội dung?')" class="px-2.5 py-1 rounded text-xs bg-[var(--background)] border border-[var(--border)] cursor-pointer">
+            Hạn 36 tháng yêu cầu TĐND đơn 1-2024-00215
+          </button>
+          <button onclick="askSampleQuestion('Đơn quốc tế PCT/JP2024/018500 bao giờ hết hạn 31 tháng vào pha quốc gia Việt Nam?')" class="px-2.5 py-1 rounded text-xs bg-[var(--background)] border border-[var(--border)] cursor-pointer">
+            Hạn 31 tháng vào pha quốc gia đơn PCT/JP2024/018500
+          </button>
+          <button onclick="askSampleQuestion('Bằng số 21450 (đơn 1-2016-00812) đã rơi vào phạm vi công cộng để tự do sản xuất chưa?')" class="px-2.5 py-1 rounded text-xs bg-[var(--background)] border border-[var(--border)] cursor-pointer">
+            Kiểm tra FTO (Phạm vi công cộng) đơn 1-2016-00812
+          </button>
+          <button onclick="askSampleQuestion('Có những sáng chế nào đang mở chào chuyển giao công nghệ Li-xăng?')" class="px-2.5 py-1 rounded text-xs bg-[var(--background)] border border-[var(--border)] cursor-pointer">
+            Tìm sáng chế đang mở chào Li-xăng
+          </button>
+        </div>
+
+        <div id="nlgOutputContainer" class="grid grid-cols-1 lg:grid-cols-12 gap-3 pt-3 border-t border-[var(--border)]"></div>
+      </div>
+
+      <!-- HYBRID RRF PRIOR ART & CLAIM CHART -->
+      <div class="bg-[var(--card)] border border-[var(--border)] rounded-xl p-4 space-y-3.5">
+        <div class="space-y-1">
+          <div class="flex flex-wrap items-center gap-2">
+            <span class="px-2 py-0.5 rounded text-xs font-semibold bg-indigo-500/15 text-indigo-400 border border-indigo-500/30">
+              HYBRID BM25 + N-GRAM COSINE WITH RECIPROCAL RANK FUSION (RRF)
+            </span>
+            <span class="text-xs text-[var(--muted-foreground)]">
+              Đối sánh Điều 60 (Tính mới) & Điều 61 (Trình độ sáng tạo) + Tự động lập Bảng đối chiếu Dấu hiệu Kỹ thuật (Claim Chart)
+            </span>
+          </div>
+          <h2 class="text-base font-bold">2B. Đối sánh Tình trạng Kỹ thuật Trước (Prior Art Search) & Lập Claim Chart</h2>
+        </div>
+
+        <div class="space-y-2">
+          <textarea id="priorArtInput" rows="2" class="w-full p-3 rounded-lg text-xs bg-[var(--background)] border border-[var(--border)] text-[var(--foreground)]">Hệ thống quản lý nhiệt độ khối pin xe điện sử dụng tấm tản nhiệt kênh dẫn chất lỏng phân nhánh kết hợp vật liệu chuyển pha parafin-graphit và van điều khiển xung PWM.</textarea>
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <div class="flex flex-wrap gap-1.5">
+              <button onclick="setSamplePriorArt('Hệ thống quản lý nhiệt độ khối pin xe điện sử dụng tấm tản nhiệt kênh dẫn chất lỏng phân nhánh kết hợp vật liệu chuyển pha parafin-graphit và van điều khiển xung PWM.')" class="px-2.5 py-1 rounded text-xs bg-[var(--background)] border border-[var(--border)] cursor-pointer">
+                Mẫu 1: Tản nhiệt khối pin LFP / PCM (H01M)
+              </button>
+              <button onclick="setSamplePriorArt('Quy trình chiết siêu âm ở tần số 35-45 kHz thu hồi hoạt chất curcuminoit từ củ nghệ vàng bằng dung môi etanol thực phẩm kết tinh lạnh.')" class="px-2.5 py-1 rounded text-xs bg-[var(--background)] border border-[var(--border)] cursor-pointer">
+                Mẫu 2: Chiết xuất Curcuminoit nghệ vàng (A61K)
+              </button>
+              <button onclick="setSamplePriorArt('Tấm panen bê tông nhẹ đúc sẵn từ tro bay nhiệt điện và xỉ lò cao hoạt hóa kiềm geopolyme kết hợp cốt liệu hạt đất sét nung keramzit.')" class="px-2.5 py-1 rounded text-xs bg-[var(--background)] border border-[var(--border)] cursor-pointer">
+                Mẫu 3: Tấm panen bê tông nhẹ Geopolyme (C04B)
+              </button>
+            </div>
+            <button onclick="runPriorArtSearch()" class="px-4 py-2 rounded-lg text-xs font-semibold bg-indigo-600 hover:bg-indigo-500 text-white cursor-pointer">
+              🔍 Chạy Đối sánh RRF & Lập Claim Chart
+            </button>
+          </div>
+        </div>
+
+        <div id="priorArtOutputContainer" class="space-y-2.5 pt-2 border-t border-[var(--border)]"></div>
+      </div>
+    </section>
+
+    <!-- =================================================================== -->
+    <!-- TAB 3: ETL PARSER (INID + ST.96 XML + 2-COL PDF + BITMASK 0..31)    -->
+    <!-- =================================================================== -->
+    <section id="tabPanel-etl" class="hidden space-y-4">
+      <div id="etlScanResultBanner" class="hidden p-3.5 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-xs space-y-1"></div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-4">
+        <!-- LIVE PARSER SANDBOX -->
+        <div class="lg:col-span-6 bg-[var(--card)] border border-[var(--border)] rounded-xl p-4 space-y-3">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <div>
+              <span class="text-xs font-semibold text-emerald-500">FSM INID PARSER + WIPO ST.96 XML + 2-COL PDF SORTER</span>
+              <h3 class="text-sm font-bold">3A. Phòng Thử nghiệm Bóc tách Trực tiếp (0 Token AI)</h3>
+            </div>
+            <div class="flex gap-1.5">
+              <button onclick="loadSampleParserInput('INID')" class="px-2 py-1 rounded text-xs bg-[var(--background)] border border-[var(--border)] cursor-pointer">
+                Mẫu INID Tập A/B
+              </button>
+              <button onclick="loadSampleParserInput('XML')" class="px-2 py-1 rounded text-xs bg-[var(--background)] border border-[var(--border)] cursor-pointer">
+                Mẫu WIPO ST.96 XML
+              </button>
+              <button onclick="runLiveParserDemo()" class="px-3 py-1 rounded text-xs font-semibold bg-emerald-600 text-white cursor-pointer">
+                Bóc tách Ngay
+              </button>
+            </div>
+          </div>
+
+          <textarea id="rawGazetteSandboxInput" rows="7" class="w-full p-2.5 rounded-lg text-xs font-mono bg-[var(--background)] border border-[var(--border)] text-[var(--foreground)]">(21) 1-2026-01580
+(22) 12/04/2026
+(43) 15/10/2026
+(51) G06V 20/56; G06N 3/08
+(54) HỆ THỐNG NHẬN DẠNG KHUYẾT TẬT BỀ MẶT THÉP CÁN NÓNG BẰNG MẠNG NƠ-RON TÍCH CHẬP ĐA TỶ LỆ
+(71) Tập đoàn Hòa Phát (VN)
+(72) Nguyễn Đức Thuận; Phạm Minh Hoàng
+(57) Hệ thống camera tốc độ cao kết hợp mô hình học sâu phát hiện vết nứt tế vi trên dải thép cán nóng ở vận tốc 18 m/s.
+Yêu cầu bảo hộ:
+1. Hệ thống nhận dạng khuyết tật bề mặt thép cán nóng bao gồm cụm đèn chiếu sáng đồng trục bước sóng ngắn, dãy camera tuyến tính tốc độ cao và bộ xử lý biên chạy mạng nơ-ron tích chập đa tỷ lệ.
+2. Hệ thống theo điểm 1, trong đó bộ xử lý biên phân loại khuyết tật theo thời gian thực dưới 4 mili-giây.</textarea>
+
+          <pre id="rawGazetteSandboxOutput" class="p-3 rounded-lg text-xs font-mono bg-[var(--background)] border border-[var(--border)] overflow-x-auto max-h-64"></pre>
+        </div>
+
+        <!-- MISSING DOSSIERS QUEUE WITH 5-BIT COMPLETENESS BITMASK -->
+        <div class="lg:col-span-6 bg-[var(--card)] border border-[var(--border)] rounded-xl p-4 space-y-3">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <div>
+              <span class="text-xs font-semibold text-amber-500">CROSS-SOURCE RECONCILIATION (BITMASK 0..31)</span>
+              <h3 class="text-sm font-bold">3B. Hàng đợi Đối soát Đơn Thiếu hụt (`missing_dossiers_queue`)</h3>
+            </div>
+          </div>
+          <p class="text-xs text-[var(--muted-foreground)]">
+            Đối soát chéo 5 lớp Bitmask: <code>1=Bảng 5 cột HTML</code> | <code>2=Công báo Tập A</code> | <code>4=Công báo Tập B</code> | <code>8=PDF Toàn văn</code> | <code>16=WIPO Events</code> (Đủ 100% = <code>31/31</code>).
+          </p>
+
+          <div class="flex gap-2">
+            <input id="newMissingAppNoInput" type="text" placeholder="Nhập số đơn khuyết cần đưa vào hàng đợi quét bù (VD: 1-2024-01999)" class="flex-1 px-3 py-1.5 rounded-lg text-xs bg-[var(--background)] border border-[var(--border)]" />
+            <button onclick="addManualMissingDossier()" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-amber-600 text-white cursor-pointer">
+              + Thêm vào Hàng đợi
+            </button>
+          </div>
+
+          <div id="missingQueueContainer" class="space-y-2 max-h-60 overflow-y-auto pr-1"></div>
+
+          <!-- STATELESS REALTIME FEDERATED PROXY -->
+          <div class="p-3 rounded-xl bg-[var(--background)] border border-[var(--border)] space-y-2">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <span class="text-xs font-bold text-blue-400">3C. Tra cứu Liên hợp Không Lưu trữ (0-Storage RAM TTL Cache)</span>
+              <span id="ramCacheStatsBadge" class="text-[11px] font-mono px-2 py-0.5 rounded bg-blue-500/15 text-blue-400">RAM Cache: 0 MB Disk</span>
+            </div>
+            <div class="flex gap-2">
+              <input id="federatedAppNoInput" type="text" value="1-2023-02410" class="flex-1 px-2.5 py-1 rounded text-xs font-mono bg-[var(--card)] border border-[var(--border)]" />
+              <button onclick="runFederatedLiveLookup()" class="px-3 py-1 rounded text-xs font-semibold bg-blue-600 text-white cursor-pointer">
+                Tra cứu RAM Stream
+              </button>
+            </div>
+            <div id="federatedLookupOutput" class="text-xs"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-[var(--card)] border border-[var(--border)] rounded-xl p-4 space-y-2">
+        <h3 class="text-sm font-bold">Nhật ký Quét Đồng bộ Tự động (`etl_scan_logs`)</h3>
+        <div id="etlLogsTableContainer" class="overflow-x-auto"></div>
+      </div>
+    </section>
+
+    <!-- =================================================================== -->
+    <!-- TAB 4: ENTERPRISE TECHNOLOGY ARTICLES + IPC INDUSTRY SECTOR MAPPER  -->
+    <!-- =================================================================== -->
+    <section id="tabPanel-articles" class="hidden space-y-4">
+      <div class="bg-[var(--card)] border border-[var(--border)] rounded-xl p-4 space-y-3">
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <div>
+            <span class="text-xs font-semibold text-emerald-500">RULE-AST ENTERPRISE BRIEFING + IPC INDUSTRY SECTOR MAPPER (0 TOKEN AI)</span>
+            <h2 class="text-base font-bold">4. Chuyên mục Điểm tin Sáng chế Mới Cấp Bằng Dễ hiểu cho Doanh nghiệp</h2>
+          </div>
+        </div>
+        <div id="businessArticlesContainer" class="grid grid-cols-1 lg:grid-cols-2 gap-4"></div>
+      </div>
+    </section>
+
+    <!-- =================================================================== -->
+    <!-- TAB 5: STRATEGIC PATENT MAP, AVG GRANT LAG & 3-TIER EXPLOITATION    -->
+    <!-- =================================================================== -->
+    <section id="tabPanel-map" class="hidden space-y-4">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-4">
+        <div class="lg:col-span-6 bg-[var(--card)] border border-[var(--border)] rounded-xl p-4 space-y-3">
+          <h3 class="text-sm font-bold">5A. Mật độ Sáng chế & Độ trễ Cấp bằng Trung bình theo Phân nhóm IPC</h3>
+          <div id="ipcMapChartContainer" class="space-y-2.5"></div>
+        </div>
+        <div class="lg:col-span-6 bg-[var(--card)] border border-[var(--border)] rounded-xl p-4 space-y-3">
+          <h3 class="text-sm font-bold">5B. Cơ cấu Khai thác Thương mại & Tín hiệu Thực chứng 3 Tầng</h3>
+          <div id="commMapChartContainer" class="space-y-2.5"></div>
+        </div>
+      </div>
+
+      <div class="bg-[var(--card)] border border-[var(--border)] rounded-xl p-4 space-y-3">
+        <h3 class="text-sm font-bold">5C. Bảng Điều phối Chuyển giao Công nghệ, Li-xăng & Điểm Tín hiệu Thực chứng 3 Tầng</h3>
+        <div id="commercializationTableContainer" class="overflow-x-auto"></div>
+      </div>
+
+      <div class="bg-[var(--card)] border border-[var(--border)] rounded-xl p-4 space-y-3">
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <h3 class="text-sm font-bold">5D. Dữ liệu Công báo Sở hữu Công nghiệp Tập A (A1..A4) & Tập B (B1..B7)</h3>
+          <select id="gazetteVolSelect" onchange="renderGazetteTable()" class="px-3 py-1.5 rounded-lg text-xs bg-[var(--background)] border border-[var(--border)]">
+            <option value="">Tất cả Công báo Tập A & Tập B</option>
+            <option value="A">Chỉ xem Công báo Tập A (Đơn công bố A1..A4)</option>
+            <option value="B">Chỉ xem Công báo Tập B (Văn bằng & Li-xăng B1..B7)</option>
+          </select>
+        </div>
+        <div id="gazetteTableContainer" class="overflow-x-auto"></div>
+      </div>
+    </section>
+
+    <!-- =================================================================== -->
+    <!-- TAB 6: MCP SERVER (8 TOOLS, SHA-256 KEYS & TELEMETRY)               -->
+    <!-- =================================================================== -->
+    <section id="tabPanel-mcp" class="hidden space-y-4">
+      <div class="bg-[var(--card)] border border-[var(--border)] rounded-xl p-4 space-y-4">
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <div>
+            <span class="text-xs font-semibold text-purple-400">JSON-RPC 2.0 MODEL CONTEXT PROTOCOL (MCP SERVER)</span>
+            <h2 class="text-base font-bold">6. Cổng Kết nối MCP Server cho AI Agent (8 Công cụ Chuyên biệt & Quản trị Khóa SHA-256)</h2>
+          </div>
+          <div class="flex gap-2">
+            <input id="newMcpKeyName" type="text" placeholder="Tên khóa API mới (VD: Claude Desktop Agent)" class="px-3 py-1.5 rounded-lg text-xs bg-[var(--background)] border border-[var(--border)]" />
+            <button onclick="generateNewMcpKey()" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-purple-600 text-white cursor-pointer">
+              🔑 Tạo Khóa API (SHA-256)
+            </button>
+          </div>
+        </div>
+
+        <div id="newMcpKeyBanner" class="hidden p-3 rounded-lg bg-purple-500/10 border border-purple-500/30 text-xs space-y-1"></div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-4">
+          <div class="lg:col-span-6 space-y-2">
+            <div class="text-xs font-bold uppercase tracking-wider text-[var(--muted-foreground)]">Danh mục 8 Công cụ MCP (Nhấp để nạp tham số mẫu):</div>
+            <div id="mcpToolsCatalogContainer" class="grid grid-cols-1 md:grid-cols-2 gap-2"></div>
+          </div>
+
+          <div class="lg:col-span-6 space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold uppercase tracking-wider text-[var(--muted-foreground)]">JSON-RPC 2.0 Live Sandbox</span>
+              <button onclick="executeMcpToolSandbox()" class="px-3 py-1 rounded text-xs font-semibold bg-emerald-600 text-white cursor-pointer">
+                ▶ Thực thi Công cụ MCP
+              </button>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+              <select id="mcpToolSelect" onchange="populateMcpSampleArgs()" class="w-full px-3 py-1.5 rounded-lg text-xs font-mono bg-[var(--background)] border border-[var(--border)]">
+                <option value="search_patents">1. search_patents (1 quota)</option>
+                <option value="semantic_prior_art_search">2. semantic_prior_art_search (2 quota)</option>
+                <option value="get_patent_detail">3. get_patent_detail (1 quota)</option>
+                <option value="get_patent_claims_and_history">4. get_patent_claims_and_history (1 quota)</option>
+                <option value="check_annuity_and_fto_status">5. check_annuity_and_fto_status (1 quota)</option>
+                <option value="search_patent_gazettes">6. search_patent_gazettes (1 quota)</option>
+                <option value="get_ipc_hierarchy_and_filters">7. get_ipc_hierarchy_and_filters (0 quota - FREE)</option>
+                <option value="get_patent_search_guide">8. get_patent_search_guide (0 quota - FREE)</option>
+              </select>
+              <input id="mcpApiKeyInput" type="text" value="vnp_live_demo_attorney_2026_key" class="w-full px-3 py-1.5 rounded-lg text-xs font-mono bg-[var(--background)] border border-[var(--border)]" />
+            </div>
+            <textarea id="mcpArgsTextarea" rows="3" class="w-full p-2.5 rounded-lg text-xs font-mono bg-[var(--background)] border border-[var(--border)]"></textarea>
+            <pre id="mcpResponseOutput" class="p-3 rounded-lg text-xs font-mono bg-[var(--background)] border border-[var(--border)] overflow-x-auto max-h-56"></pre>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 pt-3 border-t border-[var(--border)]">
+          <div class="lg:col-span-6 space-y-2">
+            <h3 class="text-xs font-bold uppercase tracking-wider text-[var(--muted-foreground)]">Danh sách Khóa API (Chỉ lưu mã băm SHA-256)</h3>
+            <div id="mcpKeysTableContainer" class="overflow-x-auto"></div>
+          </div>
+          <div class="lg:col-span-6 space-y-2">
+            <h3 class="text-xs font-bold uppercase tracking-wider text-[var(--muted-foreground)]">Nhật ký Truy vấn MCP Telemetry (`mcp_usage_logs`)</h3>
+            <div id="mcpLogsTableContainer" class="overflow-x-auto"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- MODAL ĐỌC BẢN MÔ TẢ TOÀN VĂN SÁNG CHẾ TOÀN TRANG (TRỰC TIẾP TỪ LINK GỐC CỤC SHTT - 0 MB DB) -->
+  <div id="noipPdfModal" onclick="if(event.target === this) closeDirectNoipPdfModal()" class="hidden fixed inset-0 z-50 bg-black/75 backdrop-blur-xs flex items-center justify-center p-2 md:p-4">
+    <div class="bg-[var(--card)] text-[var(--foreground)] border border-[var(--border)] rounded-2xl shadow-2xl w-full max-w-7xl h-[92vh] flex flex-col overflow-hidden">
+      <div class="px-4 py-3 bg-slate-900 text-white flex flex-wrap items-center justify-between gap-2 shrink-0">
+        <div class="flex flex-wrap items-center gap-2">
+          <span class="px-2 py-0.5 rounded text-xs font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
+            🔗 ĐỌC TRỰC TIẾP LINK GỐC CỤC SHTT (0 MB DB)
+          </span>
+          <h3 id="noipPdfModalTitle" class="text-sm font-bold truncate max-w-2xl">
+            Bản mô tả toàn văn Sáng chế / Giải pháp hữu ích
+          </h3>
+        </div>
+        <div class="flex items-center gap-2">
+          <a id="noipPdfModalRawLink" href="https://ipvietnam.gov.vn" target="_blank" rel="noopener noreferrer" class="px-3 py-1 rounded-lg text-xs font-semibold bg-blue-600 hover:bg-blue-500 text-white transition">
+            Mở Link Gốc Cục SHTT ↗
+          </a>
+          <button onclick="closeDirectNoipPdfModal()" class="px-3 py-1 rounded-lg text-xs font-semibold bg-slate-700 hover:bg-slate-600 text-white cursor-pointer">
+            ✕ Đóng khung rộng (Esc)
+          </button>
+        </div>
+      </div>
+      <div id="noipPdfModalBody" class="flex-1 overflow-y-auto p-3 bg-[var(--background)] flex flex-col"></div>
+    </div>
+  </div>
+
+  <script>
+    // =========================================================================
+    // DỮ LIỆU & THUẬT TOÁN ZERO-AI ĐỘC LẬP 100% TRÊN TRÌNH DUYỆT
+    // =========================================================================
+    const IPC_CONCORDANCE = {
+      "H01M": ["H02J", "B60L", "C01B", "H01G"],
+      "A61K": ["A61P", "C07D", "C12N", "A61Q", "C07C"],
+      "C04B": ["E04C", "B28B", "C01B"],
+      "G06N": ["G06V", "G06F", "A01G"],
+      "A01G": ["G06N", "G01N", "A01N"],
+      "C02F": ["B01D", "C12N", "B01J"],
+      "F04D": ["F24F", "H02K", "F16C"],
+      "A43B": ["B29D", "A61F"],
+      "B01J": ["C02F", "B82Y"],
+      "C25B": ["H01M", "C01B"],
+      "F26B": ["A23L", "A61K"],
+      "F28D": ["F22B", "F24H"]
+    };
+
+    const IPC_INDUSTRY_SECTOR_MAP = {
+      "H01M": "Lưu trữ năng lượng, Pin Lithium-ion & Phương tiện giao thông điện",
+      "B60L": "Hệ thống truyền động & Trạm sạc phương tiện giao thông điện",
+      "A61K": "Dược phẩm, Bào chế thuốc, Dược liệu & Công nghệ Y sinh",
+      "C04B": "Vật liệu xây dựng xanh, Bê tông nhẹ Geopolyme & Cấu kiện không nung",
+      "A01G": "Nông nghiệp thông minh, Tưới tiêu chính xác & Thủy lợi thích ứng độ mặn",
+      "C02F": "Xử lý nước cấp, Nước thải công nghiệp & Công nghệ môi trường",
+      "F04D": "Cơ khí động lực, Máy bơm, Quạt công nghiệp & Thiết bị thông gió",
+      "G06N": "Trí tuệ nhân tạo (AI), Học sâu & Điện toán công nghiệp",
+      "G06V": "Thị giác máy tính & Kiểm định chất lượng tự động",
+      "C25B": "Điện hóa công nghiệp, Điện phân nước & Sản xuất năng lượng Hydro xanh",
+      "F26B": "Kỹ thuật sấy thăng hoa, Bơm nhiệt & Chế biến sâu nông dược liệu",
+      "F28D": "Thiết bị trao đổi nhiệt, Thu hồi nhiệt thải & Tiết kiệm năng lượng lò hơi",
+      "A43B": "Công nghiệp da giày, Vật liệu polyme đàn hồi & Phụ trợ dệt may",
+      "B01J": "Vật liệu xúc tác nano, Hấp phụ & Quy trình công nghệ hóa học"
+    };
+
+    function mapIpcToSector(ipcCodes) {
+      for (const c of (ipcCodes || [])) {
+        const p = c.trim().toUpperCase().slice(0, 4);
+        if (IPC_INDUSTRY_SECTOR_MAP[p]) return IPC_INDUSTRY_SECTOR_MAP[p];
+      }
+      return "Công nghệ Kỹ thuật Đa ngành & Sản xuất Công nghiệp";
+    }
+
+    const SPECIAL_FILTER_META = {
+      "SC-F01": { title: "SC-F01: Đơn sắp hết hạn 36 tháng yêu cầu thẩm định nội dung (TĐND)", basis: "Điều 113 khoản 1 & 2 Luật SHTT hợp nhất 67/VBHN-VPQH (2026)", value: "Hạn yêu cầu TĐND là 36 tháng kể từ ngày nộp đơn/ngày ưu tiên cho cả Sáng chế và GPHI; quá hạn đơn coi như đã rút." },
+      "SC-F02": { title: "SC-F02: Bằng độc quyền sắp đến hạn hoặc đang trong 6 tháng ân hạn đóng phí duy trì (Annuity)", basis: "Điều 94 Luật SHTT hợp nhất 67/VBHN-VPQH (2026)", value: "Phát hiện văn bằng cần đóng niên liễm hàng năm hoặc theo dõi văn bằng của đối thủ sắp chấm dứt hiệu lực." },
+      "SC-F03": { title: "SC-F03: Đơn PCT quốc tế chỉ định Việt Nam sắp đến hạn 31 tháng vào pha quốc gia", basis: "Điều 100, Điều 110 Luật SHTT & Hiệp ước PCT", value: "Nguồn khách hàng quốc tế (Inbound PCT Filing) cho các đại diện SHTT và dự báo công nghệ nước ngoài sắp vào Việt Nam." },
+      "SC-F04": { title: "SC-F04: Đơn có Thông báo kết quả thẩm định nội dung (dự định từ chối) đang chờ trả lời (Hạn 3 tháng)", basis: "Điều 114, 115, 117 Luật SHTT & TT 06/VBHN-BKHCN (2026)", value: "Chủ đơn có 03 tháng (gia hạn 1 lần 03 tháng) để sửa đổi thu hẹp Yêu cầu bảo hộ, chuyển đổi SC sang GPHI hoặc lập luận phản hồi." },
+      "SC-F05": { title: "SC-F05: Đơn có Thông báo dự định cấp bằng nhưng quá hạn 3 tháng nộp phí cấp bằng", basis: "Điều 117, Điều 118 Luật SHTT", value: "Phát hiện hồ sơ chủ đơn quên đóng lệ phí cấp bằng & phí duy trì năm đầu để khắc phục trước khi bị từ chối." },
+      "SC-F06": { title: "SC-F06: Đơn bị từ chối (hình thức hoặc nội dung) đang trong thời hạn 90 ngày khiếu nại", basis: "Điều 119a Luật SHTT hợp nhất 67/VBHN-VPQH (2026)", value: "Phục vụ dịch vụ tư vấn khiếu nại quyết định từ chối cấp văn bằng của Cục SHTT." },
+      "SC-F07": { title: "SC-F07: Đơn tồn đọng thẩm định nội dung quá hạn luật định 12 tháng (Đủ điều kiện thúc đẩy / PPH)", basis: "Điều 119 khoản 2a & 2đ, Điều 114 khoản 3 VBHN 67/VBHN-VPQH (2026)", value: "Thời hạn TĐND chuẩn là 12 tháng (thẩm định nhanh 03 tháng); lọc hồ sơ tồn đọng để nộp kết quả thẩm định nước ngoài hoặc PPH/ASPEC." },
+      "SC-F08": { title: "SC-F08: Sáng chế hết hiệu lực / Rơi vào Phạm vi Công cộng (FTO - Freedom to Operate Clear)", basis: "Điều 93, Điều 95, Điều 113 khoản 3 Luật SHTT", value: "Dành cho các nhà máy Dược phẩm Generic, Hóa chất, Cơ khí, Điện tử tại Việt Nam tìm kiếm công nghệ tự do sản xuất thương mại." },
+      "SC-F09": { title: "SC-F09: Đơn/Bằng cần cập nhật thông tin chủ văn bằng (đối chiếu ĐKKD) hoặc chờ ghi nhận Li-xăng", basis: "Điều 97, Điều 138-148 Luật SHTT", value: "Đối chiếu Mã số thuế & địa chỉ trụ sở với CSDL Đăng ký doanh nghiệp để tư vấn sửa đổi văn bằng hoặc đăng ký hợp đồng Li-xăng." }
+    };
+
+    const STATUS_LABELS = {
+      "GRANTED": { label: "Đã cấp Bằng độc quyền", badge: "bg-emerald-500/15 text-emerald-500 border-emerald-500/30" },
+      "PUBLISHED": { label: "Đã công bố đơn Tập A", badge: "bg-blue-500/15 text-blue-400 border-blue-500/30" },
+      "UNDER_SUBSTANTIVE_EXAM": { label: "Đang thẩm định nội dung", badge: "bg-amber-500/15 text-amber-400 border-amber-500/30" },
+      "PENDING": { label: "Chờ vào pha QG / Thẩm định HT", badge: "bg-purple-500/15 text-purple-400 border-purple-500/30" },
+      "REFUSED": { label: "Đã có QĐ từ chối (Hạn KN 90 ngày)", badge: "bg-rose-500/15 text-rose-400 border-rose-500/30" },
+      "TERMINATED": { label: "Chấm dứt hiệu lực (FTO Clear)", badge: "bg-slate-500/15 text-[var(--muted-foreground)] border-[var(--border)]" }
+    };
+
+    const COMM_LABELS = {
+      "IN_HOUSE_PRODUCTION": { label: "Đang ứng dụng sản xuất nội bộ", badge: "bg-emerald-500/15 text-emerald-500 border-emerald-500/30" },
+      "OPEN_FOR_LICENSING": { label: "Đang mở chào Li-xăng / Chuyển giao", badge: "bg-indigo-500/15 text-indigo-400 border-indigo-500/30" },
+      "LICENSED_OR_ASSIGNED": { label: "Đã ký hợp đồng Li-xăng", badge: "bg-teal-500/15 text-teal-400 border-teal-500/30" },
+      "PILOT_RND": { label: "Đang thử nghiệm Pilot / R&D", badge: "bg-amber-500/15 text-amber-400 border-amber-500/30" },
+      "UNEXPLOITED": { label: "Chưa khai thác / Phạm vi công cộng", badge: "bg-[var(--background)] text-[var(--muted-foreground)] border-[var(--border)]" }
+    };
+
+    // Danh mục liên kết PDF Bản mô tả Toàn văn thực tế trên Cổng Liferay Cục SHTT (0 MB lưu DB)
+    const VERIFIED_NOIP_LIVE_PDFS = [
+      {
+        label: "Bằng SC 1-0032137 (Chàm mèo)",
+        app_no: "1-2019-05968",
+        url: "https://www.ipvietnam.gov.vn/documents/20182/1318324/32137.pdf/00ad7c8e-b2b3-4c29-a563-487de9ecd88c",
+        desc: "Dẫn xuất indirubin từ lá cây chàm mèo - Viện Hóa học các Hợp chất Thiên nhiên"
+      },
+      {
+        label: "Bằng GPHI 2-0004323 (Nano Selen)",
+        app_no: "2-2025-00329",
+        url: "https://www.ipvietnam.gov.vn/documents/20182/2142261/4323.pdf/3b2cf889-bd36-424d-9d61-d1788226d12b",
+        desc: "Quy trình tổng hợp xanh hạt nano Selen từ lá vối - Viện Sinh học (T09/2025)"
+      },
+      {
+        label: "Bằng SC 1-0044433 (KH Vật liệu)",
+        app_no: null,
+        url: "https://www.ipvietnam.gov.vn/documents/20182/1873363/44433.pdf/a05a9e41-8d68-45df-8767-ca7421234008",
+        desc: "Bản mô tả Sáng chế Viện Khoa học vật liệu - Công bố CB444B (T03/2025)"
+      },
+      {
+        label: "Bằng SC 1-0028212 (Bộ nối điện)",
+        app_no: null,
+        url: "https://www.ipvietnam.gov.vn/documents/20182/1108922/28212.pdf/e0e68be0-74d8-4388-985f-1f7df4928c35",
+        desc: "Nắp che và thân đế bộ nối điện (IPC H01R 13/629) - Cổng Cục SHTT"
+      }
+    ];
+
+    let PATENTS_DB = [
+      {
+        application_no: "1-2019-05968", patent_type: "PATENT", filing_origin: "NATIONAL", grant_no: "1-0032137",
+        filing_date: "2019-10-25", earliest_priority_date: "2019-10-25", publication_date: "2021-05-25",
+        substantive_exam_requested: true, substantive_exam_deadline: "2022-10-25", grant_date: "2022-06-25",
+        expiration_date: "2039-10-25", next_annuity_due_date: "2027-06-25", status_group: "GRANTED", fto_status: "ACTIVE_PROTECTED",
+        commercialization_status: "OPEN_FOR_LICENSING",
+        commercialization_note: "Bản mô tả toàn văn công bố chính thức trên Cổng Liferay Cục SHTT (đọc trực tiếp từ link gốc không lưu DB); sẵn sàng chuyển giao công nghệ chiết xuất dược chất.",
+        special_filter_flags: [], ipc_codes: ["C07D 403/04", "A61K 36/19", "A61P 35/00"],
+        completeness_mask: 31, missing_fields: [],
+        industry_sector_vi: "Dược phẩm, Bào chế thuốc, Dược liệu & Công nghệ Y sinh",
+        exploitation_signals: {
+          signal_confidence_score: 75,
+          tier_1_hard_legal: { triggered: true },
+          tier_2_entity_match: { triggered: true },
+          tier_3_verified_owner_claim: { triggered: false }
+        },
+        title_vi: "DẪN XUẤT CỦA INDIRUBIN PHÂN LẬP VÀ TỔNG HỢP TỪ LÁ CÂY CHÀM MÈO (STROBILANTHES CUSIA) VÀ QUY TRÌNH ĐIỀU CHẾ CHÚNG",
+        abstract_vi: "Sáng chế đề cập đến các dẫn xuất mới của indirubin có độ tan sinh học cao được phân lập và bán tổng hợp từ lá cây chàm mèo (Strobilanthes cusia) thu hái tại Việt Nam cùng quy trình điều chế định hướng ứng dụng hỗ trợ điều trị ung thư.",
+        applicant_name: "Viện Hóa học các Hợp chất Thiên nhiên - Viện Hàn lâm KH&CN Việt Nam", applicant_country: "VN", applicant_province: "Hà Nội",
+        tax_code: "0100104512", business_status: "Đang hoạt động", phone_number: "02437564995", phone_type: "so-co-dinh",
+        inventors: ["GS.TS. Châu Văn Minh", "PGS.TS. Phạm Văn Cường", "TS. Nguyễn Văn Hùng"], representative: "Nộp trực tiếp",
+        fulltext_pdf_url: "https://www.ipvietnam.gov.vn/documents/20182/1318324/32137.pdf/00ad7c8e-b2b3-4c29-a563-487de9ecd88c", monthly_release_period: "Công bố Toàn văn Cục SHTT (CB411B)", gazette_issue_no: "CB411B",
+        specification_sections: {
+          technical_field: "Hóa dược và hóa học các hợp chất thiên nhiên (dẫn xuất của indirubin phân lập và bán tổng hợp từ lá cây chàm mèo Strobilanthes cusia).",
+          background_art: "Hoạt chất indirubin tự nhiên có hoạt tính ức chế tế bào ung thư mạnh nhưng độ tan trong nước và sinh khả dụng đường uống rất thấp.",
+          technical_essence: "Chiết chọn lọc phân đoạn giàu indirubin từ sinh khối lá chàm mèo Việt Nam kết hợp phản ứng oxim hóa tại vị trí C-3' gắn nhóm thế thân nước dược dụng.",
+          technical_effect: "Tăng độ tan trong môi trường sinh lý gấp 18 lần so với indirubin tự nhiên, nâng hiệu suất bán tổng hợp đạt 84%."
+        },
+        claims: [
+          { claim_number: 1, claim_type: "INDEPENDENT", parent_claim_numbers: [], claim_text_vi: "Dẫn xuất của indirubin phân lập và tổng hợp từ lá cây chàm mèo (Strobilanthes cusia) có cấu trúc oxim hóa tại vị trí C-3' mang nhóm thế thân nước dược dụng." },
+          { claim_number: 2, claim_type: "DEPENDENT", parent_claim_numbers: [1], claim_text_vi: "Quy trình điều chế dẫn xuất của indirubin theo điểm 1 bao gồm bước chiết thu nhận indirubin tinh khiết từ lá cây chàm mèo Việt Nam và phản ứng ngưng tụ với hydroxylamin hydroclorua." }
+        ],
+        claim_history_diff: {}, citations: [],
+        events: [
+          { event_code: "FILING", event_title: "Nộp đơn đăng ký Sáng chế tại Cục SHTT", event_date: "2019-10-25", document_no: "1-2019-05968" },
+          { event_code: "GRANTED_B", event_title: "Cấp Bằng độc quyền Sáng chế số 1-0032137 (Công bố PDF toàn văn gốc)", event_date: "2022-06-25", document_no: "CB411B" }
+        ],
+        annuity_schedule: []
+      },
+      {
+        application_no: "2-2025-00329", patent_type: "UTILITY_SOLUTION", filing_origin: "NATIONAL", grant_no: "2-0004323",
+        filing_date: "2023-03-14", earliest_priority_date: "2023-03-14", publication_date: "2024-09-25",
+        substantive_exam_requested: true, substantive_exam_deadline: "2026-03-14", grant_date: "2025-09-25",
+        expiration_date: "2033-03-14", next_annuity_due_date: "2027-09-25", status_group: "GRANTED", fto_status: "ACTIVE_PROTECTED",
+        commercialization_status: "OPEN_FOR_LICENSING",
+        commercialization_note: "Bản mô tả toàn văn công bố tháng 09/2025 trên Cổng Liferay Cục SHTT (chuyển đổi từ đơn SC 1-2023-01236).",
+        special_filter_flags: [], ipc_codes: ["C01B 19/00", "B82Y 30/00", "A61K 33/04"],
+        completeness_mask: 31, missing_fields: [],
+        industry_sector_vi: "Công nghệ nano sinh học, Vật liệu kháng khuẩn & Y sinh",
+        exploitation_signals: {
+          signal_confidence_score: 75,
+          tier_1_hard_legal: { triggered: true },
+          tier_2_entity_match: { triggered: true },
+          tier_3_verified_owner_claim: { triggered: false }
+        },
+        title_vi: "QUY TRÌNH TỔNG HỢP XANH HẠT NANO SELEN CÓ HOẠT TÍNH KHÁNG KHUẨN SỬ DỤNG DỊCH CHIẾT LÁ VỐI (CLEISTOCALYX OPERCULATUS L.) LÀM TÁC NHÂN KHỬ",
+        abstract_vi: "Quy trình tổng hợp xanh hạt nano selen kích thước đồng đều (25-60 nm) có hoạt tính kháng khuẩn mạnh sử dụng dịch chiết nước lá vối làm tác nhân khử và ổn định sinh học.",
+        applicant_name: "Viện Sinh học - Viện Hàn lâm Khoa học và Công nghệ Việt Nam", applicant_country: "VN", applicant_province: "Hà Nội",
+        tax_code: "0100104580", business_status: "Đang hoạt động", phone_number: "02437564129", phone_type: "so-co-dinh",
+        inventors: ["TS. Nguyễn Thị Phương Thảo", "PGS.TS. Trần Văn Tuấn"], representative: "Nộp trực tiếp",
+        fulltext_pdf_url: "https://www.ipvietnam.gov.vn/documents/20182/2142261/4323.pdf/3b2cf889-bd36-424d-9d61-d1788226d12b", monthly_release_period: "Tháng 09/2025", gazette_issue_no: "CB450B",
+        specification_sections: {
+          technical_field: "Công nghệ nano sinh học và vật liệu kháng khuẩn (quy trình tổng hợp xanh hạt nano selen từ dịch chiết lá vối).",
+          background_art: "Phương pháp hóa học truyền thống dùng chất khử độc hại như natri borohydrua hoặc hydrazin gây kết tụ hạt.",
+          technical_essence: "Sử dụng dịch chiết nước lá vối (Cleistocalyx operculatus L.) giàu polyphenol và flavonoid khử trực tiếp muối natri selenit ở nhiệt độ 55-65 độ C.",
+          technical_effect: "Tạo hạt nano selen cầu đồng nhất 25-60 nm bền trên 6 tháng mà không cần chất hoạt động bề mặt tổng hợp."
+        },
+        claims: [
+          { claim_number: 1, claim_type: "INDEPENDENT", parent_claim_numbers: [], claim_text_vi: "Quy trình tổng hợp xanh hạt nano selen có hoạt tính kháng khuẩn sử dụng dịch chiết lá vối (Cleistocalyx operculatus L.) làm tác nhân khử bao gồm bước phối trộn dịch chiết nước lá vối với dung dịch Na2SeO3 2-5 mM ở pH 6,5-7,5 và khuấy từ ở nhiệt độ 55-65 độ C." }
+        ],
+        claim_history_diff: {}, citations: [],
+        events: [
+          { event_code: "GRANTED_B", event_title: "Cấp Bằng độc quyền Giải pháp hữu ích số 2-0004323", event_date: "2025-09-25", document_no: "CB450B" }
+        ],
+        annuity_schedule: []
+      },
+      {
+        application_no: "1-2023-02410", patent_type: "PATENT", filing_origin: "NATIONAL", grant_no: "1-0056120",
+        filing_date: "2023-06-20", earliest_priority_date: "2023-06-20", publication_date: "2025-01-25",
+        substantive_exam_requested: true, substantive_exam_deadline: "2026-06-20", grant_date: "2026-08-25",
+        expiration_date: "2043-06-20", next_annuity_due_date: "2027-08-25", status_group: "GRANTED", fto_status: "ACTIVE_PROTECTED",
+        commercialization_status: "IN_HOUSE_PRODUCTION",
+        commercialization_note: "Đang trang bị trên dòng pack pin xe máy điện và trạm lưu trữ năng lượng BESS sản xuất tại Hải Phòng; cần cập nhật địa chỉ ĐKKD mới (SC-F09).",
+        special_filter_flags: ["SC-F09"], ipc_codes: ["H01M 10/6556", "H01M 10/613", "B60L 58/26"],
+        completeness_mask: 31, missing_fields: [],
+        industry_sector_vi: "Lưu trữ năng lượng, Pin Lithium-ion & Phương tiện giao thông điện",
+        exploitation_signals: {
+          signal_confidence_score: 100,
+          tier_1_hard_legal: { triggered: true },
+          tier_2_entity_match: { triggered: true },
+          tier_3_verified_owner_claim: { triggered: true }
+        },
+        title_vi: "HỆ THỐNG QUẢN LÝ NHIỆT ĐỘ ĐA KÊNH CHO KHỐI PIN LITHIUM-ION MẬT ĐỘ NĂNG LƯỢNG CAO",
+        abstract_vi: "Sáng chế đề xuất kết cấu tấm làm mát vi kênh tích hợp vật liệu chuyển pha (PCM) và thuật toán điều tiết lưu lượng chất lỏng theo gradien nhiệt thời gian thực giúp ngăn ngừa hiện tượng thoát nhiệt dây chuyền.",
+        applicant_name: "Công ty Cổ phần Giải pháp Năng lượng VinES", applicant_country: "VN", applicant_province: "Hà Nội",
+        tax_code: "0109712850", business_status: "Đang hoạt động (Đã cập nhật địa chỉ ĐKKD)", phone_number: "0988776655", phone_type: "so-mobile",
+        inventors: ["TS. Lê Minh Quân", "KS. Vũ Đức Thịnh", "TS. Nguyễn Hoàng Long"], representative: "Công ty TNHH Luật SHTT Bross và Cộng sự",
+        fulltext_pdf_url: "https://ipvietnam.gov.vn/documents/20182/sc_2026_08/1-0056120.pdf", monthly_release_period: "Kỳ 2 tháng 8/2026", gazette_issue_no: "CB465B",
+        specification_sections: {
+          technical_field: "Sáng chế thuộc lĩnh vực lưu trữ năng lượng điện hóa và phương tiện giao thông điện, cụ thể là hệ thống quản lý nhiệt cho khối pin Lithium-ion.",
+          background_art: "Trong điều kiện khí hậu nhiệt đới nóng ẩm tại Việt Nam, khi sạc nhanh dòng lớn trên 2C, chênh lệch nhiệt độ giữa tâm và rìa khối pin thường vượt quá 8 độ C làm suy giảm nhanh tuổi thọ cell pin.",
+          technical_essence: "Sử dụng tấm dẫn nhiệt nhôm định hình có rãnh vi kênh phân nhánh dạng xương cá kết hợp lớp đệm vật liệu chuyển pha parafin-graphit trương nở.",
+          technical_effect: "Giữ độ chênh lệch nhiệt độ toàn khối pin dưới 2,1 độ C khi sạc siêu nhanh, kéo dài tuổi thọ chu kỳ sạc xả thêm 28% và tiết kiệm 18% điện năng bơm làm mát."
+        },
+        claims: [
+          { claim_number: 1, claim_type: "INDEPENDENT", parent_claim_numbers: [], claim_text_vi: "Hệ thống quản lý nhiệt độ đa kênh cho khối pin Lithium-ion bao gồm: tấm đế tản nhiệt có mạng lưới kênh dẫn chất lỏng phân nhánh đối xứng; lớp vật liệu chuyển pha composit parafin-graphit ôm sát bề mặt trụ của các cell pin; và cụm van điều tiết lưu lượng điều khiển bằng xung PWM theo chênh lệch nhiệt độ đo được." },
+          { claim_number: 2, claim_type: "DEPENDENT", parent_claim_numbers: [1], claim_text_vi: "Hệ thống theo điểm 1, trong đó lớp vật liệu chuyển pha có nhiệt độ nóng chảy trong khoảng từ 42 độ C đến 46 độ C và hệ số dẫn nhiệt tối thiểu đạt 8 W/m.K." },
+          { claim_number: 3, claim_type: "DEPENDENT", parent_claim_numbers: [1], claim_text_vi: "Hệ thống theo điểm 1, trong đó tiết diện kênh dẫn chất lỏng thu hẹp dần từ đầu vào tới đầu ra theo tỷ lệ 1,5:1 để đồng đều hóa áp suất." }
+        ],
+        claim_history_diff: {
+          published_a_count: 3, granted_b_count: 3, narrowed_or_cancelled_count: 2,
+          claim_diffs: [
+            { claim_number: 1, change_type: "AMENDED_NARROWED", published_a_text: "Hệ thống quản lý nhiệt độ đa kênh cho khối pin Lithium-ion bao gồm: tấm đế tản nhiệt có kênh dẫn chất lỏng; lớp vật liệu chuyển pha ôm sát bề mặt các cell pin; và van điều tiết lưu lượng.", granted_b_text: "Hệ thống quản lý nhiệt độ đa kênh cho khối pin Lithium-ion bao gồm: tấm đế tản nhiệt có mạng lưới kênh dẫn chất lỏng phân nhánh đối xứng; lớp vật liệu chuyển pha composit parafin-graphit ôm sát bề mặt trụ của các cell pin; và cụm van điều tiết lưu lượng điều khiển bằng xung PWM theo chênh lệch nhiệt độ đo được.", legal_note: "Thu hẹp phạm vi bảo hộ bằng cách bổ sung dấu hiệu kỹ thuật giới hạn (phân nhánh đối xứng, xung PWM) để vượt qua đối chứng loại Y." }
+          ]
+        },
+        citations: [
+          { cited_doc_no: "US11205810B2", cited_title: "Hybrid PCM and microchannel liquid cooling plate for EV battery module", category: "Y", cited_by: "EXAMINER" }
+        ],
+        events: [
+          { event_code: "FILING", event_title: "Nộp đơn đăng ký Sáng chế", event_date: "2023-06-20", document_no: "1-2023-02410" },
+          { event_code: "PUBLICATION_A", event_title: "Công bố đơn trên Công báo Tập A", event_date: "2025-01-25", document_no: "CB442A" },
+          { event_code: "GRANTED_B", event_title: "Cấp Bằng độc quyền Sáng chế số 1-0056120", event_date: "2026-08-25", document_no: "CB465B" }
+        ],
+        annuity_schedule: [
+          { policy_year: 4, due_date: "2026-08-25", grace_period_end_date: "2027-02-25", independent_claims_billed: 1, estimated_fee_vnd: 900000, payment_status: "PAID" },
+          { policy_year: 5, due_date: "2027-08-25", grace_period_end_date: "2028-02-25", independent_claims_billed: 1, estimated_fee_vnd: 1050000, payment_status: "UPCOMING" }
+        ]
+      },
+      {
+        application_no: "2-2021-00496", patent_type: "UTILITY_SOLUTION", filing_origin: "NATIONAL", grant_no: "2-0003961",
+        filing_date: "2021-10-18", earliest_priority_date: "2021-10-18", publication_date: "2023-05-25",
+        substantive_exam_requested: true, substantive_exam_deadline: "2024-10-18", grant_date: "2025-02-15",
+        expiration_date: "2031-10-18", next_annuity_due_date: "2027-02-15", status_group: "GRANTED", fto_status: "ACTIVE_PROTECTED",
+        commercialization_status: "IN_HOUSE_PRODUCTION",
+        commercialization_note: "Đã đưa vào dây chuyền chiết xuất dược liệu chuẩn hóa GMP-WHO tại Hưng Yên.",
+        special_filter_flags: [], ipc_codes: ["A61K 36/9066", "A61P 17/00", "C07C 49/255"],
+        completeness_mask: 31, missing_fields: [],
+        industry_sector_vi: "Dược phẩm, Bào chế thuốc, Dược liệu & Công nghệ Y sinh",
+        exploitation_signals: {
+          signal_confidence_score: 100,
+          tier_1_hard_legal: { triggered: true },
+          tier_2_entity_match: { triggered: true },
+          tier_3_verified_owner_claim: { triggered: true }
+        },
+        title_vi: "QUY TRÌNH SẢN XUẤT HỖN HỢP CURCUMINOIT TỪ CỦ NGHỆ VÀNG (CURCUMA LONGA L.) BẰNG DUNG MÔI XANH",
+        abstract_vi: "Giải pháp hữu ích đề cập đến quy trình chiết xuất và tinh chế hỗn hợp curcuminoit độ tinh khiết trên 95% từ củ nghệ vàng Việt Nam bằng hệ dung môi sinh học an toàn, rút ngắn 40% thời gian kết tinh.",
+        applicant_name: "Viện Hóa học các Hợp chất Thiên nhiên - Viện Hàn lâm KH&CN Việt Nam", applicant_country: "VN", applicant_province: "Hà Nội",
+        tax_code: "0100104512", business_status: "Đang hoạt động", phone_number: "0912345678", phone_type: "so-mobile",
+        inventors: ["TS. Nguyễn Văn Hùng", "PGS.TS. Trần Thị Minh", "ThS. Lê Hoàng Nam"], representative: "Công ty Luật TNHH T&G (TGVN)",
+        fulltext_pdf_url: "https://ipvietnam.gov.vn/documents/20182/gphi_2025_02/2-0003961.pdf", monthly_release_period: "Tháng 02/2025", gazette_issue_no: "CB443B",
+        specification_sections: {
+          technical_field: "Hóa dược và chế biến sâu nông sản dược liệu (chiết xuất hoạt chất curcuminoit từ củ nghệ vàng).",
+          background_art: "Quy trình truyền thống dùng dung môi độc hại như diclometan và thời gian kết tinh kéo dài 48-72 giờ.",
+          technical_essence: "Chiết hai pha kết hợp siêu âm tần số thấp (35-45 kHz) và kết tinh phân đoạn trong hệ etanol thực phẩm - nước khử khoáng tỷ lệ 80:20.",
+          technical_effect: "Hiệu suất thu hồi đạt 92,5%, độ tinh khiết 96,4%, giảm 35% chi phí dung môi."
+        },
+        claims: [
+          { claim_number: 1, claim_type: "INDEPENDENT", parent_claim_numbers: [], claim_text_vi: "Quy trình sản xuất hỗn hợp curcuminoit từ củ nghệ vàng (Curcuma longa L.) bao gồm các bước: (a) chuẩn bị bột nghệ khô có độ ẩm dưới 8%; (b) chiết siêu âm ở tần số 35-45 kHz bằng hệ dung môi etanol - nước tỷ lệ 80:20; và (c) kết tinh lạnh phân đoạn ở nhiệt độ 4-8 độ C trong 12 giờ." },
+          { claim_number: 2, claim_type: "DEPENDENT", parent_claim_numbers: [1], claim_text_vi: "Quy trình theo điểm 1, trong đó bước chiết siêu âm được thực hiện ở nhiệt độ từ 50 độ C đến 55 độ C với tỷ lệ nguyên liệu/dung môi là 1:8." }
+        ],
+        claim_history_diff: { published_a_count: 4, granted_b_count: 2, narrowed_or_cancelled_count: 2, claim_diffs: [] },
+        citations: [], events: [], annuity_schedule: []
+      },
+      {
+        application_no: "2-2023-00819", patent_type: "UTILITY_SOLUTION", filing_origin: "NATIONAL", grant_no: "2-0004319",
+        filing_date: "2023-11-12", earliest_priority_date: "2023-11-12", publication_date: "2024-08-25",
+        substantive_exam_requested: true, substantive_exam_deadline: "2026-11-12", grant_date: "2025-09-25",
+        expiration_date: "2033-11-12", next_annuity_due_date: "2026-12-05", status_group: "GRANTED", fto_status: "ACTIVE_PROTECTED",
+        commercialization_status: "OPEN_FOR_LICENSING",
+        commercialization_note: "Sẵn sàng chuyển giao dây chuyền sản xuất tấm panen geopolyme nhẹ cho các nhà máy vật liệu xây dựng không nung.",
+        special_filter_flags: ["SC-F02"], ipc_codes: ["C04B 28/00", "C04B 18/08", "E04C 2/04"],
+        completeness_mask: 31, missing_fields: [],
+        industry_sector_vi: "Vật liệu xây dựng xanh, Bê tông nhẹ Geopolyme & Cấu kiện không nung",
+        exploitation_signals: {
+          signal_confidence_score: 55,
+          tier_1_hard_legal: { triggered: false },
+          tier_2_entity_match: { triggered: true },
+          tier_3_verified_owner_claim: { triggered: true }
+        },
+        title_vi: "QUY TRÌNH CHẾ TẠO TẤM PANEN SỬ DỤNG HẠT ĐẤT SÉT NUNG BẰNG CÔNG NGHỆ GEOPOLYME",
+        abstract_vi: "Quy trình chế tạo tấm panen bê tông nhẹ chịu nhiệt sử dụng cốt liệu hạt đất sét nung (keramzit) liên kết bằng chất kết dính geopolyme từ tro bay nhiệt điện và xỉ lò cao.",
+        applicant_name: "Công ty Cổ phần Vật liệu Xây dựng Xanh Việt Nam", applicant_country: "VN", applicant_province: "Bình Dương",
+        tax_code: "3702819405", business_status: "Đang hoạt động", phone_number: "0908112233", phone_type: "so-mobile",
+        inventors: ["KS. Phạm Quốc Bảo", "TS. Đỗ Thành Trung"], representative: "Công ty CP Sở hữu công nghiệp INVESTIP",
+        fulltext_pdf_url: "https://www.ipvietnam.gov.vn/documents/20182/2142261/4319.pdf", monthly_release_period: "Tháng 09/2025", gazette_issue_no: "CB450B",
+        specification_sections: {
+          technical_field: "Vật liệu xây dựng xanh (tấm panen đúc sẵn geopolyme).",
+          background_art: "Tấm panen xi măng Portland nặng, phát thải CO2 cao.",
+          technical_essence: "Hoạt hóa tro bay và xỉ lò cao bằng dung dịch kiềm natri silicat - natri hydroxit kết hợp hạt keramzit.",
+          technical_effect: "Giảm 42% trọng lượng tấm tường, đạt chuẩn chống cháy EI150, giảm 60% phát thải CO2."
+        },
+        claims: [
+          { claim_number: 1, claim_type: "INDEPENDENT", parent_claim_numbers: [], claim_text_vi: "Quy trình chế tạo tấm panen sử dụng hạt đất sét nung bằng công nghệ geopolyme bao gồm: (a) phối trộn tro bay loại F và xỉ lò cao theo tỷ lệ 70:30; (b) hoạt hóa bằng dung dịch kiềm mô-đun SiO2/Na2O bằng 1,2-1,4; (c) trộn hạt đất sét nung 4-10 mm; và (d) dưỡng hộ ở 60-70 độ C." }
+        ],
+        claim_history_diff: {}, citations: [], events: [], annuity_schedule: []
+      },
+      {
+        application_no: "1-2020-01486", patent_type: "PATENT", filing_origin: "NATIONAL", grant_no: "1-0055517",
+        filing_date: "2020-03-19", earliest_priority_date: "2019-06-10", publication_date: "2021-01-25",
+        substantive_exam_requested: true, substantive_exam_deadline: "2022-06-10", grant_date: "2026-02-25",
+        expiration_date: "2040-03-19", next_annuity_due_date: "2027-02-25", status_group: "GRANTED", fto_status: "ACTIVE_PROTECTED",
+        commercialization_status: "LICENSED_OR_ASSIGNED",
+        commercialization_note: "Đã ghi nhận hợp đồng Li-xăng (B5) cho nhà máy lắp ráp quạt điện công nghiệp tại Đồng Nai.",
+        special_filter_flags: [], ipc_codes: ["F04D 29/34", "F04D 25/08"],
+        completeness_mask: 31, missing_fields: [],
+        industry_sector_vi: "Cơ khí động lực, Máy bơm, Quạt công nghiệp & Thiết bị thông gió",
+        exploitation_signals: {
+          signal_confidence_score: 70,
+          tier_1_hard_legal: { triggered: true },
+          tier_2_entity_match: { triggered: false },
+          tier_3_verified_owner_claim: { triggered: true }
+        },
+        title_vi: "CƠ CẤU LẮP RÁP GIÁ ĐỠ CÁNH QUẠT VÀ CÁNH QUẠT CỦA QUẠT TRẦN",
+        abstract_vi: "Cơ cấu khóa cài an toàn chống tự tháo lỏng giữa giá đỡ hợp kim và cánh quạt trần tốc độ cao, giảm rung lắc cơ học.",
+        applicant_name: "PAN AIR ELECTRIC CO., LTD.", applicant_country: "TW", applicant_province: "",
+        inventors: ["CHEN, Wei-Ming"], representative: "Công ty TNHH Sở hữu trí tuệ Thảo Thọ Quyền (INVENCO)",
+        fulltext_pdf_url: "https://ipvietnam.gov.vn/documents/20182/sc_2026_02/1-0055517.pdf", monthly_release_period: "Tháng 02/2026", gazette_issue_no: "CB455B",
+        specification_sections: {
+          technical_field: "Quạt trần dân dụng và công nghiệp.",
+          background_art: "Liên kết bắt vít thông thường dễ tự tháo lỏng khi chịu rung động quay.",
+          technical_essence: "Rãnh khóa chốt đàn hồi hai bậc kết hợp đệm giảm chấn cao su định hình tự khóa.",
+          technical_effect: "Triệt tiêu 75% độ ồn rung lắc ở tốc độ cao."
+        },
+        claims: [
+          { claim_number: 1, claim_type: "INDEPENDENT", parent_claim_numbers: [], claim_text_vi: "Cơ cấu lắp ráp giá đỡ cánh quạt và cánh quạt của quạt trần bao gồm thân giá đỡ gắn với rôto động cơ có chốt định vị hướng trục và lẫy khóa đàn hồi ăn khớp cưỡng bức với rãnh bậc trên gốc cánh quạt." }
+        ],
+        claim_history_diff: {}, citations: [], events: [], annuity_schedule: []
+      },
+      {
+        application_no: "1-2024-00215", patent_type: "PATENT", filing_origin: "NATIONAL", grant_no: null,
+        filing_date: "2024-01-15", earliest_priority_date: "2024-01-15", publication_date: "2025-08-25",
+        substantive_exam_requested: false, substantive_exam_deadline: "2027-01-15", grant_date: null,
+        expiration_date: "2044-01-15", next_annuity_due_date: null, status_group: "PUBLISHED", fto_status: "CONTINGENT",
+        commercialization_status: "PILOT_RND",
+        commercialization_note: "Đang thử nghiệm tại trạm quan trắc mặn ĐBSCL; cần nộp yêu cầu TĐND trước hạn 36 tháng (15/01/2027 - SC-F01).",
+        special_filter_flags: ["SC-F01"], ipc_codes: ["A01G 25/16", "G06N 3/08", "G01N 27/06"],
+        completeness_mask: 19, missing_fields: ["grant_no", "grant_date", "fulltext_pdf_url"],
+        industry_sector_vi: "Nông nghiệp thông minh, Tưới tiêu chính xác & Thủy lợi thích ứng độ mặn",
+        exploitation_signals: {
+          signal_confidence_score: 30,
+          tier_1_hard_legal: { triggered: false },
+          tier_2_entity_match: { triggered: true },
+          tier_3_verified_owner_claim: { triggered: false }
+        },
+        title_vi: "HỆ THỐNG ĐIỀU KHIỂN TƯỚI TIÊU THÔNG MINH THÍCH ỨNG ĐỘ MẶN THEO THỜI GIAN THỰC CHO VÙNG CỬA SÔNG",
+        abstract_vi: "Hệ thống mạng cảm biến độ dẫn điện đa tầng kết hợp bộ điều khiển đóng mở cống tự động dự báo xâm nhập mặn trước 48 giờ.",
+        applicant_name: "Trường Đại học Cần Thơ", applicant_country: "VN", applicant_province: "Cần Thơ",
+        inventors: ["PGS.TS. Huỳnh Văn Khải", "ThS. Trần Quốc Tuấn"], representative: "Nộp trực tiếp",
+        specification_sections: {},
+        claims: [
+          { claim_number: 1, claim_type: "INDEPENDENT", parent_claim_numbers: [], claim_text_vi: "Hệ thống điều khiển tưới tiêu thông minh thích ứng độ mặn bao gồm cụm phao cảm biến đo độ dẫn điện ở 3 tầng độ sâu, bộ truyền tin LoRaWAN và tủ điều khiển van cống tự động đóng khi độ mặn vượt ngưỡng cài đặt." }
+        ],
+        claim_history_diff: {}, citations: [], events: [], annuity_schedule: []
+      },
+      {
+        application_no: "1-2023-01980", patent_type: "PATENT", filing_origin: "NATIONAL", grant_no: null,
+        filing_date: "2023-09-05", earliest_priority_date: "2023-09-05", publication_date: "2025-04-25",
+        substantive_exam_requested: true, substantive_exam_deadline: "2026-09-05", grant_date: null,
+        expiration_date: "2043-09-05", next_annuity_due_date: null, status_group: "UNDER_SUBSTANTIVE_EXAM", fto_status: "CONTINGENT",
+        commercialization_status: "PILOT_RND",
+        commercialization_note: "Đang trong hạn 3 tháng trả lời Thông báo kết quả thẩm định nội dung của Cục SHTT (SC-F04) và quá 12 tháng thẩm định (SC-F07).",
+        special_filter_flags: ["SC-F04", "SC-F07"], ipc_codes: ["C02F 3/34", "C12N 1/20"],
+        completeness_mask: 19, missing_fields: ["grant_no", "grant_date", "fulltext_pdf_url"],
+        industry_sector_vi: "Xử lý nước cấp, Nước thải công nghiệp & Công nghệ môi trường",
+        exploitation_signals: {
+          signal_confidence_score: 30,
+          tier_1_hard_legal: { triggered: false },
+          tier_2_entity_match: { triggered: true },
+          tier_3_verified_owner_claim: { triggered: false }
+        },
+        title_vi: "CHẾ PHẨM VI SINH VẬT BẢN ĐỊA XỬ LÝ NHANH NƯỚC THẢI CHẾ BIẾN THỦY SẢN GIÀU NITƠ VÀ PHỐTPHO",
+        abstract_vi: "Tổ hợp chủng vi khuẩn Bacillus và Nitrosomonas phân lập tại vùng biển miền Trung Việt Nam được cố định trên giá thể than sinh học vỏ trấu.",
+        applicant_name: "Công ty TNHH Công nghệ Sinh học Biển Xanh", applicant_country: "VN", applicant_province: "Khánh Hòa",
+        inventors: ["TS. Võ Thị Thu Hà", "KS. Nguyễn Thành Đạt"], representative: "Công ty TNHH SHTT Quốc tế D&N",
+        specification_sections: {},
+        claims: [
+          { claim_number: 1, claim_type: "INDEPENDENT", parent_claim_numbers: [], claim_text_vi: "Chế phẩm vi sinh vật xử lý nước thải chế biến thủy sản chứa tổ hợp chủng Bacillus subtilis và Nitrosomonas europaea cố định trên giá thể biochar vỏ trấu với mật độ tối thiểu 10^9 CFU/g." }
+        ],
+        claim_history_diff: {}, citations: [], events: [], annuity_schedule: []
+      },
+      {
+        application_no: "1-2016-00812", patent_type: "PATENT", filing_origin: "NATIONAL", grant_no: "1-0021450",
+        filing_date: "2016-03-10", earliest_priority_date: "2016-03-10", publication_date: "2017-10-25",
+        substantive_exam_requested: true, substantive_exam_deadline: "2019-03-10", grant_date: "2019-06-18",
+        expiration_date: "2036-03-10", next_annuity_due_date: "2024-06-18", status_group: "TERMINATED", fto_status: "PUBLIC_DOMAIN",
+        commercialization_status: "UNEXPLOITED",
+        commercialization_note: "Văn bằng đã chấm dứt hiệu lực sớm do không nộp phí duy trì năm thứ 6; đã rơi vào Phạm vi công cộng (FTO Clear - SC-F08).",
+        special_filter_flags: ["SC-F08"], ipc_codes: ["A61K 9/20", "A61K 31/44"],
+        completeness_mask: 31, missing_fields: [],
+        industry_sector_vi: "Dược phẩm, Bào chế thuốc, Dược liệu & Công nghệ Y sinh",
+        exploitation_signals: {
+          signal_confidence_score: 0,
+          tier_1_hard_legal: { triggered: false },
+          tier_2_entity_match: { triggered: false },
+          tier_3_verified_owner_claim: { triggered: false }
+        },
+        title_vi: "DẠNG BÀO CHẾ VIÊN NÉN GIẢI PHÓNG KÉO DÀI HAI LỚP CHỨA HOẠT CHẤT HẠ HUYẾT ÁP",
+        abstract_vi: "Công thức tá dược cốt thân nước HPMC kết hợp lớp màng kiểm soát thẩm thấu giúp duy trì nồng độ hoạt chất ổn định trong huyết tương suốt 24 giờ.",
+        applicant_name: "GLOBAL PHARMA RESEARCH AG", applicant_country: "CH", applicant_province: "",
+        inventors: ["MULLER, Hans"], representative: "Công ty TNHH Luật Phạm và Liên danh",
+        fulltext_pdf_url: "https://www.ipvietnam.gov.vn/documents/20182/sc_2019_06/1-0021450.pdf", monthly_release_period: "Tháng 06/2019", gazette_issue_no: "CB375B",
+        specification_sections: {},
+        claims: [
+          { claim_number: 1, claim_type: "INDEPENDENT", parent_claim_numbers: [], claim_text_vi: "Viên nén hai lớp giải phóng kéo dài bao gồm lớp giải phóng tức thời chứa 20% liều hoạt chất và lớp cốt polyme HPMC K100M chứa 80% liều hoạt chất còn lại." }
+        ],
+        claim_history_diff: {}, citations: [], events: [], annuity_schedule: []
+      },
+      {
+        application_no: "1-2026-09001", patent_type: "PATENT", filing_origin: "PCT_PENDING_VN", pct_application_no: "PCT/JP2024/018500",
+        grant_no: null, filing_date: "2024-05-15", earliest_priority_date: "2024-05-15", publication_date: "2025-11-20",
+        substantive_exam_requested: false, substantive_exam_deadline: "2027-05-15", grant_date: null,
+        expiration_date: "2044-05-15", next_annuity_due_date: null, status_group: "PENDING", fto_status: "CONTINGENT",
+        commercialization_status: "PILOT_RND",
+        commercialization_note: "Đơn PCT quốc tế có chỉ định Việt Nam sắp đến hạn chót 31 tháng vào pha quốc gia ngày 15/12/2026 (SC-F03).",
+        special_filter_flags: ["SC-F03"], ipc_codes: ["C25B 1/04", "C25B 11/04", "H01M 8/10"],
+        completeness_mask: 19, missing_fields: ["grant_no", "grant_date", "fulltext_pdf_url"],
+        industry_sector_vi: "Điện hóa công nghiệp, Điện phân nước & Sản xuất năng lượng Hydro xanh",
+        exploitation_signals: {
+          signal_confidence_score: 0,
+          tier_1_hard_legal: { triggered: false },
+          tier_2_entity_match: { triggered: false },
+          tier_3_verified_owner_claim: { triggered: false }
+        },
+        title_vi: "CỤM ĐIỆN CỰC MÀNG TRAO ĐỔI PROTON (PEM) GIẢM HÀM LƯỢNG IRIDI CHO MÁY ĐIỆN PHÂN SẢN XUẤT HYDRO XANH",
+        abstract_vi: "Cấu trúc lớp xúc tác anot lõi-vỏ oxit rutheni-iridi phân tán trên giá đỡ titan xốp giúp giảm 70% lượng kim loại quý Iridi trong thiết bị điện phân nước công suất lớn.",
+        applicant_name: "NIPPON GREEN HYDROGEN TECH CORP.", applicant_country: "JP", applicant_province: "",
+        inventors: ["TANAKA, Kenji", "SATO, Hiroshi"], representative: "Chưa chỉ định đại diện tại Việt Nam (Inbound PCT - SC-F03)",
+        specification_sections: {},
+        claims: [
+          { claim_number: 1, claim_type: "INDEPENDENT", parent_claim_numbers: [], claim_text_vi: "Cụm điện cực màng trao đổi proton dùng cho máy điện phân nước bao gồm màng dẫn proton perfluorosulfonic và lớp xúc tác anot chứa các hạt nano cấu trúc lõi-vỏ RuO2@IrO2 với hàm lượng Iridi dưới 0,3 mg/cm2." }
+        ],
+        claim_history_diff: {}, citations: [], events: [], annuity_schedule: []
+      },
+      {
+        application_no: "1-2022-02740", patent_type: "PATENT", filing_origin: "NATIONAL", grant_no: null,
+        filing_date: "2022-08-14", earliest_priority_date: "2022-08-14", publication_date: "2024-02-25",
+        substantive_exam_requested: true, substantive_exam_deadline: "2025-08-14", grant_date: null,
+        expiration_date: "2042-08-14", next_annuity_due_date: null, status_group: "UNDER_SUBSTANTIVE_EXAM", fto_status: "CONTINGENT",
+        commercialization_status: "PILOT_RND",
+        commercialization_note: "Đã có Thông báo dự định cấp bằng ngày 15/06/2026 nhưng quá hạn 3 tháng chủ đơn chưa nộp lệ phí cấp bằng & phí duy trì năm đầu (SC-F05).",
+        special_filter_flags: ["SC-F05"], ipc_codes: ["F26B 5/06", "A23L 3/44", "A61K 36/00"],
+        completeness_mask: 19, missing_fields: ["grant_no", "grant_date", "fulltext_pdf_url"],
+        industry_sector_vi: "Kỹ thuật sấy thăng hoa, Bơm nhiệt & Chế biến sâu nông dược liệu",
+        exploitation_signals: {
+          signal_confidence_score: 30,
+          tier_1_hard_legal: { triggered: false },
+          tier_2_entity_match: { triggered: true },
+          tier_3_verified_owner_claim: { triggered: false }
+        },
+        title_vi: "HỆ THỐNG SẤY THĂNG HOA DƯỢC LIỆU TUẦN HOÀN NHIỆT BƠM NHIỆT KẾT HỢP BỨC XẠ HỒNG NGOẠI XA",
+        abstract_vi: "Buồng sấy chân không thăng hoa thu hồi nhiệt ngưng tụ bằng chu trình bơm nhiệt CO2 siêu tới hạn giúp giảm 45% điện năng tiêu thụ.",
+        applicant_name: "Công ty Cổ phần Cơ nhiệt Điện lạnh Nam Việt", applicant_country: "VN", applicant_province: "Đà Nẵng",
+        inventors: ["KS. Trần Đình Trọng", "ThS. Nguyễn Văn Phúc"], representative: "Nộp trực tiếp",
+        specification_sections: {},
+        claims: [
+          { claim_number: 1, claim_type: "INDEPENDENT", parent_claim_numbers: [], claim_text_vi: "Hệ thống sấy thăng hoa dược liệu bao gồm buồng thăng hoa chân không, dàn ngưng băng kép và cụm bơm nhiệt tuần hoàn thu hồi ẩn nhiệt ngưng tụ." }
+        ],
+        claim_history_diff: {}, citations: [], events: [], annuity_schedule: []
+      },
+      {
+        application_no: "2-2024-00612", patent_type: "UTILITY_SOLUTION", filing_origin: "NATIONAL", grant_no: null,
+        filing_date: "2024-04-20", earliest_priority_date: "2024-04-20", publication_date: "2025-11-25",
+        substantive_exam_requested: true, substantive_exam_deadline: "2027-04-20", grant_date: null,
+        expiration_date: "2034-04-20", next_annuity_due_date: null, status_group: "REFUSED", fto_status: "PUBLIC_DOMAIN",
+        commercialization_status: "UNEXPLOITED",
+        commercialization_note: "Cục SHTT ra Quyết định từ chối cấp bằng ngày 28/09/2026; đang còn trong thời hạn 90 ngày để nộp đơn khiếu nại đến ngày 27/12/2026 (SC-F06).",
+        special_filter_flags: ["SC-F06", "SC-F08"], ipc_codes: ["F28D 7/02", "F22B 37/00"],
+        completeness_mask: 19, missing_fields: ["grant_no", "grant_date", "fulltext_pdf_url"],
+        industry_sector_vi: "Thiết bị trao đổi nhiệt, Thu hồi nhiệt thải & Tiết kiệm năng lượng lò hơi",
+        exploitation_signals: {
+          signal_confidence_score: 0,
+          tier_1_hard_legal: { triggered: false },
+          tier_2_entity_match: { triggered: false },
+          tier_3_verified_owner_claim: { triggered: false }
+        },
+        title_vi: "THIẾT BỊ THU HỒI NHIỆT THẢI KHÓI LÒ HƠI CÔNG NGHIỆP DẠNG ỐNG NHIỆT TRỌNG TRƯỜNG CHỐNG BÁM MUỘI",
+        abstract_vi: "Thiết bị trao đổi nhiệt ống nhiệt hai pha tích hợp cơ cấu rung rũ muội tự động bằng xung khí nén cho lò hơi đốt sinh khối.",
+        applicant_name: "Công ty TNHH Thiết bị Nhiệt Công nghiệp Á Châu", applicant_country: "VN", applicant_province: "Đồng Nai",
+        inventors: ["KS. Lê Quang Hải"], representative: "Nộp trực tiếp",
+        specification_sections: {},
+        claims: [
+          { claim_number: 1, claim_type: "INDEPENDENT", parent_claim_numbers: [], claim_text_vi: "Thiết bị thu hồi nhiệt thải khói lò hơi bao gồm bó ống nhiệt trọng trường bố trí so le và hệ thống vòi phun xung khí nén làm sạch bề mặt cánh tản nhiệt." }
+        ],
+        claim_history_diff: {}, citations: [], events: [], annuity_schedule: []
+      }
+    ];
+
+    let MISSING_QUEUE_DB = [
+      { id: 1, application_no: "1-2023-02409", detected_source: "Phát hiện khoảng trống dải số đơn trước 1-2023-02410 trên Công báo Tập A", missing_reason: "SEQUENCE_GAP_TAP_A", completeness_mask: 0, missing_fields: ["title_vi", "filing_date", "ipc_codes", "abstract_vi", "applicant_name"], priority_level: 1, resolution_status: "PENDING_SUPPLEMENTARY_SCAN", detected_at: "2026-11-10 08:00" },
+      { id: 2, application_no: "2-2023-00320", detected_source: "Bảng HTML Bằng GPHI tháng 9/2026 (Số bằng 4552, 5 cột) khuyết IPC, Ngày nộp, Tác giả & Tóm tắt", missing_reason: "MISSING_BIBLIO_AND_SPEC", completeness_mask: 9, missing_fields: ["ipc_codes", "filing_date", "inventors", "abstract_vi"], priority_level: 1, resolution_status: "PENDING_SUPPLEMENTARY_SCAN", detected_at: "2026-11-10 08:05" },
+      { id: 3, application_no: "1-2024-00885", detected_source: "Bản ghi Công báo Tập B có mã INID nhưng chưa có liên kết PDF toàn văn trên trang hàng tháng", missing_reason: "MISSING_FULLTEXT_PDF_URL", completeness_mask: 7, missing_fields: ["fulltext_pdf_url", "claims_section"], priority_level: 2, resolution_status: "PENDING_SUPPLEMENTARY_SCAN", detected_at: "2026-11-10 08:20" }
+    ];
+
+    let ETL_LOGS_DB = [
+      { id: 1, scan_type: "INITIAL_BOOTSTRAP", triggered_by: "Hệ thống khởi tạo (Zero-AI Rule Parser)", gazette_issues_scanned: "CB411B, CB442B, CB443B, CB449A, CB450B, CB455B, CB465B", monthly_portal_period: "Tháng 06/2022 - Kỳ 2 tháng 8/2026", new_patents_added: 12, fulltext_specs_parsed: 6, missing_dossiers_queued: 3, ai_tokens_used: 0, created_at: "2026-11-10 08:00:00" }
+    ];
+
+    let GAZETTE_ENTRIES_DB = [
+      { issue_no: "CB450B", volume: "B", subcategory_code: "B1", subcategory_name: "Cấp Bằng độc quyền Sáng chế & Giải pháp hữu ích mới", application_no: "2-2025-00329", grant_no: "2-0004323", title_vi: "QUY TRÌNH TỔNG HỢP XANH HẠT NANO SELEN CÓ HOẠT TÍNH KHÁNG KHUẨN SỬ DỤNG DỊCH CHIẾT LÁ VỐI", applicant_name: "Viện Sinh học - Viện Hàn lâm KH&CN Việt Nam", published_date: "2025-09-25", pdf_url: "https://www.ipvietnam.gov.vn/documents/20182/2142261/4323.pdf/3b2cf889-bd36-424d-9d61-d1788226d12b", summary_note: "Công bố PDF toàn văn gốc trên Liferay Cục SHTT (0 MB lưu DB)" },
+      { issue_no: "CB411B", volume: "B", subcategory_code: "B1", subcategory_name: "Cấp Bằng độc quyền Sáng chế & Giải pháp hữu ích mới", application_no: "1-2019-05968", grant_no: "1-0032137", title_vi: "DẪN XUẤT CỦA INDIRUBIN PHÂN LẬP VÀ TỔNG HỢP TỪ LÁ CÂY CHÀM MÈO (STROBILANTHES CUSIA)", applicant_name: "Viện Hóa học các Hợp chất Thiên nhiên", published_date: "2022-06-25", pdf_url: "https://www.ipvietnam.gov.vn/documents/20182/1318324/32137.pdf/00ad7c8e-b2b3-4c29-a563-487de9ecd88c", summary_note: "Công bố PDF toàn văn gốc trên Liferay Cục SHTT (0 MB lưu DB)" },
+      { issue_no: "CB449A", volume: "A", subcategory_code: "A1", subcategory_name: "Đơn công bố lần đầu (tháng thứ 19)", application_no: "1-2024-00215", grant_no: null, title_vi: "HỆ THỐNG ĐIỀU KHIỂN TƯỚI TIÊU THÔNG MINH THÍCH ỨNG ĐỘ MẶN", applicant_name: "Trường Đại học Cần Thơ", published_date: "2025-08-25", summary_note: "Công bố đơn hợp lệ theo Điều 110.2 Luật SHTT" },
+      { issue_no: "CB452A", volume: "A", subcategory_code: "A2", subcategory_name: "Đơn PCT vào pha quốc gia Việt Nam", application_no: "1-2024-01890", grant_no: null, title_vi: "PHƯƠNG PHÁP MÃ HÓA DỮ LIỆU MẠNG THÔNG TIN DI ĐỘNG 6G", applicant_name: "QUALCOMM INCORPORATED", published_date: "2025-11-15", summary_note: "Vào pha quốc gia từ đơn PCT/US2024/011200" },
+      { issue_no: "CB458A", volume: "A", subcategory_code: "A3", subcategory_name: "Sửa đổi, chuyển đổi loại đơn SC sang GPHI (Điều 115)", application_no: "2-2023-00819", grant_no: null, title_vi: "QUY TRÌNH CHẾ TẠO TẤM PANEN SỬ DỤNG HẠT ĐẤT SÉT NUNG BẰNG CÔNG NGHỆ GEOPOLYME", applicant_name: "Công ty Cổ phần Vật liệu Xây dựng Xanh Việt Nam", published_date: "2025-04-01", summary_note: "Chuyển đổi từ đơn đăng ký Sáng chế sang Giải pháp hữu ích" },
+      { issue_no: "CB460A", volume: "A", subcategory_code: "A4", subcategory_name: "Đơn rút bỏ hoặc coi như đã rút do quá 36 tháng không yêu cầu TĐND", application_no: "1-2022-00911", grant_no: null, title_vi: "THIẾT BỊ LỌC BỤI TĨNH ĐIỆN LÒ ĐỐT RÁC", applicant_name: "Công ty TNHH Cơ khí Môi trường Bắc Việt", published_date: "2026-05-15", summary_note: "Coi như đã rút theo Điều 113 khoản 3 VBHN 67/VBHN-VPQH" },
+      { issue_no: "CB465B", volume: "B", subcategory_code: "B1", subcategory_name: "Cấp Bằng độc quyền Sáng chế & Giải pháp hữu ích mới", application_no: "1-2023-02410", grant_no: "1-0056120", title_vi: "HỆ THỐNG QUẢN LÝ NHIỆT ĐỘ ĐA KÊNH CHO KHỐI PIN LITHIUM-ION MẬT ĐỘ NĂNG LƯỢNG CAO", applicant_name: "Công ty Cổ phần Giải pháp Năng lượng VinES", published_date: "2026-08-25", pdf_url: "https://ipvietnam.gov.vn/documents/20182/sc_2026_08/1-0056120.pdf", summary_note: "Cấp Bằng độc quyền sáng chế hiệu lực 20 năm" },
+      { issue_no: "CB462B", volume: "B", subcategory_code: "B2", subcategory_name: "Duy trì hiệu lực Bằng độc quyền hàng năm", application_no: "2-2021-00496", grant_no: "2-0003961", title_vi: "QUY TRÌNH SẢN XUẤT HỖN HỢP CURCUMINOIT TỪ CỦ NGHỆ VÀNG BẰNG DUNG MÔI XANH", applicant_name: "Viện Hóa học các Hợp chất Thiên nhiên", published_date: "2026-03-01", pdf_url: "https://ipvietnam.gov.vn/documents/20182/gphi_2025_02/2-0003961.pdf", summary_note: "Ghi nhận đóng phí duy trì hiệu lực năm thứ 5 (Điều 94)" },
+      { issue_no: "CB459B", volume: "B", subcategory_code: "B5", subcategory_name: "Ghi nhận Hợp đồng chuyển giao quyền sử dụng (Li-xăng)", application_no: "1-2020-01486", grant_no: "1-0055517", title_vi: "CƠ CẤU LẮP RÁP GIÁ ĐỠ CÁNH QUẠT VÀ CÁNH QUẠT CỦA QUẠT TRẦN", applicant_name: "PAN AIR ELECTRIC CO., LTD.", published_date: "2026-06-15", pdf_url: "https://ipvietnam.gov.vn/documents/20182/sc_2026_02/1-0055517.pdf", summary_note: "Đăng ký hợp đồng Li-xăng không độc quyền tại Việt Nam" },
+      { issue_no: "CB442B", volume: "B", subcategory_code: "B6", subcategory_name: "Chấm dứt hiệu lực Bằng độc quyền do không đóng phí duy trì", application_no: "1-2016-00812", grant_no: "1-0021450", title_vi: "DẠNG BÀO CHẾ VIÊN NÉN GIẢI PHÓNG KÉO DÀI HAI LỚP CHỨA HOẠT CHẤT HẠ HUYẾT ÁP", applicant_name: "GLOBAL PHARMA RESEARCH AG", published_date: "2025-01-15", pdf_url: "https://www.ipvietnam.gov.vn/documents/20182/sc_2019_06/1-0021450.pdf", summary_note: "Chấm dứt hiệu lực theo Điều 95.1.b; chuyển sang Phạm vi công cộng (FTO Clear)" }
+    ];
+
+    let MCP_KEYS_LOCAL = [
+      { key_name: "Khóa MCP Chuyên gia SHTT & R&D", key_prefix: "vnp_live_demo_", tier: "PRO_ATTORNEY", daily_quota: 500, used_today: 2 }
+    ];
+    let MCP_LOGS_LOCAL = [
+      { created_at: "09:15:02", tool_name: "get_ipc_hierarchy_and_filters", quota_cost: 0, latency_ms: 1.2 },
+      { created_at: "09:15:10", tool_name: "search_patents", quota_cost: 1, latency_ms: 2.4 }
+    ];
+    let RAM_CACHE_MAP = new Map();
+
+    let selectedSpecialFilter = "";
+    let selectedPatentAppNo = "1-2019-05968";
+    let activeDetailSubTab = "pdf";
+    let activePdfViewerMode = "gview"; // 'gview' | 'direct' | 'stream'
+    let customDirectPdfUrlOverride = "";
+    let modalDirectPdfUrl = "";
+    let modalDirectPdfTitle = "";
+    let backendConnected = false;
+
+    try {
+      fetch("/api/gazettes").then(r => { if (r && r.ok) backendConnected = true; }).catch(() => {});
+    } catch (e) {}
+
+    // =========================================================================
+    // BỘ ĐỌC PDF TOÀN VĂN TRỰC TIẾP TỪ LINK GỐC CỤC SHTT (ZERO-STORAGE / 0 MB DB)
+    // =========================================================================
+    function escapeHtmlAttr(str) {
+      return String(str || "")
+        .replace(/&/g, "&amp;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
+    }
+
+    function normalizeNoipPdfUrl(rawUrl) {
+      if (!rawUrl || !String(rawUrl).trim()) return "";
+      let u = String(rawUrl).trim().replace(/&amp;/gi, "&");
+      if (u.startsWith("//")) u = "https:" + u;
+      else if (u.startsWith("/")) u = "https://www.ipvietnam.gov.vn" + u;
+      else if (/^documents\//i.test(u)) u = "https://www.ipvietnam.gov.vn/" + u;
+
+      try {
+        const parsed = new URL(u);
+        const host = parsed.hostname.toLowerCase();
+        if ((host === "ipvietnam.gov.vn" || host === "www.ipvietnam.gov.vn") && parsed.protocol === "http:") {
+          parsed.protocol = "https:";
+        }
+        if ((parsed.searchParams.get("download") || "").toLowerCase() === "true" || parsed.searchParams.get("download") === "1") {
+          parsed.searchParams.delete("download");
+        }
+        parsed.hash = "";
+        return parsed.toString();
+      } catch (e) {
+        return u.replace(/([?&])download=(?:true|1)(&|$)/gi, "$1").replace(/[?&]$/, "");
+      }
+    }
+
+    function isOfficialNoipHost(rawUrl) {
+      const norm = normalizeNoipPdfUrl(rawUrl);
+      if (!norm) return false;
+      try {
+        const host = new URL(norm).hostname.toLowerCase();
+        return [
+          "ipvietnam.gov.vn",
+          "www.ipvietnam.gov.vn",
+          "wipopublish.ipvietnam.gov.vn",
+          "iplib.noip.gov.vn",
+          "iplib.ipvietnam.gov.vn"
+        ].includes(host);
+      } catch (e) {
+        return false;
+      }
+    }
+
+    function isRealLiferayNoipPdfUrl(rawUrl) {
+      const norm = normalizeNoipPdfUrl(rawUrl);
+      return /\/documents\/20182\/\d+\//i.test(norm);
+    }
+
+    function buildPdfFrameEmbedElement(normUrl, heightClass) {
+      const safeOrig = escapeHtmlAttr(normUrl);
+      const encoded = encodeURIComponent(normUrl);
+      if (activePdfViewerMode === "gview") {
+        const gviewSrc = `https://docs.google.com/gview?embedded=true&url=${encoded}`;
+        return `
+          <iframe
+            src="${escapeHtmlAttr(gviewSrc)}"
+            title="Khung đọc trực tiếp Bản mô tả sáng chế từ Cục SHTT (Google PDF Wrapper)"
+            class="w-full ${heightClass} rounded-xl border border-[var(--border)] bg-white"
+            loading="lazy"
+            referrerpolicy="no-referrer"
+          ></iframe>
+        `;
+      }
+      if (activePdfViewerMode === "stream") {
+        if (!backendConnected) {
+          return `
+            <div class="w-full ${heightClass} rounded-xl border border-amber-500/40 bg-amber-500/10 p-5 flex flex-col items-center justify-center text-center space-y-3 text-xs">
+              <div class="text-sm font-bold text-amber-400">⚡ Chế độ Luồng Pass-Through (<code>/api/pdf-stream</code>) dành cho máy chủ Python <code>server.py</code></div>
+              <p class="max-w-lg text-[var(--muted-foreground)]">Trang hiện đang chạy ở chế độ Nhúng Độc lập (Google Sites / Static HTML). Hãy chọn <strong>Chế độ 1 (Google PDF Wrapper)</strong> hoặc <strong>Chế độ 2 (Khung Native Trực tiếp)</strong> để đọc trực tiếp từ máy chủ Cục SHTT ngay trên trình duyệt (0 MB DB).</p>
+              <div class="flex flex-wrap gap-2">
+                <button onclick="setPdfViewerMode('gview')" class="px-3 py-1.5 rounded-lg font-semibold bg-blue-600 text-white cursor-pointer">Chuyển sang Khung Google PDF Wrapper</button>
+                <button onclick="setPdfViewerMode('direct')" class="px-3 py-1.5 rounded-lg font-semibold bg-emerald-600 text-white cursor-pointer">Chuyển sang Khung Native Cục SHTT</button>
+              </div>
+            </div>
+          `;
+        }
+        const streamSrc = `/api/pdf-stream?url=${encoded}#view=FitH&toolbar=1`;
+        return `
+          <iframe
+            src="${escapeHtmlAttr(streamSrc)}"
+            title="Luồng đọc PDF trực tiếp không lưu trữ từ Cục SHTT (/api/pdf-stream)"
+            class="w-full ${heightClass} rounded-xl border border-[var(--border)] bg-white"
+            loading="lazy"
+          ></iframe>
+        `;
+      }
+      const directSrc = `${safeOrig}#view=FitH&toolbar=1&navpanes=0`;
+      return `
+        <object
+          data="${directSrc}"
+          type="application/pdf"
+          class="w-full ${heightClass} rounded-xl border border-[var(--border)] bg-white"
+        >
+          <iframe
+            src="${directSrc}"
+            title="Khung đọc PDF trực tiếp từ Cục SHTT"
+            class="w-full ${heightClass} rounded-xl border border-[var(--border)] bg-white"
+          ></iframe>
+        </object>
+      `;
+    }
+
+    function buildDirectNoipPdfReaderHtml(p, isModal) {
+      const effectiveRawUrl = isModal ? (modalDirectPdfUrl || customDirectPdfUrlOverride || (p && p.fulltext_pdf_url) || "") : (customDirectPdfUrlOverride || (p && p.fulltext_pdf_url) || "");
+      const normUrl = normalizeNoipPdfUrl(effectiveRawUrl);
+      const isRealLiferay = isRealLiferayNoipPdfUrl(normUrl);
+      const inputId = isModal ? "customNoipPdfInputModal" : "customNoipPdfInputInline";
+      const heightClass = isModal ? "h-[66vh] min-h-[460px]" : "h-[500px]";
+
+      const sampleButtonsHtml = VERIFIED_NOIP_LIVE_PDFS.map(s => {
+        const isCurrent = normalizeNoipPdfUrl(s.url) === normUrl;
+        return `
+          <button
+            onclick="selectVerifiedLivePdfSample('${escapeHtmlAttr(s.url)}', '${s.app_no || ''}', ${isModal ? 'true' : 'false'})"
+            title="${escapeHtmlAttr(s.desc)}"
+            class="px-2.5 py-1 rounded-md text-[11px] font-semibold border transition cursor-pointer ${isCurrent ? 'bg-emerald-600 text-white border-emerald-600' : 'bg-[var(--card)] text-[var(--foreground)] border-[var(--border)] hover:border-emerald-500'}"
+          >
+            📄 ${s.label}
+          </button>
+        `;
+      }).join("");
+
+      const toolbarAndSamplesHtml = `
+        <div class="p-3 rounded-xl bg-[var(--background)] border border-[var(--border)] space-y-2.5 text-xs">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <div class="flex flex-wrap items-center gap-1.5">
+              <span class="px-2 py-0.5 rounded font-bold bg-emerald-500/15 text-emerald-500 border border-emerald-500/30">
+                🔗 Zero-DB PDF Reader (0 MB lưu CSDL)
+              </span>
+              ${normUrl ? (isRealLiferay
+                ? `<span class="px-2 py-0.5 rounded font-semibold bg-blue-500/15 text-blue-400 border border-blue-500/30">✅ Link thực tế trên Liferay Cục SHTT</span>`
+                : `<span class="px-2 py-0.5 rounded font-semibold bg-amber-500/15 text-amber-400 border border-amber-500/30">ℹ️ Link mẫu kỳ 2026 - Chọn nhanh link thực tế bên dưới để xem bản scan thật</span>`
+              ) : ''}
+            </div>
+            <div class="flex flex-wrap items-center gap-1.5">
+              ${!isModal ? `
+                <button onclick="openDirectNoipPdfModal('${p ? p.application_no : ''}')" class="px-2.5 py-1 rounded-lg font-semibold bg-slate-800 hover:bg-slate-700 text-white cursor-pointer">
+                  ⛶ Phóng to Toàn trang
+                </button>
+              ` : ''}
+              ${normUrl ? `
+                <a href="${escapeHtmlAttr(normUrl)}" target="_blank" rel="noopener noreferrer" class="px-2.5 py-1 rounded-lg font-semibold bg-blue-600 hover:bg-blue-500 text-white">
+                  Mở Link Gốc Cục SHTT ↗
+                </a>
+              ` : ''}
+            </div>
+          </div>
+
+          <div class="flex flex-wrap items-center gap-1.5 pt-1 border-t border-[var(--border)]">
+            <span class="text-[11px] font-semibold text-[var(--muted-foreground)] mr-1">Chế độ khung đọc:</span>
+            <button onclick="setPdfViewerMode('gview')" class="px-2.5 py-1 rounded-md text-[11px] font-semibold border cursor-pointer ${activePdfViewerMode === 'gview' ? 'bg-blue-600 text-white border-blue-600' : 'bg-[var(--card)] text-[var(--foreground)] border-[var(--border)]'}">
+              1. Google PDF Wrapper (Vượt chặn X-Frame Cục SHTT)
+            </button>
+            <button onclick="setPdfViewerMode('direct')" class="px-2.5 py-1 rounded-md text-[11px] font-semibold border cursor-pointer ${activePdfViewerMode === 'direct' ? 'bg-blue-600 text-white border-blue-600' : 'bg-[var(--card)] text-[var(--foreground)] border-[var(--border)]'}">
+              2. Khung Native Trực tiếp (ipvietnam.gov.vn)
+            </button>
+            <button onclick="setPdfViewerMode('stream')" class="px-2.5 py-1 rounded-md text-[11px] font-semibold border cursor-pointer ${activePdfViewerMode === 'stream' ? 'bg-blue-600 text-white border-blue-600' : 'bg-[var(--card)] text-[var(--foreground)] border-[var(--border)]'}">
+              3. Luồng RAM Pass-Through (/api/pdf-stream)
+            </button>
+          </div>
+
+          <div class="space-y-1 pt-1 border-t border-[var(--border)]">
+            <div class="text-[11px] font-semibold text-[var(--muted-foreground)]">Nạp nhanh Bản mô tả toàn văn thực tế từ máy chủ Cục SHTT (<code>www.ipvietnam.gov.vn/documents/20182/...</code>):</div>
+            <div class="flex flex-wrap gap-1.5">
+              ${sampleButtonsHtml}
+            </div>
+          </div>
+
+          <div class="flex flex-col sm:flex-row gap-1.5 pt-1 border-t border-[var(--border)]">
+            <input
+              id="${inputId}"
+              type="url"
+              value="${escapeHtmlAttr(normUrl)}"
+              placeholder="Dán link gốc PDF từ ipvietnam.gov.vn/documents/20182/... (tự động gỡ ?download=true để đọc trực tiếp)"
+              class="flex-1 px-2.5 py-1.5 rounded-lg text-xs font-mono bg-[var(--card)] border border-[var(--border)] focus:outline-none focus:border-blue-500"
+            />
+            <button onclick="applyCustomDirectPdfUrl('${inputId}', ${isModal ? 'true' : 'false'})" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-emerald-600 hover:bg-emerald-500 text-white shrink-0 cursor-pointer">
+              Đọc Link Gốc Này
+            </button>
+          </div>
+          <div id="${inputId}Msg" class="hidden text-[11px] font-semibold text-rose-400"></div>
+        </div>
+      `;
+
+      if (!normUrl) {
+        return `
+          <div class="space-y-2.5">
+            ${toolbarAndSamplesHtml}
+            <div class="p-5 rounded-xl border border-amber-500/40 bg-amber-500/10 text-xs space-y-2">
+              <div class="text-sm font-bold text-amber-400">⏳ Hồ sơ ${p ? p.application_no : ''} hiện mới ở giai đoạn Công bố đơn Tập A / Đang thẩm định</div>
+              <p class="text-[var(--muted-foreground)]">Cục SHTT chỉ đăng tải tệp PDF <strong>Bản mô tả toàn văn Bằng độc quyền</strong> sau khi có Quyết định cấp bằng (Công báo Tập B). Bạn có thể bấm chọn một trong <strong>4 Bản mô tả thực tế của Cục SHTT</strong> ở thanh công cụ phía trên hoặc dán đường dẫn PDF bất kỳ từ <code>ipvietnam.gov.vn</code> để đọc trực tiếp ngay trong khung này (0 MB lưu DB).</p>
+            </div>
+          </div>
+        `;
+      }
+
+      return `
+        <div class="space-y-2.5 flex-1 flex flex-col">
+          ${toolbarAndSamplesHtml}
+          <div class="text-[11px] font-mono text-[var(--muted-foreground)] bg-[var(--background)] px-2.5 py-1 rounded border border-[var(--border)] break-all">
+            <strong>Nguồn đọc trực tiếp (Upstream Origin):</strong> ${escapeHtmlAttr(normUrl)}
+          </div>
+          ${buildPdfFrameEmbedElement(normUrl, heightClass)}
+        </div>
+      `;
+    }
+
+    function setPdfViewerMode(mode) {
+      activePdfViewerMode = mode;
+      renderPatentDetail();
+      renderDirectPdfModalIfOpen();
+    }
+
+    function applyCustomDirectPdfUrl(inputId, isModal) {
+      const el = document.getElementById(inputId);
+      const msgEl = document.getElementById(inputId + "Msg");
+      if (!el) return;
+      const raw = el.value.trim();
+      const norm = normalizeNoipPdfUrl(raw);
+      if (!norm || !isOfficialNoipHost(norm)) {
+        if (msgEl) {
+          msgEl.classList.remove("hidden");
+          msgEl.textContent = "⚠️ Chỉ chấp nhận liên kết trực tiếp từ tên miền chính thức của Cục SHTT Việt Nam (ipvietnam.gov.vn / wipopublish.ipvietnam.gov.vn / iplib.noip.gov.vn).";
+        }
+        return;
+      }
+      if (msgEl) msgEl.classList.add("hidden");
+      customDirectPdfUrlOverride = norm;
+      if (isModal) modalDirectPdfUrl = norm;
+      renderPatentDetail();
+      renderDirectPdfModalIfOpen();
+    }
+
+    function selectVerifiedLivePdfSample(sampleUrl, sampleAppNo, isModal) {
+      const norm = normalizeNoipPdfUrl(sampleUrl);
+      if (sampleAppNo && PATENTS_DB.some(x => x.application_no === sampleAppNo)) {
+        selectedPatentAppNo = sampleAppNo;
+        customDirectPdfUrlOverride = "";
+        activeDetailSubTab = "pdf";
+        if (isModal) {
+          const found = PATENTS_DB.find(x => x.application_no === sampleAppNo);
+          modalDirectPdfTitle = `Đơn ${found.application_no} / Bằng ${found.grant_no} - ${found.title_vi}`;
+          modalDirectPdfUrl = norm;
+        }
+        runSearch();
+      } else {
+        customDirectPdfUrlOverride = norm;
+        activeDetailSubTab = "pdf";
+        if (isModal) modalDirectPdfUrl = norm;
+        renderPatentDetail();
+      }
+      renderDirectPdfModalIfOpen();
+    }
+
+    function openDirectNoipPdfForPatent(appNo, expandModal) {
+      selectedPatentAppNo = appNo;
+      customDirectPdfUrlOverride = "";
+      activeDetailSubTab = "pdf";
+      switchTab("search");
+      runSearch();
+      if (expandModal) openDirectNoipPdfModal(appNo);
+    }
+
+    function openDirectNoipPdfModal(appNoOrEmpty, explicitUrl, explicitTitle) {
+      const p = PATENTS_DB.find(x => x.application_no === (appNoOrEmpty || selectedPatentAppNo)) || PATENTS_DB[0];
+      modalDirectPdfUrl = normalizeNoipPdfUrl(explicitUrl || customDirectPdfUrlOverride || (p && p.fulltext_pdf_url) || "");
+      modalDirectPdfTitle = explicitTitle || (p ? `Đơn ${p.application_no}${p.grant_no ? ' / Bằng ' + p.grant_no : ''} — ${p.title_vi}` : "Bản mô tả toàn văn Sáng chế Cục SHTT");
+      const modal = document.getElementById("noipPdfModal");
+      modal.classList.remove("hidden");
+      renderDirectPdfModalIfOpen();
+    }
+
+    function renderDirectPdfModalIfOpen() {
+      const modal = document.getElementById("noipPdfModal");
+      if (!modal || modal.classList.contains("hidden")) return;
+      const p = PATENTS_DB.find(x => x.application_no === selectedPatentAppNo) || PATENTS_DB[0];
+      document.getElementById("noipPdfModalTitle").textContent = modalDirectPdfTitle || (p ? p.title_vi : "");
+      const rawLink = document.getElementById("noipPdfModalRawLink");
+      const norm = normalizeNoipPdfUrl(modalDirectPdfUrl || customDirectPdfUrlOverride || (p && p.fulltext_pdf_url) || "");
+      if (rawLink) rawLink.href = norm || "https://ipvietnam.gov.vn/bang-oc-quyen-sang-che/giai-phap-huu-ich-uoc-cap-hang-thang";
+      document.getElementById("noipPdfModalBody").innerHTML = buildDirectNoipPdfReaderHtml(p, true);
+    }
+
+    function closeDirectNoipPdfModal() {
+      const modal = document.getElementById("noipPdfModal");
+      if (modal) modal.classList.add("hidden");
+      const body = document.getElementById("noipPdfModalBody");
+      if (body) body.innerHTML = "";
+    }
+
+    window.addEventListener("keydown", (ev) => {
+      if (ev.key === "Escape") closeDirectNoipPdfModal();
+    });
+
+    function foldVn(str) {
+      if (!str) return "";
+      return str.replace(/đ/g, "d").replace(/Đ/g, "D").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+    }
+
+    function buildCleanStandaloneHtmlSnapshot() {
+      const clone = document.documentElement.cloneNode(true);
+      const modal = clone.querySelector("#noipPdfModal");
+      if (modal) modal.classList.add("hidden");
+      const modalBody = clone.querySelector("#noipPdfModalBody");
+      if (modalBody) modalBody.innerHTML = "";
+      const copyBtn = clone.querySelector("#btnCopyEmbed");
+      if (copyBtn) copyBtn.textContent = "📋 Sao chép Mã Nhúng Google Sites";
+      return "<!DOCTYPE html>\n" + clone.outerHTML;
+    }
+
+    function fallbackCopyTextToClipboard(text) {
+      const ta = document.createElement("textarea");
+      ta.value = text;
+      ta.setAttribute("readonly", "");
+      ta.style.position = "fixed";
+      ta.style.opacity = "0";
+      ta.style.left = "-9999px";
+      document.body.appendChild(ta);
+      ta.select();
+      try {
+        document.execCommand("copy");
+      } catch (e) {}
+      document.body.removeChild(ta);
+    }
+
+    function copyStandaloneHtmlEmbed() {
+      const fullHtml = buildCleanStandaloneHtmlSnapshot();
+      const showCopiedToast = () => {
+        const btn = document.getElementById("btnCopyEmbed");
+        if (!btn) return;
+        btn.textContent = "✅ Đã sao chép HTML! Dán vào Google Sites -> Mã nhúng -> Công bố";
+        setTimeout(() => { btn.textContent = "📋 Sao chép Mã Nhúng Google Sites"; }, 4000);
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(fullHtml).then(showCopiedToast).catch(() => {
+          fallbackCopyTextToClipboard(fullHtml);
+          showCopiedToast();
+        });
+      } else {
+        fallbackCopyTextToClipboard(fullHtml);
+        showCopiedToast();
+      }
+    }
+
+    function downloadStandaloneHtmlEmbed() {
+      const fullHtml = buildCleanStandaloneHtmlSnapshot();
+      const blob = new Blob([fullHtml], { type: "text/html;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "vietnampatentcore_fullpage_embed.html";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      setTimeout(() => URL.revokeObjectURL(url), 1500);
+    }
+
+    function switchTab(tabId) {
+      ["search", "nlg", "etl", "articles", "map", "mcp"].forEach(id => {
+        const panel = document.getElementById("tabPanel-" + id);
+        const btn = document.getElementById("tabBtn-" + id);
+        if (id === tabId) {
+          panel.classList.remove("hidden");
+          btn.className = "px-3 py-2 rounded-lg text-xs font-semibold bg-blue-600 text-white transition cursor-pointer";
+        } else {
+          panel.classList.add("hidden");
+          btn.className = "px-3 py-2 rounded-lg text-xs font-semibold text-[var(--muted-foreground)] hover:bg-[var(--background)] transition cursor-pointer";
+        }
+      });
+      if (tabId === "articles") renderBusinessArticles();
+      if (tabId === "map") { renderPatentMapAndCommercialization(); renderGazetteTable(); }
+      if (tabId === "etl") { renderEtlCenter(); runFederatedLiveLookup(); }
+      if (tabId === "mcp") loadMcpDashboard();
+    }
+
+    function renderKpis() {
+      const total = PATENTS_DB.length;
+      const granted = PATENTS_DB.filter(p => p.status_group === "GRANTED").length;
+      const ftoClear = PATENTS_DB.filter(p => p.fto_status === "PUBLIC_DOMAIN").length;
+      const licensable = PATENTS_DB.filter(p => p.commercialization_status === "OPEN_FOR_LICENSING" || p.commercialization_status === "IN_HOUSE_PRODUCTION").length;
+      const pendingMissing = MISSING_QUEUE_DB.filter(m => m.resolution_status === "PENDING_SUPPLEMENTARY_SCAN").length;
+
+      const cards = [
+        { label: "Tổng Hồ sơ SC & GPHI", val: total, sub: "Đủ 9 bộ lọc SC-F01..SC-F09", color: "text-blue-400" },
+        { label: "Bằng Độc quyền Đã Cấp", val: granted, sub: "Đã tách 6 mục & Cây Claims", color: "text-emerald-500" },
+        { label: "Phạm vi Công cộng (FTO)", val: ftoClear, sub: "Tự do sản xuất thương mại", color: "text-teal-400" },
+        { label: "Đang Khai thác / Li-xăng", val: licensable, sub: "Tín hiệu thực chứng 3 tầng", color: "text-indigo-400" },
+        { label: "Đơn Khuyết Chờ Quét Bù", val: pendingMissing, sub: "Đối soát Bitmask 0..31", color: "text-amber-400" },
+        { label: "Chi phí Token AI Vận hành", val: "0 Token", sub: "100% Thuật toán Quy tắc", color: "text-emerald-500" }
+      ];
+
+      document.getElementById("kpiContainer").innerHTML = cards.map(c => `
+        <div class="bg-[var(--card)] border border-[var(--border)] rounded-xl p-3">
+          <div class="text-xs text-[var(--muted-foreground)] font-medium">${c.label}</div>
+          <div class="text-lg font-bold mt-0.5 ${c.color}">${c.val}</div>
+          <div class="text-[11px] text-[var(--muted-foreground)] mt-0.5">${c.sub}</div>
+        </div>
+      `).join("");
+    }
+
+    // =========================================================================
+    // TAB 1: LUCENE ENGINE + 9 SPECIAL LEGAL FILTERS
+    // =========================================================================
+    function setQuickLucene(q) {
+      document.getElementById("searchQueryInput").value = q;
+      runSearch();
+    }
+
+    function resetAllFilters() {
+      document.getElementById("searchQueryInput").value = "";
+      document.getElementById("ipcFilterSelect").value = "";
+      document.getElementById("commFilterSelect").value = "";
+      selectedSpecialFilter = "";
+      updateSpecialFilterButtons();
+      runSearch();
+    }
+
+    function toggleSpecialFilter(sf) {
+      selectedSpecialFilter = sf;
+      updateSpecialFilterButtons();
+      const explainBox = document.getElementById("specialFilterExplainBox");
+      if (sf && SPECIAL_FILTER_META[sf]) {
+        const m = SPECIAL_FILTER_META[sf];
+        explainBox.classList.remove("hidden");
+        explainBox.innerHTML = `
+          <div class="font-bold text-amber-400">${m.title}</div>
+          <div class="text-[var(--foreground)]"><strong>Căn cứ pháp lý:</strong> ${m.basis} | <strong>Giá trị khai thác:</strong> ${m.value}</div>
+        `;
+      } else {
+        explainBox.classList.add("hidden");
+      }
+      runSearch();
+    }
+
+    function updateSpecialFilterButtons() {
+      document.querySelectorAll(".sf-btn").forEach(btn => {
+        if (btn.getAttribute("data-sf") === selectedSpecialFilter) {
+          btn.className = "sf-btn px-2.5 py-1.5 rounded-lg text-xs font-semibold border border-blue-500 bg-blue-600 text-white cursor-pointer";
+        } else {
+          btn.className = "sf-btn px-2.5 py-1.5 rounded-lg text-xs font-medium border border-[var(--border)] bg-[var(--background)] text-[var(--foreground)] cursor-pointer";
+        }
+      });
+    }
+
+    function matchSingleToken(rawTok, p) {
+      let tok = rawTok;
+      let boost = 1.0;
+      const bMatch = tok.match(/\^(\d+(?:\.\d+)?)$/);
+      if (bMatch) {
+        boost = parseFloat(bMatch[1]);
+        tok = tok.slice(0, bMatch.index);
+      }
+      let field = "all";
+      if (tok.includes(":") && !tok.startsWith('"')) {
+        const idx = tok.indexOf(":");
+        field = tok.slice(0, idx).toLowerCase();
+        tok = tok.slice(idx + 1);
+      }
+      tok = tok.replace(/^"|"$/g, "").replace(/~\d*(?:\.\d+)?$/, "").replace(/\*$/g, "");
+      const needle = foldVn(tok);
+
+      const claimsText = (p.claims || []).map(c => c.claim_text_vi).join(" ");
+      const ipcText = (p.ipc_codes || []).join(" ");
+      const invText = (p.inventors || []).join(" ");
+
+      let pool = "";
+      let weight = 3.0;
+      if (field === "title") { pool = p.title_vi; weight = 5.0; }
+      else if (field === "claims") { pool = claimsText; weight = 4.0; }
+      else if (field === "ipc") { pool = ipcText; weight = 4.0; }
+      else if (field === "applicant") { pool = p.applicant_name; weight = 3.5; }
+      else if (field === "status") { pool = p.status_group; weight = 2.0; }
+      else {
+        pool = [p.application_no, p.grant_no, p.pct_application_no, p.title_vi, p.abstract_vi, claimsText, p.applicant_name, invText, ipcText].join(" ");
+      }
+      if (foldVn(pool).includes(needle)) {
+        return { ok: true, score: weight * boost };
+      }
+      return { ok: false, score: 0 };
+    }
+
+    function evaluateLuceneRecord(query, p) {
+      if (!query || !query.trim()) return { ok: true, score: 1.0 };
+      let q = query.trim();
+      const notRegex = /(?:NOT\s+|-)([a-zA-Z]+:[^\s]+|"[^"]+"|[^\s]+)/g;
+      let m;
+      while ((m = notRegex.exec(q)) !== null) {
+        if (matchSingleToken(m[1], p).ok) return { ok: false, score: 0 };
+      }
+      q = q.replace(notRegex, "").trim();
+      if (!q) return { ok: true, score: 1.0 };
+
+      const orParts = q.split(/\s+OR\s+/i);
+      let anyOr = false;
+      let totalScore = 0;
+      for (const part of orParts) {
+        const andTokens = part.match(/[a-zA-Z]+:"[^"]+"(?:\^\d+)?|[a-zA-Z]+:[^\s]+(?:\^\d+)?|"[^"]+"(?:\^\d+)?|[^\s]+/g) || [];
+        let allAnd = true;
+        let partScore = 0;
+        for (const tok of andTokens) {
+          if (tok.toUpperCase() === "AND") continue;
+          const res = matchSingleToken(tok, p);
+          if (!res.ok) { allAnd = false; break; }
+          partScore += res.score;
+        }
+        if (allAnd) {
+          anyOr = true;
+          totalScore += Math.max(partScore, 1);
+        }
+      }
+      return { ok: anyOr, score: Number(totalScore.toFixed(1)) };
+    }
+
+    function runSearch() {
+      const q = document.getElementById("searchQueryInput").value;
+      const ipc = document.getElementById("ipcFilterSelect").value;
+      const comm = document.getElementById("commFilterSelect").value;
+      const expandIpc = document.getElementById("expandIpcCheckbox").checked;
+
+      const expandedList = ipc ? (expandIpc ? [ipc, ...(IPC_CONCORDANCE[ipc] || [])] : [ipc]) : [];
+      const noticeEl = document.getElementById("expandedIpcNotice");
+      if (ipc && expandIpc && expandedList.length > 1) {
+        noticeEl.classList.remove("hidden");
+        noticeEl.innerHTML = `<strong>Ma trận Mở rộng Nhóm IPC Liên quan:</strong> Đang tìm kiếm phân nhóm chính <code>${ipc}</code> kết hợp tự động với các phân nhóm đồng xuất hiện: <code>${expandedList.slice(1).join(", ")}</code>.`;
+      } else {
+        noticeEl.classList.add("hidden");
+      }
+
+      const matched = [];
+      for (const p of PATENTS_DB) {
+        if (selectedSpecialFilter && !(p.special_filter_flags || []).includes(selectedSpecialFilter)) continue;
+        if (comm && p.commercialization_status !== comm) continue;
+        if (expandedList.length > 0) {
+          const pIpc = (p.ipc_codes || []).join(" ").toUpperCase();
+          if (!expandedList.some(code => pIpc.includes(code))) continue;
+        }
+        const ev = evaluateLuceneRecord(q, p);
+        if (ev.ok) matched.push({ ...p, relevance_score: ev.score });
+      }
+
+      matched.sort((a, b) => b.relevance_score - a.relevance_score);
+      document.getElementById("searchResultCountLabel").textContent = `Kết quả tra cứu (${matched.length} / ${PATENTS_DB.length} hồ sơ khớp)`;
+
+      const listEl = document.getElementById("patentListContainer");
+      if (matched.length === 0) {
+        listEl.innerHTML = `<div class="bg-[var(--card)] border border-[var(--border)] rounded-xl p-5 text-center text-xs text-[var(--muted-foreground)]">Không có hồ sơ nào khớp với bộ lọc hiện tại.</div>`;
+        return;
+      }
+
+      if (!matched.some(x => x.application_no === selectedPatentAppNo)) {
+        selectedPatentAppNo = matched[0].application_no;
+      }
+
+      listEl.innerHTML = matched.map(p => {
+        const st = STATUS_LABELS[p.status_group] || { label: p.status_group, badge: "" };
+        const cm = COMM_LABELS[p.commercialization_status] || { label: p.commercialization_status, badge: "" };
+        const isSelected = p.application_no === selectedPatentAppNo;
+        const cmask = p.completeness_mask !== undefined ? p.completeness_mask : 31;
+        return `
+          <article onclick="selectPatent('${p.application_no}')" class="bg-[var(--card)] border ${isSelected ? 'border-blue-500 ring-1 ring-blue-500/30' : 'border-[var(--border)]'} rounded-xl p-3.5 transition cursor-pointer space-y-2">
+            <div class="flex flex-wrap items-center justify-between gap-1.5">
+              <div class="flex flex-wrap items-center gap-1.5">
+                <span class="px-2 py-0.5 rounded text-xs font-mono font-bold bg-[var(--background)] border border-[var(--border)]">(21) ${p.application_no}</span>
+                ${p.grant_no ? `<span class="px-2 py-0.5 rounded text-xs font-mono font-bold bg-emerald-500/15 text-emerald-500 border border-emerald-500/30">(11) ${p.grant_no}</span>` : ''}
+                <span class="px-2 py-0.5 rounded text-xs font-medium border ${st.badge}">${st.label}</span>
+              </div>
+              <span class="text-[11px] font-mono text-[var(--muted-foreground)]">Bitmask: ${cmask}/31 | Điểm: ${p.relevance_score}</span>
+            </div>
+            <h3 class="text-xs md:text-sm font-bold leading-snug">${p.title_vi}</h3>
+            <p class="text-xs text-[var(--muted-foreground)] line-clamp-2">${p.abstract_vi}</p>
+            <div class="flex flex-wrap items-center justify-between gap-2 pt-1.5 border-t border-[var(--border)] text-xs">
+              <span class="font-semibold">(71/73) ${p.applicant_name} (${p.applicant_country})</span>
+              <div class="flex flex-wrap gap-1">
+                ${(p.ipc_codes || []).map(c => `<span class="px-1.5 py-0.5 rounded font-mono text-[11px] bg-blue-500/10 text-blue-400 border border-blue-500/20">${c}</span>`).join("")}
+              </div>
+            </div>
+            <div class="flex flex-wrap items-center justify-between gap-2 text-xs">
+              <span class="px-2 py-0.5 rounded border ${cm.badge}">${cm.label}</span>
+              <div class="flex flex-wrap items-center gap-1">
+                ${(p.special_filter_flags || []).map(f => `<span class="px-2 py-0.5 rounded font-semibold bg-amber-500/15 text-amber-400 border border-amber-500/30">${f}</span>`).join("")}
+                ${p.fulltext_pdf_url ? `
+                  <button onclick="event.stopPropagation(); openDirectNoipPdfForPatent('${p.application_no}', false)" class="px-2 py-0.5 rounded font-semibold bg-blue-600 hover:bg-blue-500 text-white cursor-pointer">
+                    📄 Đọc PDF Gốc Cục SHTT
+                  </button>
+                  <button onclick="event.stopPropagation(); openDirectNoipPdfForPatent('${p.application_no}', true)" title="Mở khung đọc PDF toàn trang" class="px-2 py-0.5 rounded font-semibold bg-slate-800 hover:bg-slate-700 text-white cursor-pointer">
+                    ⛶ Toàn trang
+                  </button>
+                ` : `<span class="px-2 py-0.5 rounded text-[11px] bg-[var(--background)] text-[var(--muted-foreground)] border border-[var(--border)]">⏳ Chưa có PDF cấp bằng</span>`}
+              </div>
+            </div>
+          </article>
+        `;
+      }).join("");
+
+      renderPatentDetail();
+    }
+
+    function selectPatent(appNo) {
+      selectedPatentAppNo = appNo;
+      customDirectPdfUrlOverride = "";
+      runSearch();
+    }
+
+    function switchDetailSubTab(subTab) {
+      activeDetailSubTab = subTab;
+      renderPatentDetail();
+    }
+
+    function renderPatentDetail() {
+      const p = PATENTS_DB.find(x => x.application_no === selectedPatentAppNo) || PATENTS_DB[0];
+      if (!p) return;
+      const st = STATUS_LABELS[p.status_group] || { label: p.status_group, badge: "" };
+      const cm = COMM_LABELS[p.commercialization_status] || { label: p.commercialization_status, badge: "" };
+      const secs = p.specification_sections || {};
+      const diffs = (p.claim_history_diff && p.claim_history_diff.claim_diffs) || [];
+      const events = p.events || [];
+      const annuities = p.annuity_schedule || [];
+      const exp = p.exploitation_signals || { signal_confidence_score: 50 };
+
+      let subTabContent = "";
+      if (activeDetailSubTab === "inid") {
+        subTabContent = `
+          <div class="grid grid-cols-2 gap-2 text-xs bg-[var(--background)] p-3 rounded-lg border border-[var(--border)]">
+            <div><span class="text-[var(--muted-foreground)]">(22) Ngày nộp đơn:</span> <strong>${p.filing_date}</strong></div>
+            <div><span class="text-[var(--muted-foreground)]">(43) Công bố Tập A:</span> <strong>${p.publication_date || 'Chưa công bố'}</strong></div>
+            <div><span class="text-[var(--muted-foreground)]">Hạn 36T yêu cầu TĐND:</span> <strong>${p.substantive_exam_deadline}</strong></div>
+            <div><span class="text-[var(--muted-foreground)]">(45) Ngày cấp bằng:</span> <strong>${p.grant_date || 'Đang thẩm định'}</strong></div>
+            <div><span class="text-[var(--muted-foreground)]">Hạn đóng niên liễm:</span> <strong>${p.next_annuity_due_date || 'N/A'}</strong></div>
+            <div><span class="text-[var(--muted-foreground)]">Trạng thái FTO:</span> <strong class="text-emerald-400">${p.fto_status}</strong></div>
+            <div class="col-span-2"><span class="text-[var(--muted-foreground)]">Ngành kinh tế (IPC Mapper):</span> <strong>${p.industry_sector_vi || mapIpcToSector(p.ipc_codes)}</strong></div>
+            <div class="col-span-2"><span class="text-[var(--muted-foreground)]">(72) Tác giả sáng chế:</span> <strong>${(p.inventors || []).join("; ")}</strong></div>
+            <div class="col-span-2"><span class="text-[var(--muted-foreground)]">Độ hoàn thiện Bitmask:</span> <code>${p.completeness_mask || 31}/31</code> | <strong>Điểm Tín hiệu Khai thác 3 Tầng:</strong> <code>${exp.signal_confidence_score || 0}/100</code></div>
+            ${p.fulltext_pdf_url ? `
+              <div class="col-span-2 pt-1.5 border-t border-[var(--border)] flex flex-wrap items-center justify-between gap-2">
+                <div class="min-w-0 flex-1">
+                  <span class="text-[var(--muted-foreground)]">Link PDF Toàn văn gốc Cục SHTT (0 MB DB):</span>
+                  <code class="text-blue-400 break-all">${p.fulltext_pdf_url}</code>
+                </div>
+                <div class="flex flex-wrap gap-1.5 shrink-0">
+                  <button onclick="switchDetailSubTab('pdf')" class="px-2.5 py-1 rounded font-semibold bg-blue-600 hover:bg-blue-500 text-white cursor-pointer">📄 Mở Khung PDF Gốc</button>
+                  <button onclick="openDirectNoipPdfModal('${p.application_no}')" class="px-2.5 py-1 rounded font-semibold bg-slate-800 hover:bg-slate-700 text-white cursor-pointer">⛶ Toàn trang</button>
+                </div>
+              </div>
+            ` : ''}
+          </div>
+
+          <div class="p-3 rounded-lg border border-[var(--border)] bg-[var(--background)] space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold">Cập nhật Trạng thái Khai thác Thực tế:</span>
+              <span class="px-2 py-0.5 rounded text-xs border ${cm.badge}">${cm.label}</span>
+            </div>
+            <p class="text-xs text-[var(--muted-foreground)]">${p.commercialization_note || ''}</p>
+            <div class="flex gap-2">
+              <select id="detailCommSelect" class="flex-1 px-2.5 py-1.5 rounded text-xs bg-[var(--card)] border border-[var(--border)]">
+                <option value="IN_HOUSE_PRODUCTION" ${p.commercialization_status === 'IN_HOUSE_PRODUCTION' ? 'selected' : ''}>Đang ứng dụng sản xuất nội bộ</option>
+                <option value="OPEN_FOR_LICENSING" ${p.commercialization_status === 'OPEN_FOR_LICENSING' ? 'selected' : ''}>Đang mở chào Li-xăng / Chuyển giao</option>
+                <option value="LICENSED_OR_ASSIGNED" ${p.commercialization_status === 'LICENSED_OR_ASSIGNED' ? 'selected' : ''}>Đã ký hợp đồng Li-xăng</option>
+                <option value="PILOT_RND" ${p.commercialization_status === 'PILOT_RND' ? 'selected' : ''}>Đang thử nghiệm Pilot / R&D</option>
+                <option value="UNEXPLOITED" ${p.commercialization_status === 'UNEXPLOITED' ? 'selected' : ''}>Chưa khai thác / Phạm vi công cộng</option>
+              </select>
+              <button onclick="savePatentCommStatus('${p.application_no}')" class="px-3 py-1.5 rounded text-xs font-semibold bg-blue-600 text-white cursor-pointer">
+                Lưu trạng thái
+              </button>
+            </div>
+          </div>
+        `;
+      } else if (activeDetailSubTab === "claims") {
+        subTabContent = `
+          <div class="space-y-2">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <div class="text-xs font-bold uppercase tracking-wider text-[var(--muted-foreground)]">
+                Cây Yêu cầu bảo hộ (${(p.claims || []).length} điểm - Độc lập / Phụ thuộc)
+              </div>
+              <button onclick="switchDetailSubTab('pdf')" class="px-2.5 py-1 rounded text-xs font-semibold bg-emerald-600 hover:bg-emerald-500 text-white cursor-pointer">
+                📄 Đọc Bản PDF Gốc Cục SHTT
+              </button>
+            </div>
+            <div class="space-y-2 max-h-52 overflow-y-auto pr-1">
+              ${(p.claims || []).map(c => `
+                <div class="p-2.5 rounded-lg border border-[var(--border)] bg-[var(--background)] text-xs ${c.claim_type === 'DEPENDENT' ? 'ml-4 border-l-4 border-l-blue-500' : 'border-l-4 border-l-emerald-500'}">
+                  <div class="font-semibold mb-1">
+                    Điểm ${c.claim_number} (${c.claim_type === 'INDEPENDENT' ? 'ĐIỂM ĐỘC LẬP' : 'ĐIỂM PHỤ THUỘC vào điểm ' + (c.parent_claim_numbers || []).join(', ')})
+                  </div>
+                  <p class="text-[var(--muted-foreground)] leading-relaxed">${c.claim_text_vi}</p>
+                </div>
+              `).join("")}
+            </div>
+          </div>
+          <div class="space-y-1.5 text-xs bg-[var(--background)] p-3 rounded-lg border border-[var(--border)]">
+            <div><strong>1. Lĩnh vực kỹ thuật:</strong> ${secs.technical_field || p.abstract_vi}</div>
+            <div><strong>2. Tình trạng kỹ thuật:</strong> ${secs.background_art || 'Đã tích hợp trong tóm tắt hồ sơ'}</div>
+            <div><strong>3. Bản chất kỹ thuật:</strong> ${secs.technical_essence || p.abstract_vi}</div>
+            <div><strong>4. Hiệu quả đạt được:</strong> ${secs.technical_effect || 'Đáp ứng tiêu chuẩn áp dụng công nghiệp'}</div>
+          </div>
+        `;
+      } else if (activeDetailSubTab === "history") {
+        subTabContent = `
+          <div class="space-y-2">
+            <div class="text-xs font-bold uppercase tracking-wider text-[var(--muted-foreground)]">
+              Đối chiếu Lịch sử Sửa đổi Yêu cầu bảo hộ (Công bố Tập A vs Cấp bằng Tập B)
+            </div>
+            ${diffs.length > 0 ? diffs.map(d => `
+              <div class="p-3 rounded-lg border border-[var(--border)] bg-[var(--background)] text-xs space-y-1.5">
+                <div class="flex items-center justify-between font-bold">
+                  <span>Điểm YCBH số ${d.claim_number}</span>
+                  <span class="px-2 py-0.5 rounded bg-amber-500/15 text-amber-400 border border-amber-500/30">${d.change_type}</span>
+                </div>
+                <div class="p-2 rounded bg-rose-500/10 border border-rose-500/30"><strong>Tập A:</strong> ${d.published_a_text}</div>
+                <div class="p-2 rounded bg-emerald-500/10 border border-emerald-500/30"><strong>Tập B:</strong> ${d.granted_b_text}</div>
+                <div class="text-[var(--muted-foreground)] italic">${d.legal_note}</div>
+              </div>
+            `).join("") : `<div class="p-3 rounded-lg bg-[var(--background)] border border-[var(--border)] text-xs text-[var(--muted-foreground)]">Điểm yêu cầu bảo hộ giữ nguyên từ lúc công bố đơn Tập A.</div>`}
+          </div>
+        `;
+      } else if (activeDetailSubTab === "timeline") {
+        subTabContent = `
+          <div class="space-y-2">
+            <div class="text-xs font-bold uppercase tracking-wider text-[var(--muted-foreground)]">Tiến trình Thẩm định & Biểu phí Niên liễm (Điều 94)</div>
+            ${events.length > 0 ? events.map(ev => `
+              <div class="p-2 rounded-lg border border-[var(--border)] bg-[var(--background)] text-xs flex items-center justify-between">
+                <div><strong>${ev.event_date}</strong> - ${ev.event_title}</div>
+                <code class="px-1.5 py-0.5 rounded bg-[var(--card)] border border-[var(--border)]">${ev.document_no}</code>
+              </div>
+            `).join("") : `<div class="p-2.5 rounded-lg bg-[var(--background)] border border-[var(--border)] text-xs">Đang đồng bộ chuỗi sự kiện Công báo Tập A/B.</div>`}
+            ${annuities.length > 0 ? `
+              <table class="w-full text-left border-collapse text-xs mt-2">
+                <thead>
+                  <tr class="border-b border-[var(--border)] text-[var(--muted-foreground)]">
+                    <th class="py-1.5 px-2">Năm</th>
+                    <th class="py-1.5 px-2">Hạn chuẩn</th>
+                    <th class="py-1.5 px-2">Ân hạn 6T</th>
+                    <th class="py-1.5 px-2">Phí tham khảo</th>
+                    <th class="py-1.5 px-2">Trạng thái</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${annuities.map(a => `
+                    <tr class="border-b border-[var(--border)]">
+                      <td class="py-1.5 px-2 font-bold">Năm ${a.policy_year}</td>
+                      <td class="py-1.5 px-2 font-mono">${a.due_date}</td>
+                      <td class="py-1.5 px-2 font-mono">${a.grace_period_end_date}</td>
+                      <td class="py-1.5 px-2">${(a.estimated_fee_vnd || 0).toLocaleString('vi-VN')} đ</td>
+                      <td class="py-1.5 px-2 font-semibold">${a.payment_status}</td>
+                    </tr>
+                  `).join("")}
+                </tbody>
+              </table>
+            ` : ''}
+          </div>
+        `;
+      } else if (activeDetailSubTab === "pdf") {
+        subTabContent = buildDirectNoipPdfReaderHtml(p, false);
+      }
+
+      document.getElementById("patentDetailPanel").innerHTML = `
+        <div class="space-y-3">
+          <div class="flex flex-wrap items-center justify-between gap-2 pb-2 border-b border-[var(--border)]">
+            <div>
+              <span class="text-xs font-mono text-[var(--muted-foreground)]">Hồ sơ INID chuẩn WIPO ST.9</span>
+              <h3 class="text-sm md:text-base font-bold">Đơn số ${p.application_no} ${p.grant_no ? ' / Bằng số ' + p.grant_no : ''}</h3>
+            </div>
+            <div class="flex flex-wrap items-center gap-1.5">
+              ${p.fulltext_pdf_url ? `
+                <button onclick="openDirectNoipPdfModal('${p.application_no}')" class="px-2.5 py-1 rounded text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-white cursor-pointer">
+                  ⛶ Phóng to Khung PDF Gốc
+                </button>
+              ` : ''}
+              <span class="px-2.5 py-1 rounded text-xs font-semibold border ${st.badge}">${st.label}</span>
+            </div>
+          </div>
+          <div class="text-xs md:text-sm font-bold">${p.title_vi}</div>
+          <div class="flex flex-wrap gap-1 bg-[var(--background)] p-1 rounded-lg border border-[var(--border)]">
+            <button onclick="switchDetailSubTab('inid')" class="flex-1 py-1.5 px-2 rounded text-xs font-semibold cursor-pointer ${activeDetailSubTab === 'inid' ? 'bg-blue-600 text-white' : 'text-[var(--muted-foreground)]'}">1. Hồ sơ INID</button>
+            <button onclick="switchDetailSubTab('claims')" class="flex-1 py-1.5 px-2 rounded text-xs font-semibold cursor-pointer ${activeDetailSubTab === 'claims' ? 'bg-blue-600 text-white' : 'text-[var(--muted-foreground)]'}">2. Cây Claims</button>
+            <button onclick="switchDetailSubTab('history')" class="flex-1 py-1.5 px-2 rounded text-xs font-semibold cursor-pointer ${activeDetailSubTab === 'history' ? 'bg-blue-600 text-white' : 'text-[var(--muted-foreground)]'}">3. Diff Tập A/B</button>
+            <button onclick="switchDetailSubTab('timeline')" class="flex-1 py-1.5 px-2 rounded text-xs font-semibold cursor-pointer ${activeDetailSubTab === 'timeline' ? 'bg-blue-600 text-white' : 'text-[var(--muted-foreground)]'}">4. Niên liễm</button>
+            <button onclick="switchDetailSubTab('pdf')" class="flex-1 py-1.5 px-2 rounded text-xs font-semibold cursor-pointer ${activeDetailSubTab === 'pdf' ? 'bg-emerald-600 text-white' : 'text-emerald-400 bg-emerald-500/10'}">5. 📄 PDF Gốc Cục SHTT</button>
+          </div>
+          ${subTabContent}
+        </div>
+      `;
+    }
+
+    function savePatentCommStatus(appNo) {
+      const newStatus = document.getElementById("detailCommSelect").value;
+      const p = PATENTS_DB.find(x => x.application_no === appNo);
+      if (p) {
+        p.commercialization_status = newStatus;
+        p.commercialization_note = `Đã cập nhật trạng thái khai thác sang "${COMM_LABELS[newStatus].label}" lúc ${new Date().toLocaleTimeString('vi-VN')}.`;
+      }
+      renderKpis();
+      runSearch();
+    }
+
+    // =========================================================================
+    // TAB 2A: 3-STAGE RULE-AST NLG ENGINE (100% CLIENT-SIDE ZERO-AI)
+    // =========================================================================
+    function askSampleQuestion(q) {
+      document.getElementById("nlgQuestionInput").value = q;
+      runDeterministicNlg();
+    }
+
+    function runDeterministicNlg() {
+      const q = document.getElementById("nlgQuestionInput").value.trim();
+      if (!q) return;
+
+      const qFold = foldVn(q);
+      let intent = "GENERAL_LOOKUP";
+      if (qFold.includes("li-xang") || qFold.includes("chuyen giao") || qFold.includes("thuong mai")) intent = "COMMERCIALIZATION";
+      else if (qFold.includes("36 thang") || qFold.includes("31 thang") || qFold.includes("tdnd") || qFold.includes("han")) intent = "DEADLINE_CHECK";
+      else if (qFold.includes("fto") || qFold.includes("cong cong") || qFold.includes("hieu luc") || qFold.includes("nien liem")) intent = "VALIDITY_AND_FTO";
+      else if (qFold.includes("yeu cau bao ho") || qFold.includes("claims")) intent = "CLAIM_SCOPE";
+
+      const appMatch = q.match(/\b([12]-\d{4}-\d{5})\b/);
+      const pctMatch = q.match(/\b(PCT\/[A-Z]{2}\d{4}\/\d{5,6})\b/i);
+      const grantMatch = q.match(/\b(?:bang so\s*|1-|2-)0*(\d{4,7})\b/i);
+
+      let p = null;
+      if (appMatch) p = PATENTS_DB.find(x => x.application_no === appMatch[1]);
+      else if (pctMatch) p = PATENTS_DB.find(x => (x.pct_application_no || "").toUpperCase() === pctMatch[1].toUpperCase());
+      else if (grantMatch) p = PATENTS_DB.find(x => (x.grant_no || "").endsWith(grantMatch[1]));
+
+      if (!p && intent === "COMMERCIALIZATION") {
+        const licList = PATENTS_DB.filter(x => x.commercialization_status === "OPEN_FOR_LICENSING" || x.commercialization_status === "IN_HOUSE_PRODUCTION");
+        const md = `Hệ thống ghi nhận **${licList.length} sáng chế/giải pháp hữu ích** có tín hiệu khai thác thương mại & mở chào chuyển giao công nghệ (Li-xăng):\n\n` +
+          licList.map(x => `• **Đơn \`${x.application_no}\` (Bằng \`${x.grant_no || 'N/A'}\`)** - *${x.title_vi}* của **${x.applicant_name}** (Ngành: *${x.industry_sector_vi || mapIpcToSector(x.ipc_codes)}*, Điểm tín hiệu 3 tầng: \`${(x.exploitation_signals && x.exploitation_signals.signal_confidence_score) || 75}/100\`).`).join("\n\n");
+        renderNlgResult(intent, licList.map(x => x.application_no), [
+          { stage: "Tầng 1: Nhận diện Thực thể & Ý định (Regex + Từ điển Trọng số)", detail: `Phân loại ý định=${intent}, quét danh sách hồ sơ có cờ OPEN_FOR_LICENSING / IN_HOUSE_PRODUCTION` },
+          { stage: "Tầng 2: Suy diễn Quy tắc Pháp lý & Ma trận Tín hiệu 3 Tầng", detail: `Lọc ${licList.length} hồ sơ có Tầng 1 (B5/Niên liễm), Tầng 2 (MST ĐKKD) và Tầng 3 (Chủ bằng xác nhận)` },
+          { stage: "Tầng 3: Hiện thực hóa Bề mặt Ngôn ngữ (Null-Safe Slot Realization)", detail: `Kết xuất danh sách ${licList.length} hồ sơ kèm ngành kinh tế tiếng Việt (0 AI Tokens)` }
+        ], md);
+        return;
+      }
+
+      if (!p) p = PATENTS_DB[0];
+      const maxYears = p.patent_type === "UTILITY_SOLUTION" ? 10 : 20;
+      const sector = p.industry_sector_vi || mapIpcToSector(p.ipc_codes);
+      const stLabel = (STATUS_LABELS[p.status_group] && STATUS_LABELS[p.status_group].label) || p.status_group;
+      const cmLabel = (COMM_LABELS[p.commercialization_status] && COMM_LABELS[p.commercialization_status].label) || p.commercialization_status;
+      const firstClaim = (p.claims && p.claims[0] && p.claims[0].claim_text_vi) || p.abstract_vi;
+
+      const paras = [
+        `Theo dữ liệu đồng bộ từ Công báo Sở hữu công nghiệp và Cục SHTT, hồ sơ **\`${p.application_no}\`** (${p.grant_no ? 'Số bằng độc quyền `' + p.grant_no + '`, ' : ''}${p.pct_application_no ? 'Đơn quốc tế `' + p.pct_application_no + '`, ' : ''}tên: *"${p.title_vi}"* do **${p.applicant_name}** đứng tên, ngành ứng dụng: *${sector}*) hiện có tình trạng pháp lý: **${stLabel}**.`,
+        p.fto_status === "PUBLIC_DOMAIN"
+          ? `Về khả năng tự do khai thác (FTO): Hồ sơ này đã thuộc **Phạm vi công cộng (Public Domain - FTO Clear)** tại Việt Nam. Doanh nghiệp có thể tự do ứng dụng giải pháp kỹ thuật thuộc phân nhóm \`${(p.ipc_codes || []).join(", ")}\` vào sản xuất mà không phát sinh nghĩa vụ trả phí bản quyền sáng chế.`
+          : `Về hiệu lực & thời hạn thủ tục (theo Luật SHTT hợp nhất số 67/VBHN-VPQH năm 2026): Ngày nộp đơn \`${p.filing_date}\`, hạn chót 36 tháng yêu cầu thẩm định nội dung (Điều 113) là ngày **\`${p.substantive_exam_deadline}\`** (${p.substantive_exam_requested ? 'Đã nộp yêu cầu TĐND' : 'Chưa nộp yêu cầu TĐND'}), thời hạn bảo hộ tối đa ${maxYears} năm (Điều 93) đến \`${p.expiration_date}\`, kỳ đóng niên liễm tiếp theo: **\`${p.next_annuity_due_date || 'Chưa phát sinh'}\`**.`,
+        `Về phạm vi yêu cầu bảo hộ & khai thác thương mại: Điểm yêu cầu bảo hộ độc lập số 1 xác định: *"${firstClaim}"*. Trạng thái khai thác: **${cmLabel}** (Điểm tín hiệu thực chứng 3 tầng: \`${(p.exploitation_signals && p.exploitation_signals.signal_confidence_score) || 50}/100\`).`
+      ];
+
+      renderNlgResult(intent, [p.application_no], [
+        { stage: "Tầng 1: Nhận diện Thực thể & Ý định (Regex + Từ điển Trọng số)", detail: `Bóc tách application_no=${p.application_no}, grant_no=${p.grant_no || 'None'}, intent=${intent}` },
+        { stage: "Tầng 2: Suy diễn Quy tắc Pháp lý Sáng chế (Rule Engine 2026)", detail: `Áp dụng Điều 93 (${maxYears} năm đến ${p.expiration_date}), Điều 113 (hạn 36T TĐND: ${p.substantive_exam_deadline}), FTO=${p.fto_status}, Bitmask=${p.completeness_mask || 31}/31` },
+        { stage: "Tầng 3: Hiện thực hóa Bề mặt Ngôn ngữ (Null-Safe Slot Realization)", detail: `Ghép ${paras.length} mệnh đề tiếng Việt tất định, ánh xạ IPC sang ngành '${sector}', chi phí AI Token = 0` }
+      ], paras.join("\n\n"));
+    }
+
+    function renderNlgResult(intent, refs, trace, md) {
+      const formattedMd = md
+        .replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>")
+        .replace(/\*([^*]+)\*/g, "<em>$1</em>")
+        .replace(/`([^`]+)`/g, "<code class='px-1 py-0.5 rounded bg-[var(--card)] border border-[var(--border)] font-mono text-xs'>$1</code>")
+        .split("\n\n").map(p => `<p>${p}</p>`).join("");
+
+      document.getElementById("nlgOutputContainer").innerHTML = `
+        <div class="lg:col-span-5 space-y-2 text-xs">
+          <div class="font-bold uppercase tracking-wider text-[var(--muted-foreground)]">Nhật ký Suy diễn Quy tắc 3 Bước (Rule Engine Trace)</div>
+          ${trace.map(t => `
+            <div class="p-2.5 rounded-lg bg-[var(--background)] border border-[var(--border)]">
+              <div class="font-bold text-emerald-400">${t.stage}</div>
+              <div class="text-[var(--muted-foreground)] font-mono text-[11px] mt-0.5">${t.detail}</div>
+            </div>
+          `).join("")}
+        </div>
+        <div class="lg:col-span-7 space-y-2">
+          <div class="text-xs font-bold uppercase tracking-wider text-[var(--muted-foreground)]">Câu trả lời Tự nhiên Kết xuất từ Cây Mẫu Ngữ pháp (0 Token AI)</div>
+          <div class="p-4 rounded-xl bg-[var(--background)] border border-[var(--border)] space-y-2.5 text-xs md:text-sm leading-relaxed">
+            ${formattedMd}
+          </div>
+        </div>
+      `;
+    }
+
+    // =========================================================================
+    // TAB 2B: CLIENT-SIDE HYBRID BM25 + COSINE RRF PRIOR ART ENGINE
+    // =========================================================================
+    function setSamplePriorArt(txt) {
+      document.getElementById("priorArtInput").value = txt;
+      runPriorArtSearch();
+    }
+
+    function buildTokenSet(text) {
+      return foldVn(text).split(/[^a-z0-9]+/).filter(w => w.length >= 3);
+    }
+
+    function computeCosineSim(tokensA, tokensB) {
+      const freqA = {};
+      const freqB = {};
+      tokensA.forEach(t => freqA[t] = (freqA[t] || 0) + 1);
+      tokensB.forEach(t => freqB[t] = (freqB[t] || 0) + 1);
+      let dot = 0, normA = 0, normB = 0;
+      for (const k in freqA) {
+        normA += freqA[k] * freqA[k];
+        if (freqB[k]) dot += freqA[k] * freqB[k];
+      }
+      for (const k in freqB) normB += freqB[k] * freqB[k];
+      if (!normA || !normB) return 0;
+      return dot / (Math.sqrt(normA) * Math.sqrt(normB));
+    }
+
+    function runPriorArtSearch() {
+      const desc = document.getElementById("priorArtInput").value.trim();
+      if (!desc) return;
+      const qTokens = buildTokenSet(desc);
+      const qUnique = Array.from(new Set(qTokens));
+
+      const scored = PATENTS_DB.map(p => {
+        const claimText = (p.claims || []).map(c => c.claim_text_vi).join(" ");
+        const fullText = [p.title_vi, p.abstract_vi, claimText].join(" ");
+        const docTokens = buildTokenSet(fullText);
+        const cos = computeCosineSim(qTokens, docTokens);
+        const matchedWords = qUnique.filter(w => docTokens.includes(w));
+        const bm25 = Number((matchedWords.length * 2.1).toFixed(2));
+
+        const rawClaim1 = (p.claims && p.claims[0] && p.claims[0].claim_text_vi) || p.abstract_vi;
+        const clauses = rawClaim1.split(/;\s*|\(\w\)\s*/).filter(s => s.trim().length > 10);
+        const chart = clauses.slice(0, 3).map((cl, idx) => {
+          const sim = computeCosineSim(qTokens, buildTokenSet(cl));
+          return {
+            feature_id: "F" + (idx + 1),
+            prior_art_claim_element: cl.trim(),
+            similarity_ratio: Number(sim.toFixed(2)),
+            overlap_assessment: sim >= 0.25
+              ? "TRÙNG KHỚP TRỰC TIẾP (Cảnh báo mất tính mới - Điều 60)"
+              : (sim >= 0.12 ? "TƯƠNG ĐƯƠNG KỸ THUẬT (Đánh giá trình độ sáng tạo - Điều 61)" : "KHÁC BIỆT")
+          };
+        });
+        return { p, bm25, cos: Number(cos.toFixed(3)), chart };
+      });
+
+      const byLex = [...scored].sort((a, b) => b.bm25 - a.bm25);
+      const byVec = [...scored].sort((a, b) => b.cos - a.cos);
+
+      const finalMatches = scored.map(item => {
+        const rL = byLex.findIndex(x => x.p.application_no === item.p.application_no) + 1;
+        const rV = byVec.findIndex(x => x.p.application_no === item.p.application_no) + 1;
+        const rrf = Number(((1 / (10 + rL)) + (1 / (10 + rV))).toFixed(4));
+        const cat = item.cos >= 0.28 ? "X" : (item.cos >= 0.14 ? "Y" : "A");
+        return {
+          application_no: item.p.application_no,
+          grant_no: item.p.grant_no,
+          title_vi: item.p.title_vi,
+          lexical_bm25_score: item.bm25,
+          vector_cosine_similarity: item.cos,
+          rrf_hybrid_score: rrf,
+          citation_category: cat,
+          citation_assessment: cat === "X"
+            ? "Tài liệu loại X: Có khả năng làm mất tính mới (Điều 60) khi đứng độc lập."
+            : "Tài liệu loại Y: Có khả năng làm mất trình độ sáng tạo (Điều 61) khi kết hợp tài liệu cùng nhóm IPC.",
+          claim_chart_comparison: item.chart
+        };
+      }).sort((a, b) => (b.rrf_hybrid_score - a.rrf_hybrid_score) || (b.vector_cosine_similarity - a.vector_cosine_similarity)).slice(0, 3);
+
+      document.getElementById("priorArtOutputContainer").innerHTML = finalMatches.map(m => `
+        <div class="p-3.5 rounded-xl border border-[var(--border)] bg-[var(--background)] space-y-2 text-xs">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <div class="flex flex-wrap items-center gap-2">
+              <span class="px-2 py-0.5 rounded font-mono font-bold bg-indigo-600 text-white">Đối chứng loại ${m.citation_category}</span>
+              <span class="font-mono font-bold text-blue-400">${m.application_no} ${m.grant_no ? '| Bằng: ' + m.grant_no : ''}</span>
+              <span class="font-bold">${m.title_vi}</span>
+            </div>
+            <div class="font-mono text-[var(--muted-foreground)]">
+              RRF: <strong>${m.rrf_hybrid_score}</strong> | Cosine: <strong>${m.vector_cosine_similarity}</strong> | BM25: <strong>${m.lexical_bm25_score}</strong>
+            </div>
+          </div>
+          <div class="text-[var(--muted-foreground)]"><strong>Nhận định thẩm định:</strong> ${m.citation_assessment}</div>
+          <div class="space-y-1.5 pt-1">
+            ${m.claim_chart_comparison.map(f => `
+              <div class="p-2 rounded bg-[var(--card)] border border-[var(--border)] flex flex-col md:flex-row md:items-center md:justify-between gap-2">
+                <div><strong>[${f.feature_id}]</strong> ${f.prior_art_claim_element}</div>
+                <span class="px-2 py-0.5 rounded font-semibold shrink-0 ${f.similarity_ratio >= 0.25 ? 'bg-rose-500/15 text-rose-400 border border-rose-500/30' : 'bg-amber-500/15 text-amber-400 border border-amber-500/30'}">
+                  Độ khớp: ${Math.round(f.similarity_ratio * 100)}% - ${f.overlap_assessment}
+                </span>
+              </div>
+            `).join("")}
+          </div>
+        </div>
+      `).join("");
+    }
+
+    // =========================================================================
+    // TAB 3: LIVE INID + WIPO ST.96 XML PARSER & BITMASK BACKFILL QUEUE
+    // =========================================================================
+    function loadSampleParserInput(mode) {
+      const box = document.getElementById("rawGazetteSandboxInput");
+      if (mode === "XML") {
+        box.value = `<?xml version="1.0" encoding="UTF-8"?>
+<pat:PatentBag xmlns:pat="http://www.wipo.int/standards/XMLSchema/ST96/Patent">
+  <pat:PatentTransaction>
+    <pat:ApplicationNumberText>1-2025-00888</pat:ApplicationNumberText>
+    <pat:PatentGrantNumber>1-0059999</pat:PatentGrantNumber>
+    <pat:FilingDate>10/02/2025</pat:FilingDate>
+    <pat:InventionTitle>HỆ THỐNG VI MẠCH BÁN DẪN AI NĂNG LƯỢNG SIÊU THẤP</pat:InventionTitle>
+    <pat:IPCRClassificationText>G06N 3/063</pat:IPCRClassificationText>
+    <pat:ApplicantName>Tập đoàn Công nghệ - Viễn thông Quân đội (Viettel)</pat:ApplicantName>
+    <pat:Abstract>Vi mạch tích hợp xử lý mạng nơ-ron xung tiêu thụ năng lượng siêu thấp cho thiết bị biên.</pat:Abstract>
+  </pat:PatentTransaction>
+</pat:PatentBag>`;
+      } else {
+        box.value = `(21) 1-2026-01580
+(22) 12/04/2026
+(43) 15/10/2026
+(51) G06V 20/56; G06N 3/08
+(54) HỆ THỐNG NHẬN DẠNG KHUYẾT TẬT BỀ MẶT THÉP CÁN NÓNG BẰNG MẠNG NƠ-RON TÍCH CHẬP ĐA TỶ LỆ
+(71) Tập đoàn Hòa Phát (VN)
+(72) Nguyễn Đức Thuận; Phạm Minh Hoàng
+(57) Hệ thống camera tốc độ cao kết hợp mô hình học sâu phát hiện vết nứt tế vi trên dải thép cán nóng ở vận tốc 18 m/s.
+Yêu cầu bảo hộ:
+1. Hệ thống nhận dạng khuyết tật bề mặt thép cán nóng bao gồm cụm đèn chiếu sáng đồng trục bước sóng ngắn, dãy camera tuyến tính tốc độ cao và bộ xử lý biên chạy mạng nơ-ron tích chập đa tỷ lệ.
+2. Hệ thống theo điểm 1, trong đó bộ xử lý biên phân loại khuyết tật theo thời gian thực dưới 4 mili-giây.`;
+      }
+      runLiveParserDemo();
+    }
+
+    function runLiveParserDemo() {
+      const raw = document.getElementById("rawGazetteSandboxInput").value.trim();
+      if (raw.startsWith("<")) {
+        const getTag = (tag) => {
+          const m = raw.match(new RegExp(`<(?:\\w+:)?${tag}>([\\s\\S]*?)</(?:\\w+:)?${tag}>`, "i"));
+          return m ? m[1].trim() : null;
+        };
+        const rec = {
+          parser_engine: "GazetteINIDParser.parse_xml_st96 (WIPO ST.96 / ST.36 XML - 0 AI Tokens)",
+          application_no: getTag("ApplicationNumberText"),
+          grant_no: getTag("PatentGrantNumber") || getTag("RegistrationNumber"),
+          filing_date: getTag("FilingDate"),
+          title_vi: getTag("InventionTitle"),
+          ipc_codes: [getTag("IPCRClassificationText")].filter(Boolean),
+          applicant_name: getTag("ApplicantName"),
+          abstract_vi: getTag("Abstract"),
+          completeness_evaluation: {
+            completeness_mask: 7,
+            completeness_pct: 60,
+            missing_fields: ["fulltext_pdf_url", "wipo_prosecution_events"]
+          }
+        };
+        document.getElementById("rawGazetteSandboxOutput").textContent = JSON.stringify(rec, null, 2);
+        return;
+      }
+
+      const inidMap = {};
+      const re = /\((\d{2})\)\s*([^()]+?)(?=\(\d{2}\)|Yêu cầu bảo hộ:|YÊU CẦU BẢO HỘ:|$)/gs;
+      let m;
+      while ((m = re.exec(raw)) !== null) {
+        inidMap[m[1]] = m[2].replace(/\s+/g, " ").trim();
+      }
+      const claimsSplit = raw.split(/Yêu cầu bảo hộ:|YÊU CẦU BẢO HỘ:/i);
+      const claims = [];
+      if (claimsSplit[1]) {
+        const lines = claimsSplit[1].trim().split(/\n+/);
+        lines.forEach(l => {
+          const cm = l.trim().match(/^(\d+)\.\s*(.+)$/);
+          if (cm) {
+            const dep = cm[2].match(/theo điểm\s+(\d+)/i);
+            claims.push({
+              claim_number: Number(cm[1]),
+              claim_type: dep ? "DEPENDENT" : "INDEPENDENT",
+              parent_claim_numbers: dep ? [Number(dep[1])] : [],
+              claim_text_vi: cm[2]
+            });
+          }
+        });
+      }
+      const out = {
+        parser_engine: "GazetteINIDParser + ClaimsTreeRegex + LegalDeadlineEngine (0 AI Tokens)",
+        extracted_inid_record: {
+          application_no: inidMap["21"] || "1-2026-01580",
+          filing_date: inidMap["22"] || "12/04/2026",
+          publication_date: inidMap["43"] || "15/10/2026",
+          ipc_codes: (inidMap["51"] || "").split(/[;,]\s*/).filter(Boolean),
+          title_vi: inidMap["54"] || "",
+          applicant_name: inidMap["71"] || "",
+          inventors: (inidMap["72"] || "").split(/;\s*/).filter(Boolean),
+          abstract_vi: inidMap["57"] || "",
+          claims: claims
+        },
+        computed_2026_deadlines: {
+          formality_auto_valid_art_109_4: true,
+          substantive_exam_36m_deadline: "2029-04-12",
+          max_protection_20y_expiration: "2046-04-12"
+        },
+        completeness_evaluation: {
+          completeness_mask: 11,
+          completeness_pct: 60,
+          missing_fields: ["grant_no", "grant_date", "wipo_prosecution_events"]
+        }
+      };
+      document.getElementById("rawGazetteSandboxOutput").textContent = JSON.stringify(out, null, 2);
+    }
+
+    function triggerAutomatedEtlScan() {
+      switchTab("etl");
+      if (!PATENTS_DB.some(p => p.application_no === "1-2025-01120")) {
+        PATENTS_DB.unshift({
+          application_no: "1-2025-01120", patent_type: "PATENT", filing_origin: "NATIONAL", grant_no: "1-0056890",
+          filing_date: "2025-01-10", earliest_priority_date: "2025-01-10", publication_date: "2025-09-25",
+          substantive_exam_requested: true, substantive_exam_deadline: "2028-01-10", grant_date: "2026-09-25",
+          expiration_date: "2045-01-10", next_annuity_due_date: "2027-09-25", status_group: "GRANTED", fto_status: "ACTIVE_PROTECTED",
+          commercialization_status: "IN_HOUSE_PRODUCTION",
+          commercialization_note: "Vừa đồng bộ tự động từ Công báo số CB470A/B & Bảng Toàn văn Bằng độc quyền Kỳ 2 tháng 9/2026.",
+          special_filter_flags: ["SC-F02"], ipc_codes: ["G06N 3/063", "G06V 10/82"],
+          completeness_mask: 31, missing_fields: [],
+          industry_sector_vi: "Trí tuệ nhân tạo (AI), Học sâu & Điện toán công nghiệp",
+          exploitation_signals: {
+            signal_confidence_score: 75,
+            tier_1_hard_legal: { triggered: false },
+            tier_2_entity_match: { triggered: true },
+            tier_3_verified_owner_claim: { triggered: true }
+          },
+          title_vi: "BỘ VI XỬ LÝ MẠNG NƠ-RON XUNG TÍCH HỢP TRÊN CHIP (SOC) CHO CAMERA GIAO THÔNG THÔNG MINH",
+          abstract_vi: "Kiến trúc bộ gia tốc phần cứng mạng nơ-ron xung xử lý nhận diện biển số phương tiện thời gian thực với công suất tiêu thụ dưới 1,8W.",
+          applicant_name: "Tập đoàn Công nghệ - Viễn thông Quân đội (Viettel)", applicant_country: "VN",
+          inventors: ["TS. Bùi Quang Huy", "KS. Đặng Tuấn Anh"], representative: "Nộp trực tiếp",
+          specification_sections: {
+            technical_field: "Vi mạch bán dẫn AI biên và thị giác máy tính.",
+            background_art: "Các cụm xử lý GPU tại camera giao thông tiêu thụ điện năng lớn và tỏa nhiệt cao.",
+            technical_essence: "Sử dụng mảng nhân chập định lượng 4-bit kết hợp bộ nhớ đệm SRAM hai cổng.",
+            technical_effect: "Giảm 68% điện năng tiêu thụ, tốc độ suy luận đạt 120 FPS ở độ phân giải 4K."
+          },
+          claims: [
+            { claim_number: 1, claim_type: "INDEPENDENT", parent_claim_numbers: [], claim_text_vi: "Bộ vi xử lý mạng nơ-ron xung tích hợp trên chip bao gồm khối giải mã sự kiện hình ảnh, mảng phần tử tính toán khớp thần kinh 4-bit và bộ điều khiển xung nhịp thích ứng." }
+          ],
+          claim_history_diff: {}, citations: [], events: [], annuity_schedule: []
+        });
+        MISSING_QUEUE_DB[1].resolution_status = "RESOLVED_MERGED";
+        MISSING_QUEUE_DB[1].completeness_mask = 31;
+        MISSING_QUEUE_DB[1].missing_fields = [];
+        ETL_LOGS_DB.unshift({
+          id: ETL_LOGS_DB.length + 1,
+          scan_type: "SCHEDULED_SYNC",
+          triggered_by: "Quét đồng bộ thủ công trên Web Demo (0 Token AI)",
+          gazette_issues_scanned: "CB470A, CB470B",
+          monthly_portal_period: "Kỳ 2 tháng 9/2026",
+          new_patents_added: 1,
+          fulltext_specs_parsed: 1,
+          missing_dossiers_queued: 0,
+          ai_tokens_used: 0,
+          created_at: new Date().toLocaleTimeString('vi-VN')
+        });
+      }
+
+      const banner = document.getElementById("etlScanResultBanner");
+      banner.classList.remove("hidden");
+      banner.innerHTML = `
+        <div class="font-bold text-emerald-400">✅ Hoàn tất Quét & Bóc tách Dữ liệu Tự động (0 Token AI)</div>
+        <div>• Đã bóc tách Công báo <code>CB470A/B</code> + Toàn văn <code>Kỳ 2 tháng 9/2026</code>, bổ sung hồ sơ <code>1-2025-01120</code> (Viettel) và nâng Bitmask hồ sơ khuyết <code>2-2023-00320</code> từ <code>9/31</code> lên <code>31/31</code>.</div>
+      `;
+      renderKpis();
+      renderEtlCenter();
+      runSearch();
+    }
+
+    function addManualMissingDossier() {
+      const appNo = document.getElementById("newMissingAppNoInput").value.trim();
+      if (!appNo) return;
+      MISSING_QUEUE_DB.unshift({
+        id: Date.now(),
+        application_no: appNo,
+        detected_source: "Chuyên viên SHTT bổ sung trực tiếp trên cổng ETL",
+        missing_reason: "MANUAL_BACKFILL_REQUEST",
+        completeness_mask: 1,
+        missing_fields: ["ipc_codes", "filing_date", "abstract_vi", "fulltext_pdf_url"],
+        priority_level: 1,
+        resolution_status: "PENDING_SUPPLEMENTARY_SCAN",
+        detected_at: new Date().toLocaleTimeString('vi-VN')
+      });
+      document.getElementById("newMissingAppNoInput").value = "";
+      renderKpis();
+      renderEtlCenter();
+    }
+
+    function runFederatedLiveLookup() {
+      const appNo = document.getElementById("federatedAppNoInput").value.trim() || "1-2023-02410";
+      const isHit = RAM_CACHE_MAP.has(appNo);
+      RAM_CACHE_MAP.set(appNo, Date.now());
+      const matchedP = PATENTS_DB.find(p => p.application_no === appNo);
+      const pdfUrl = (matchedP && matchedP.fulltext_pdf_url) || "";
+      document.getElementById("ramCacheStatsBadge").textContent = `RAM Cache: ${RAM_CACHE_MAP.size}/256 mục | Hit: ${isHit ? 'YES (0ms)' : 'STREAM'} | Disk: 0 MB`;
+      document.getElementById("federatedLookupOutput").innerHTML = `
+        <div class="p-2.5 rounded-lg bg-[var(--card)] border border-[var(--border)] flex flex-wrap items-center justify-between gap-2">
+          <span>Đơn <code>${appNo}</code> -> Hạn 36T TĐND: <strong>${(matchedP && matchedP.substantive_exam_deadline) || '2026-06-20'}</strong> | Hết hạn 20 năm: <strong>${(matchedP && matchedP.expiration_date) || '2043-06-20'}</strong></span>
+          <div class="flex flex-wrap items-center gap-1.5">
+            ${pdfUrl ? `<button onclick="openDirectNoipPdfModal('${escapeHtmlAttr(appNo)}', '${escapeHtmlAttr(pdfUrl)}')" class="px-2 py-0.5 rounded font-semibold bg-emerald-600 hover:bg-emerald-500 text-white cursor-pointer">📄 Khung PDF Gốc Cục SHTT</button>` : ''}
+            <span class="px-2 py-0.5 rounded font-semibold ${isHit ? 'bg-emerald-500/15 text-emerald-400' : 'bg-blue-500/15 text-blue-400'}">${isHit ? '⚡ Trúng RAM Cache' : '🌐 Live Stream (0 Byte Disk)'}</span>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderEtlCenter() {
+      document.getElementById("missingQueueContainer").innerHTML = MISSING_QUEUE_DB.map(m => {
+        const isResolved = m.resolution_status === "RESOLVED_MERGED";
+        return `
+          <div class="p-2.5 rounded-lg border ${isResolved ? 'border-emerald-500/30 bg-emerald-500/10' : 'border-amber-500/30 bg-amber-500/10'} text-xs space-y-1">
+            <div class="flex flex-wrap items-center justify-between gap-2 font-mono font-bold">
+              <span>Số đơn: ${m.application_no}</span>
+              <span>Bitmask: ${m.completeness_mask}/31 | ${isResolved ? 'ĐÃ HỢP NHẤT ĐỦ 5 LỚP' : 'CHỜ QUÉT BÙ'}</span>
+            </div>
+            <div class="text-[var(--muted-foreground)]">${m.detected_source}</div>
+            ${(m.missing_fields || []).length > 0 ? `<div class="font-mono text-[11px] text-rose-400">Trường khuyết: ${m.missing_fields.join(", ")}</div>` : ''}
+          </div>
+        `;
+      }).join("");
+
+      document.getElementById("etlLogsTableContainer").innerHTML = `
+        <table class="w-full text-left border-collapse text-xs">
+          <thead>
+            <tr class="border-b border-[var(--border)] text-[var(--muted-foreground)]">
+              <th class="py-1.5 px-2">Thời điểm</th>
+              <th class="py-1.5 px-2">Nguồn kích hoạt</th>
+              <th class="py-1.5 px-2">Số Công báo</th>
+              <th class="py-1.5 px-2">Kỳ Toàn văn</th>
+              <th class="py-1.5 px-2">Thêm mới</th>
+              <th class="py-1.5 px-2">Chi phí AI</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${ETL_LOGS_DB.map(l => `
+              <tr class="border-b border-[var(--border)]">
+                <td class="py-1.5 px-2 font-mono">${l.created_at}</td>
+                <td class="py-1.5 px-2">${l.triggered_by}</td>
+                <td class="py-1.5 px-2"><code>${l.gazette_issues_scanned}</code></td>
+                <td class="py-1.5 px-2">${l.monthly_portal_period}</td>
+                <td class="py-1.5 px-2 font-bold text-emerald-400">+${l.new_patents_added}</td>
+                <td class="py-1.5 px-2 font-bold text-emerald-400">0 Token</td>
+              </tr>
+            `).join("")}
+          </tbody>
+        </table>
+      `;
+      runLiveParserDemo();
+    }
+
+    // =========================================================================
+    // TAB 4: ENTERPRISE ARTICLES + IPC SECTOR MAPPER
+    // =========================================================================
+    function renderBusinessArticles() {
+      const grantedList = PATENTS_DB.filter(p => p.status_group === "GRANTED");
+      document.getElementById("businessArticlesContainer").innerHTML = grantedList.map(p => {
+        const secs = p.specification_sections || {};
+        const cm = COMM_LABELS[p.commercialization_status] || { label: p.commercialization_status, badge: "" };
+        const sectorVi = p.industry_sector_vi || mapIpcToSector(p.ipc_codes);
+        return `
+          <article class="bg-[var(--background)] border border-[var(--border)] rounded-xl p-4 space-y-2.5 flex flex-col justify-between text-xs">
+            <div class="space-y-2">
+              <div class="flex flex-wrap items-center justify-between gap-2">
+                <span class="px-2 py-0.5 rounded font-mono font-bold bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">Bằng số ${p.grant_no}</span>
+                <span class="px-2 py-0.5 rounded border ${cm.badge}">${cm.label}</span>
+              </div>
+              <div class="px-2.5 py-1 rounded bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 font-semibold">
+                🏭 Ngành kinh tế ứng dụng: ${sectorVi}
+              </div>
+              <h3 class="text-sm font-bold leading-snug">[Điểm tin Công nghệ] ${p.title_vi}</h3>
+              <div class="text-[var(--muted-foreground)]"><strong>Chủ bằng:</strong> ${p.applicant_name} | <strong>IPC:</strong> <code>${(p.ipc_codes || []).join(", ")}</code></div>
+              <div class="space-y-1.5 pt-1">
+                <div class="p-2 rounded bg-[var(--card)] border border-[var(--border)]"><strong>1. Bài toán thực tiễn:</strong> ${secs.background_art || p.abstract_vi}</div>
+                <div class="p-2 rounded bg-[var(--card)] border border-[var(--border)]"><strong>2. Giải pháp cốt lõi:</strong> ${secs.technical_essence || p.abstract_vi}</div>
+                <div class="p-2 rounded bg-[var(--card)] border border-[var(--border)]"><strong>3. Hiệu quả định lượng:</strong> ${secs.technical_effect || 'Tối ưu hóa chi phí vận hành công nghiệp.'}</div>
+              </div>
+            </div>
+            <div class="pt-2 border-t border-[var(--border)] flex flex-wrap items-center justify-between gap-2">
+              <span class="text-[var(--muted-foreground)]">Đọc trực tiếp từ PDF gốc Cục SHTT (0 MB DB)</span>
+              <div class="flex flex-wrap gap-1.5">
+                ${p.fulltext_pdf_url ? `<button onclick="openDirectNoipPdfModal('${p.application_no}')" class="px-3 py-1 rounded font-semibold bg-emerald-600 hover:bg-emerald-500 text-white cursor-pointer">📄 Đọc PDF Gốc Cục SHTT</button>` : ''}
+                <button onclick="switchTab('search'); selectPatent('${p.application_no}'); switchDetailSubTab('inid');" class="px-3 py-1 rounded font-semibold bg-blue-600 text-white cursor-pointer">Xem Hồ sơ & Claims</button>
+              </div>
+            </div>
+          </article>
+        `;
+      }).join("");
+    }
+
+    // =========================================================================
+    // TAB 5: PATENT MAP, AVG GRANT LAG & 3-TIER EXPLOITATION MATRIX
+    // =========================================================================
+    function renderGazetteTable() {
+      const vol = document.getElementById("gazetteVolSelect").value;
+      const list = GAZETTE_ENTRIES_DB.filter(g => !vol || g.volume === vol);
+      document.getElementById("gazetteTableContainer").innerHTML = `
+        <table class="w-full text-left border-collapse text-xs">
+          <thead>
+            <tr class="border-b border-[var(--border)] text-[var(--muted-foreground)]">
+              <th class="py-2 px-2">Số Công báo</th>
+              <th class="py-2 px-2">Tiểu mục</th>
+              <th class="py-2 px-2">Số đơn / Bằng</th>
+              <th class="py-2 px-2">Tên Sáng chế / GPHI</th>
+              <th class="py-2 px-2">Chủ đơn / Chủ bằng</th>
+              <th class="py-2 px-2">Toàn văn Gốc</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${list.map(g => {
+              const matchedP = PATENTS_DB.find(p => p.application_no === g.application_no);
+              const pdfUrl = g.pdf_url || (matchedP && matchedP.fulltext_pdf_url) || "";
+              return `
+              <tr class="border-b border-[var(--border)]">
+                <td class="py-2 px-2 font-mono font-bold text-blue-400">${g.issue_no} (${g.published_date})</td>
+                <td class="py-2 px-2"><span class="px-2 py-0.5 rounded font-semibold ${g.volume === 'A' ? 'bg-blue-500/15 text-blue-400' : 'bg-emerald-500/15 text-emerald-400'}">${g.subcategory_code}: ${g.subcategory_name}</span></td>
+                <td class="py-2 px-2 font-mono">${g.application_no}${g.grant_no ? ' / ' + g.grant_no : ''}</td>
+                <td class="py-2 px-2 font-medium">${g.title_vi}</td>
+                <td class="py-2 px-2">${g.applicant_name}</td>
+                <td class="py-2 px-2">${pdfUrl ? `<button onclick="openDirectNoipPdfModal('${escapeHtmlAttr(g.application_no)}', '${escapeHtmlAttr(pdfUrl)}', '${escapeHtmlAttr(g.issue_no + ' - ' + g.title_vi)}')" class="px-2 py-0.5 rounded font-semibold bg-emerald-600 hover:bg-emerald-500 text-white cursor-pointer">📄 Khung PDF</button>` : `<span class="text-[var(--muted-foreground)]">Tập A</span>`}</td>
+              </tr>
+              `;
+            }).join("")}
+          </tbody>
+        </table>
+      `;
+    }
+
+    function renderPatentMapAndCommercialization() {
+      const ipcCounts = {};
+      const ipcLags = {};
+      const commCounts = {};
+
+      for (const p of PATENTS_DB) {
+        const cm = p.commercialization_status || "UNEXPLOITED";
+        commCounts[cm] = (commCounts[cm] || 0) + 1;
+        let lagM = null;
+        if (p.filing_date && p.grant_date) {
+          const diffMs = new Date(p.grant_date) - new Date(p.filing_date);
+          if (diffMs > 0) lagM = Math.round((diffMs / (1000 * 60 * 60 * 24 * 30.44)) * 10) / 10;
+        }
+        for (const c of (p.ipc_codes || [])) {
+          const prefix = c.slice(0, 4);
+          ipcCounts[prefix] = (ipcCounts[prefix] || 0) + 1;
+          if (lagM) {
+            if (!ipcLags[prefix]) ipcLags[prefix] = [];
+            ipcLags[prefix].push(lagM);
+          }
+        }
+      }
+
+      const maxIpc = Math.max(...Object.values(ipcCounts), 1);
+      document.getElementById("ipcMapChartContainer").innerHTML = Object.entries(ipcCounts)
+        .sort((a, b) => b[1] - a[1])
+        .map(([code, count]) => {
+          const pct = Math.round((count / maxIpc) * 100);
+          const lags = ipcLags[code] || [];
+          const avgLag = lags.length > 0 ? (Math.round((lags.reduce((a, b) => a + b, 0) / lags.length) * 10) / 10) + " tháng cấp bằng TB" : "Đang thẩm định";
+          return `
+            <div class="space-y-1 text-xs">
+              <div class="flex justify-between font-medium">
+                <span><strong>${code}</strong> - ${IPC_INDUSTRY_SECTOR_MAP[code] || code}</span>
+                <span class="font-bold text-blue-400 shrink-0">${count} hồ sơ (${avgLag})</span>
+              </div>
+              <div class="w-full h-2 bg-[var(--background)] rounded-full overflow-hidden border border-[var(--border)]">
+                <div class="h-full bg-blue-600 rounded-full" style="width: ${pct}%"></div>
+              </div>
+            </div>
+          `;
+        }).join("");
+
+      const totalP = PATENTS_DB.length || 1;
+      document.getElementById("commMapChartContainer").innerHTML = Object.entries(COMM_LABELS)
+        .map(([key, meta]) => {
+          const cnt = commCounts[key] || 0;
+          const pct = Math.round((cnt / totalP) * 100);
+          return `
+            <div class="space-y-1 text-xs">
+              <div class="flex justify-between font-medium">
+                <span>${meta.label}</span>
+                <span class="font-bold">${cnt} hồ sơ (${pct}%)</span>
+              </div>
+              <div class="w-full h-2 bg-[var(--background)] rounded-full overflow-hidden border border-[var(--border)]">
+                <div class="h-full bg-emerald-600 rounded-full" style="width: ${Math.max(pct, 6)}%"></div>
+              </div>
+            </div>
+          `;
+        }).join("");
+
+      document.getElementById("commercializationTableContainer").innerHTML = `
+        <table class="w-full text-left border-collapse text-xs">
+          <thead>
+            <tr class="border-b border-[var(--border)] text-[var(--muted-foreground)]">
+              <th class="py-2 px-2">Số đơn / Bằng</th>
+              <th class="py-2 px-2">Tên Sáng chế / GPHI</th>
+              <th class="py-2 px-2">Chủ văn bằng</th>
+              <th class="py-2 px-2">Tín hiệu Thực chứng 3 Tầng</th>
+              <th class="py-2 px-2">Trạng thái Khai thác</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${PATENTS_DB.map(p => {
+              const cm = COMM_LABELS[p.commercialization_status] || { label: p.commercialization_status, badge: "" };
+              const exp = p.exploitation_signals || {};
+              const sigScore = exp.signal_confidence_score !== undefined ? exp.signal_confidence_score : 30;
+              const t1 = (exp.tier_1_hard_legal && exp.tier_1_hard_legal.triggered) ? "T1:B5/NiênLiễm" : "";
+              const t2 = (exp.tier_2_entity_match && exp.tier_2_entity_match.triggered) ? "T2:ĐKKD/ViệnTrường" : "";
+              const t3 = (exp.tier_3_verified_owner_claim && exp.tier_3_verified_owner_claim.triggered) ? "T3:ChủBằngXácNhận" : "";
+              const tiersStr = [t1, t2, t3].filter(Boolean).join(" + ") || "Theo dõi cơ bản";
+              return `
+                <tr class="border-b border-[var(--border)]">
+                  <td class="py-2 px-2 font-mono font-bold">${p.application_no}${p.grant_no ? '<br/><span class="text-emerald-400">' + p.grant_no + '</span>' : ''}</td>
+                  <td class="py-2 px-2 font-medium">${p.title_vi}</td>
+                  <td class="py-2 px-2">${p.applicant_name} (${p.applicant_country})</td>
+                  <td class="py-2 px-2 font-mono">
+                    <span class="px-2 py-0.5 rounded font-bold ${sigScore >= 70 ? 'bg-emerald-500/15 text-emerald-400' : 'bg-[var(--background)] text-[var(--muted-foreground)]'}">${sigScore}/100</span>
+                    <div class="text-[11px] text-[var(--muted-foreground)] mt-0.5">${tiersStr}</div>
+                  </td>
+                  <td class="py-2 px-2"><span class="px-2 py-0.5 rounded border ${cm.badge}">${cm.label}</span></td>
+                </tr>
+              `;
+            }).join("")}
+          </tbody>
+        </table>
+      `;
+    }
+
+    // =========================================================================
+    // TAB 6: MCP SERVER 8 TOOLS & SHA-256 KEY GENERATOR
+    // =========================================================================
+    const MCP_TOOLS_META = [
+      { name: "search_patents", quota_cost: 1, description: "Tìm kiếm Lucene, mở rộng IPC & lọc theo 9 bộ lọc pháp lý SC-F01..SC-F09" },
+      { name: "semantic_prior_art_search", quota_cost: 2, description: "Đối sánh tình trạng kỹ thuật RRF (BM25 + Cosine) & lập Claim Chart" },
+      { name: "get_patent_detail", quota_cost: 1, description: "Lấy hồ sơ INID, Bitmask 0..31 & Tín hiệu khai thác 3 tầng" },
+      { name: "get_patent_claims_and_history", quota_cost: 1, description: "Lấy cây Yêu cầu bảo hộ & lịch sử sửa đổi Tập A vs Tập B" },
+      { name: "check_annuity_and_fto_status", quota_cost: 1, description: "Kiểm tra biểu phí niên liễm 20 năm (Điều 94) & trạng thái FTO" },
+      { name: "search_patent_gazettes", quota_cost: 1, description: "Tra cứu Công báo SHCN Tập A (A1..A4) & Tập B (B1..B7)" },
+      { name: "get_ipc_hierarchy_and_filters", quota_cost: 0, description: "Lấy danh mục phân loại IPC & định nghĩa 9 bộ lọc (Miễn phí 0 Quota)" },
+      { name: "get_patent_search_guide", quota_cost: 0, description: "Lấy hướng dẫn cú pháp Lucene & chuẩn WIPO ST.9 (Miễn phí 0 Quota)" }
+    ];
+
+    const MCP_SAMPLE_ARGS = {
+      "search_patents": { query: "title:pin^4 OR claims:curcuminoit~1", ipc: "", expand_related_ipc: true, special_filter: "" },
+      "semantic_prior_art_search": { technical_description: "Hệ thống làm mát khối pin Lithium-ion bằng rãnh vi kênh và vật liệu chuyển pha parafin-graphit", top_k: 2 },
+      "get_patent_detail": { identifier: "1-2023-02410" },
+      "get_patent_claims_and_history": { application_no: "1-2023-02410" },
+      "check_annuity_and_fto_status": { application_no: "1-2016-00812" },
+      "search_patent_gazettes": { volume: "B", subcategory: "B1" },
+      "get_ipc_hierarchy_and_filters": {},
+      "get_patent_search_guide": {}
+    };
+
+    function populateMcpSampleArgs() {
+      const tool = document.getElementById("mcpToolSelect").value;
+      document.getElementById("mcpArgsTextarea").value = JSON.stringify(MCP_SAMPLE_ARGS[tool] || {}, null, 2);
+    }
+
+    function selectMcpToolFromCard(toolName) {
+      document.getElementById("mcpToolSelect").value = toolName;
+      populateMcpSampleArgs();
+      executeMcpToolSandbox();
+    }
+
+    function loadMcpDashboard() {
+      populateMcpSampleArgs();
+      renderMcpTables();
+      executeMcpToolSandbox();
+    }
+
+    function renderMcpTables() {
+      document.getElementById("mcpToolsCatalogContainer").innerHTML = MCP_TOOLS_META.map((t, idx) => `
+        <div onclick="selectMcpToolFromCard('${t.name}')" class="p-2.5 rounded-lg border border-[var(--border)] bg-[var(--background)] hover:border-purple-400 transition cursor-pointer space-y-1 text-xs">
+          <div class="flex items-center justify-between">
+            <span class="font-mono font-bold text-purple-400">${idx + 1}. ${t.name}</span>
+            <span class="px-1.5 py-0.5 rounded font-semibold ${t.quota_cost === 0 ? 'bg-emerald-500/15 text-emerald-400' : 'bg-purple-500/15 text-purple-400'}">${t.quota_cost === 0 ? 'FREE (0)' : t.quota_cost + ' quota'}</span>
+          </div>
+          <p class="text-[var(--muted-foreground)]">${t.description}</p>
+        </div>
+      `).join("");
+
+      document.getElementById("mcpKeysTableContainer").innerHTML = `
+        <table class="w-full text-left border-collapse text-xs">
+          <thead>
+            <tr class="border-b border-[var(--border)] text-[var(--muted-foreground)]">
+              <th class="py-1.5 px-2">Tên khóa</th>
+              <th class="py-1.5 px-2">Tiền tố</th>
+              <th class="py-1.5 px-2">Gói</th>
+              <th class="py-1.5 px-2">Đã dùng / Ngày</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${MCP_KEYS_LOCAL.map(k => `
+              <tr class="border-b border-[var(--border)]">
+                <td class="py-1.5 px-2 font-medium">${k.key_name}</td>
+                <td class="py-1.5 px-2 font-mono text-purple-400">${k.key_prefix}***</td>
+                <td class="py-1.5 px-2">${k.tier}</td>
+                <td class="py-1.5 px-2 font-bold">${k.used_today} / ${k.daily_quota}</td>
+              </tr>
+            `).join("")}
+          </tbody>
+        </table>
+      `;
+
+      document.getElementById("mcpLogsTableContainer").innerHTML = `
+        <table class="w-full text-left border-collapse text-xs">
+          <thead>
+            <tr class="border-b border-[var(--border)] text-[var(--muted-foreground)]">
+              <th class="py-1.5 px-2">Thời gian</th>
+              <th class="py-1.5 px-2">Công cụ MCP</th>
+              <th class="py-1.5 px-2">Quota</th>
+              <th class="py-1.5 px-2">Độ trễ</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${MCP_LOGS_LOCAL.slice(0, 6).map(l => `
+              <tr class="border-b border-[var(--border)]">
+                <td class="py-1.5 px-2 font-mono">${l.created_at}</td>
+                <td class="py-1.5 px-2 font-mono font-bold text-blue-400">${l.tool_name}</td>
+                <td class="py-1.5 px-2">${l.quota_cost} lượt</td>
+                <td class="py-1.5 px-2 text-emerald-400 font-mono">${l.latency_ms} ms</td>
+              </tr>
+            `).join("")}
+          </tbody>
+        </table>
+      `;
+    }
+
+    function executeMcpToolSandbox() {
+      const toolName = document.getElementById("mcpToolSelect").value;
+      let args = {};
+      try { args = JSON.parse(document.getElementById("mcpArgsTextarea").value || "{}"); } catch (e) {}
+      const meta = MCP_TOOLS_META.find(t => t.name === toolName) || { quota_cost: 1 };
+
+      let resultPayload = {};
+      if (toolName === "get_ipc_hierarchy_and_filters") {
+        resultPayload = { ipc_concordance_matrix: IPC_CONCORDANCE, special_filters: Object.keys(SPECIAL_FILTER_META) };
+      } else if (toolName === "get_patent_search_guide") {
+        resultPayload = { lucene_operators: ["title:", "claims:", "ipc:", "applicant:", "AND", "OR", "NOT", "~1", "^4"], wipo_inid_codes: ["(11)", "(21)", "(22)", "(43)", "(45)", "(51)", "(54)", "(57)", "(71)", "(72)"] };
+      } else if (toolName === "get_patent_detail") {
+        resultPayload = PATENTS_DB.find(p => p.application_no === args.identifier || p.grant_no === args.identifier) || PATENTS_DB[0];
+      } else if (toolName === "check_annuity_and_fto_status") {
+        const p = PATENTS_DB.find(x => x.application_no === args.application_no) || PATENTS_DB[6];
+        resultPayload = { application_no: p.application_no, fto_status: p.fto_status, is_public_domain_free_to_operate: p.fto_status === "PUBLIC_DOMAIN", next_annuity_due_date: p.next_annuity_due_date };
+      } else if (toolName === "get_patent_claims_and_history") {
+        const p = PATENTS_DB.find(x => x.application_no === args.application_no) || PATENTS_DB[0];
+        resultPayload = { application_no: p.application_no, claims: p.claims, prosecution_claim_history_diff: p.claim_history_diff };
+      } else if (toolName === "search_patent_gazettes") {
+        resultPayload = { total: GAZETTE_ENTRIES_DB.length, entries: GAZETTE_ENTRIES_DB.slice(0, 4) };
+      } else {
+        resultPayload = { total_matched: PATENTS_DB.length, sample_hits: PATENTS_DB.slice(0, 2).map(p => ({ application_no: p.application_no, title_vi: p.title_vi, fto_status: p.fto_status })) };
+      }
+
+      MCP_KEYS_LOCAL[0].used_today += meta.quota_cost;
+      MCP_LOGS_LOCAL.unshift({
+        created_at: new Date().toLocaleTimeString('vi-VN'),
+        tool_name: toolName,
+        quota_cost: meta.quota_cost,
+        latency_ms: 1.4
+      });
+      renderMcpTables();
+
+      document.getElementById("mcpResponseOutput").textContent = JSON.stringify({
+        jsonrpc: "2.0",
+        id: Date.now(),
+        quota_charged: meta.quota_cost,
+        ai_tokens_used: 0,
+        result: resultPayload
+      }, null, 2);
+    }
+
+    function generateNewMcpKey() {
+      const name = document.getElementById("newMcpKeyName").value.trim() || "Claude / Cursor MCP Agent";
+      const rand = Math.random().toString(36).slice(2, 10) + Math.random().toString(36).slice(2, 10);
+      const rawKey = "vnp_live_" + rand;
+      const fakeSha = Array.from(rawKey).map(c => c.charCodeAt(0).toString(16)).join("").padEnd(64, "a").slice(0, 64);
+      MCP_KEYS_LOCAL.unshift({
+        key_name: name,
+        key_prefix: rawKey.slice(0, 14),
+        tier: "PRO_ATTORNEY",
+        daily_quota: 500,
+        used_today: 0
+      });
+      const banner = document.getElementById("newMcpKeyBanner");
+      banner.classList.remove("hidden");
+      banner.innerHTML = `
+        <div class="font-bold text-purple-400">🔑 Đã tạo Khóa API MCP mới (Chỉ hiển thị Plaintext 1 lần duy nhất):</div>
+        <div>Plaintext Key: <code class="px-2 py-0.5 rounded bg-[var(--background)] border border-[var(--border)] font-bold">${rawKey}</code></div>
+        <div>SHA-256 Hash lưu CSDL: <code class="text-[var(--muted-foreground)]">${fakeSha}</code></div>
+      `;
+      document.getElementById("mcpApiKeyInput").value = rawKey;
+      renderMcpTables();
+    }
+
+    window.addEventListener("DOMContentLoaded", () => {
+      renderKpis();
+      switchTab("search");
+      askSampleQuestion("Đơn 1-2023-02410 của VinES còn hiệu lực bảo hộ không và phạm vi yêu cầu bảo hộ là gì?");
+      runPriorArtSearch();
+    });
+  </script>
+</body>
+</html>
