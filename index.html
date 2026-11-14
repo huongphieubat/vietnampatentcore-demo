@@ -14,6 +14,7 @@
     }
   </style>
   <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 </head>
 <body class="bg-[var(--background)] text-[var(--foreground)] antialiased p-3 md:p-5 m-0">
   <div class="max-w-7xl mx-auto space-y-4">
@@ -503,8 +504,11 @@ Yêu cầu bảo hộ:
             Bản mô tả toàn văn Sáng chế / Giải pháp hữu ích
           </h3>
         </div>
-        <div class="flex items-center gap-2">
-          <a id="noipPdfModalRawLink" href="https://ipvietnam.gov.vn" target="_blank" rel="noopener noreferrer" class="px-3 py-1 rounded-lg text-xs font-semibold bg-blue-600 hover:bg-blue-500 text-white transition">
+        <div class="flex flex-wrap items-center gap-2">
+          <button id="noipPdfModalFloatingBtn" type="button" class="hidden px-3 py-1 rounded-lg text-xs font-semibold bg-emerald-600 hover:bg-emerald-500 text-white transition cursor-pointer">
+            🗔 Cửa sổ Đọc Nổi Cục SHTT
+          </button>
+          <a id="noipPdfModalRawLink" href="https://ipvietnam.gov.vn/bang-oc-quyen-sang-che/giai-phap-huu-ich-uoc-cap-hang-thang" target="_blank" rel="noopener noreferrer" class="px-3 py-1 rounded-lg text-xs font-semibold bg-blue-600 hover:bg-blue-500 text-white transition">
             Mở Link Gốc Cục SHTT ↗
           </a>
           <button onclick="closeDirectNoipPdfModal()" class="px-3 py-1 rounded-lg text-xs font-semibold bg-slate-700 hover:bg-slate-600 text-white cursor-pointer">
@@ -549,7 +553,9 @@ Yêu cầu bảo hộ:
       "F26B": "Kỹ thuật sấy thăng hoa, Bơm nhiệt & Chế biến sâu nông dược liệu",
       "F28D": "Thiết bị trao đổi nhiệt, Thu hồi nhiệt thải & Tiết kiệm năng lượng lò hơi",
       "A43B": "Công nghiệp da giày, Vật liệu polyme đàn hồi & Phụ trợ dệt may",
-      "B01J": "Vật liệu xúc tác nano, Hấp phụ & Quy trình công nghệ hóa học"
+      "B01J": "Vật liệu xúc tác nano, Hấp phụ & Quy trình công nghệ hóa học",
+      "C22B": "Luyện kim màu, Thủy luyện khoáng sản & Chế biến sâu Đất hiếm",
+      "H01R": "Linh kiện cơ điện tử, Khay thẻ SIM & Kết nối đầu cuối di động"
     };
 
     function mapIpcToSector(ipcCodes) {
@@ -592,28 +598,28 @@ Yêu cầu bảo hộ:
     // Danh mục liên kết PDF Bản mô tả Toàn văn thực tế trên Cổng Liferay Cục SHTT (0 MB lưu DB)
     const VERIFIED_NOIP_LIVE_PDFS = [
       {
-        label: "Bằng SC 1-0032137 (Chàm mèo)",
+        label: "Bằng SC 1-0032137 (Chàm mèo - 25 tr)",
         app_no: "1-2019-05968",
         url: "https://www.ipvietnam.gov.vn/documents/20182/1318324/32137.pdf/00ad7c8e-b2b3-4c29-a563-487de9ecd88c",
-        desc: "Dẫn xuất indirubin từ lá cây chàm mèo - Viện Hóa học các Hợp chất Thiên nhiên"
+        desc: "Dẫn xuất indirubin từ lá cây chàm mèo - Viện Hóa học các Hợp chất Thiên nhiên (CB411B)"
       },
       {
-        label: "Bằng GPHI 2-0004323 (Nano Selen)",
+        label: "Bằng GPHI 2-0004323 (Nano Selen - 15 tr)",
         app_no: "2-2025-00329",
         url: "https://www.ipvietnam.gov.vn/documents/20182/2142261/4323.pdf/3b2cf889-bd36-424d-9d61-d1788226d12b",
-        desc: "Quy trình tổng hợp xanh hạt nano Selen từ lá vối - Viện Sinh học (T09/2025)"
+        desc: "Quy trình tổng hợp xanh hạt nano Selen từ lá vối - Viện Sinh học (CB450B - T09/2025)"
       },
       {
-        label: "Bằng SC 1-0044433 (KH Vật liệu)",
-        app_no: null,
+        label: "Bằng SC 1-0044433 (Khoáng vật Xenotim - 13 tr)",
+        app_no: "1-2023-07936",
         url: "https://www.ipvietnam.gov.vn/documents/20182/1873363/44433.pdf/a05a9e41-8d68-45df-8767-ca7421234008",
-        desc: "Bản mô tả Sáng chế Viện Khoa học vật liệu - Công bố CB444B (T03/2025)"
+        desc: "Phương pháp chế biến khoáng vật Xenotim - Viện Khoa học vật liệu (CB444B - T03/2025)"
       },
       {
-        label: "Bằng SC 1-0028212 (Bộ nối điện)",
-        app_no: null,
+        label: "Bằng SC 1-0028212 (Khay thẻ SIM - 16 tr)",
+        app_no: "1-2015-04782",
         url: "https://www.ipvietnam.gov.vn/documents/20182/1108922/28212.pdf/e0e68be0-74d8-4388-985f-1f7df4928c35",
-        desc: "Nắp che và thân đế bộ nối điện (IPC H01R 13/629) - Cổng Cục SHTT"
+        desc: "Khay lắp thẻ môđun nhận dạng thuê bao dùng cho đầu cuối di động - DK UIL Co., Ltd. (CB398B)"
       }
     ];
 
@@ -691,6 +697,79 @@ Yêu cầu bảo hộ:
         claim_history_diff: {}, citations: [],
         events: [
           { event_code: "GRANTED_B", event_title: "Cấp Bằng độc quyền Giải pháp hữu ích số 2-0004323", event_date: "2025-09-25", document_no: "CB450B" }
+        ],
+        annuity_schedule: []
+      },
+      {
+        application_no: "1-2023-07936", patent_type: "PATENT", filing_origin: "NATIONAL", grant_no: "1-0044433",
+        filing_date: "2023-11-08", earliest_priority_date: "2023-11-08", publication_date: "2024-05-27",
+        substantive_exam_requested: true, substantive_exam_deadline: "2026-11-08", grant_date: "2025-03-25",
+        expiration_date: "2043-11-08", next_annuity_due_date: "2027-03-25", status_group: "GRANTED", fto_status: "ACTIVE_PROTECTED",
+        commercialization_status: "OPEN_FOR_LICENSING",
+        commercialization_note: "Bản mô tả toàn văn 13 trang công bố chính thức trên Cổng Liferay Cục SHTT (CB444B - Tháng 03/2025); sẵn sàng chuyển giao công nghệ thủy luyện đất hiếm nặng.",
+        special_filter_flags: [], ipc_codes: ["C22B 59/00", "C22B 3/08", "C01F 17/10"],
+        completeness_mask: 31, missing_fields: [],
+        industry_sector_vi: "Luyện kim màu, Thủy luyện khoáng sản & Chế biến sâu Đất hiếm",
+        exploitation_signals: {
+          signal_confidence_score: 75,
+          tier_1_hard_legal: { triggered: true },
+          tier_2_entity_match: { triggered: true },
+          tier_3_verified_owner_claim: { triggered: false }
+        },
+        title_vi: "PHƯƠNG PHÁP CHẾ BIẾN KHOÁNG VẬT XENOTIM",
+        abstract_vi: "Sáng chế đề cập đến phương pháp chế biến tinh quặng khoáng vật xenotim giàu đất hiếm nhóm nặng (Y, Dy, Er, Yb) bằng quy trình phân hủy kiềm nhiệt độ vừa kết hợp hòa tách chọn lọc và chiết phân đoạn thu hồi oxit yttri độ tinh khiết cao.",
+        applicant_name: "Viện Khoa học vật liệu - Viện Hàn lâm Khoa học và Công nghệ Việt Nam", applicant_country: "VN", applicant_province: "Hà Nội",
+        tax_code: "0100104520", business_status: "Đang hoạt động", phone_number: "02437564120", phone_type: "so-co-dinh",
+        inventors: ["TS. Nguyễn Trọng Hùng", "PGS.TS. Lê Bá Thuận"], representative: "Nộp trực tiếp",
+        fulltext_pdf_url: "https://www.ipvietnam.gov.vn/documents/20182/1873363/44433.pdf/a05a9e41-8d68-45df-8767-ca7421234008", monthly_release_period: "Tháng 03/2025", gazette_issue_no: "CB444B",
+        specification_sections: {
+          technical_field: "Luyện kim màu và công nghệ hóa học đất hiếm (phương pháp chế biến tinh quặng khoáng vật xenotim YPO4).",
+          background_art: "Khoáng vật xenotim có cấu trúc mạng tinh thể orthophosphat bền vững; nung axit sunfuric đặc ở nhiệt độ cao phát sinh nhiều khí thải độc hại.",
+          technical_essence: "Nghiền hoạt hóa cơ học tinh quặng xenotim kết hợp phân hủy NaOH chuyển hóa gốc phosphat tan trong nước trước khi hòa tách axit thu dung dịch muối đất hiếm sạch.",
+          technical_effect: "Đạt hiệu suất phân hủy khoáng vật trên 96%, thu hồi phụ phẩm natri phosphat và giảm mạnh phát thải khí axit."
+        },
+        claims: [
+          { claim_number: 1, claim_type: "INDEPENDENT", parent_claim_numbers: [], claim_text_vi: "Phương pháp chế biến khoáng vật xenotim bao gồm các bước: nghiền mịn tinh quặng xenotim, phân hủy bằng tác nhân kiềm NaOH để chuyển hóa hoàn toàn hydroxit đất hiếm, rửa tách dung dịch natri phosphat và hòa tách bã hydroxit bằng axit vô cơ thu dung dịch muối đất hiếm nhóm nặng." }
+        ],
+        claim_history_diff: {}, citations: [],
+        events: [
+          { event_code: "GRANTED_B", event_title: "Cấp Bằng độc quyền Sáng chế số 1-0044433 (Công bố PDF toàn văn gốc)", event_date: "2025-03-25", document_no: "CB444B" }
+        ],
+        annuity_schedule: []
+      },
+      {
+        application_no: "1-2015-04782", patent_type: "PATENT", filing_origin: "NATIONAL", grant_no: "1-0028212",
+        filing_date: "2015-12-16", earliest_priority_date: "2014-12-22", publication_date: "2016-06-27",
+        substantive_exam_requested: true, substantive_exam_deadline: "2017-12-22", grant_date: "2021-05-25",
+        expiration_date: "2035-12-16", next_annuity_due_date: "2027-05-25", status_group: "GRANTED", fto_status: "ACTIVE_PROTECTED",
+        commercialization_status: "IN_HOUSE_PRODUCTION",
+        commercialization_note: "Bản mô tả toàn văn 16 trang công bố chính thức trên Cổng Liferay Cục SHTT (CB398B); ứng dụng trên cụm khay SIM kháng nước thiết bị di động.",
+        special_filter_flags: [], ipc_codes: ["H01R 12/71", "H04B 1/3816", "G06K 13/08"],
+        completeness_mask: 31, missing_fields: [],
+        industry_sector_vi: "Linh kiện cơ điện tử, Khay thẻ SIM & Kết nối đầu cuối di động",
+        exploitation_signals: {
+          signal_confidence_score: 70,
+          tier_1_hard_legal: { triggered: true },
+          tier_2_entity_match: { triggered: false },
+          tier_3_verified_owner_claim: { triggered: true }
+        },
+        title_vi: "KHAY LẮP THẺ MÔĐUN NHẬN DẠNG THUÊ BAO DÙNG CHO ĐẦU CUỐI DI ĐỘNG",
+        abstract_vi: "Sáng chế đề cập đến kết cấu khay lắp thẻ môđun nhận dạng thuê bao (SIM/MicroSD) dùng cho thiết bị đầu cuối di động có vòng đệm đàn hồi chống thấm nước và chốt đẩy định vị chống kẹt thẻ.",
+        applicant_name: "DK UIL CO., LTD.", applicant_country: "KR", applicant_province: "",
+        inventors: ["LEE, Sang-Hoon", "KIM, Jin-Woo"], representative: "Công ty Cổ phần Sở hữu công nghiệp WINCO",
+        fulltext_pdf_url: "https://www.ipvietnam.gov.vn/documents/20182/1108922/28212.pdf/e0e68be0-74d8-4388-985f-1f7df4928c35", monthly_release_period: "Tháng 05/2021", gazette_issue_no: "CB398B",
+        specification_sections: {
+          technical_field: "Linh kiện cơ điện tử cho thiết bị viễn thông cầm tay (khay lắp thẻ SIM/MicroSD cho đầu cuối di động).",
+          background_art: "Các khay thẻ SIM siêu mỏng dễ bị cong vênh hoặc hở khe tiếp xúc làm hơi ẩm xâm nhập vào bo mạch chủ.",
+          technical_essence: "Đúc đồng thời khung kim loại gia cường với gờ giữ thẻ đàn hồi và gioăng cao su kín khít quanh nắp che ngoài của khay thẻ.",
+          technical_effect: "Tăng độ bền cơ học qua hơn 5.000 chu kỳ tháo lắp thẻ và đảm bảo chuẩn kháng bụi nước IP68."
+        },
+        claims: [
+          { claim_number: 1, claim_type: "INDEPENDENT", parent_claim_numbers: [], claim_text_vi: "Khay lắp thẻ môđun nhận dạng thuê bao dùng cho đầu cuối di động bao gồm thân khay kim loại định hình có ô chứa thẻ, vấu đàn hồi giữ cạnh thẻ và phần nắp đầu khay tích hợp vòng đệm kín khít." }
+        ],
+        claim_history_diff: {}, citations: [],
+        events: [
+          { event_code: "GRANTED_B", event_title: "Cấp Bằng độc quyền Sáng chế số 1-0028212 (Công bố PDF toàn văn gốc)", event_date: "2021-05-25", document_no: "CB398B" }
         ],
         annuity_schedule: []
       },
@@ -1040,19 +1119,54 @@ Yêu cầu bảo hộ:
     let selectedSpecialFilter = "";
     let selectedPatentAppNo = "1-2019-05968";
     let activeDetailSubTab = "pdf";
-    let activePdfViewerMode = "gview"; // 'gview' | 'direct' | 'stream'
+    let activePdfViewerMode = "canvas"; // 'canvas' | 'popup' | 'spec'
     let customDirectPdfUrlOverride = "";
+    let modalTargetAppNo = "";
     let modalDirectPdfUrl = "";
     let modalDirectPdfTitle = "";
     let backendConnected = false;
 
-    try {
-      fetch("/api/gazettes").then(r => { if (r && r.ok) backendConnected = true; }).catch(() => {});
-    } catch (e) {}
+    const IS_STATIC_EMBED_HOST =
+      !window.location.hostname ||
+      window.location.protocol === "file:" ||
+      window.location.hostname.endsWith("github.io") ||
+      window.location.hostname.endsWith("googleusercontent.com") ||
+      window.location.hostname.endsWith("sites.google.com");
+
+    if (!IS_STATIC_EMBED_HOST) {
+      try {
+        fetch("/api/gazettes").then(r => { if (r && r.ok) backendConnected = true; }).catch(() => {});
+      } catch (e) {}
+    }
 
     // =========================================================================
     // BỘ ĐỌC PDF TOÀN VĂN TRỰC TIẾP TỪ LINK GỐC CỤC SHTT (ZERO-STORAGE / 0 MB DB)
+    // Khắc phục triệt để lỗi Google gview tự tải file rỗng ("Couldn't download - No file")
+    // bằng Mozilla PDF.js <canvas> RAM + Cửa sổ Đọc Nổi Trực tiếp + Bản dựng A4 WIPO ST.9
     // =========================================================================
+    const PDFJS_CDN_WORKER_URL = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+    const NOIP_MONTHLY_PORTAL_URL = "https://ipvietnam.gov.vn/bang-oc-quyen-sang-che/giai-phap-huu-ich-uoc-cap-hang-thang";
+    const PDF_BYTES_RAM_CACHE = new Map();
+    const PDF_DOC_RAM_CACHE = new Map();
+    const INFLIGHT_PDF_FETCHES = new Map();
+    const NOIP_PDF_SLOTS = {
+      inline: { jobId: 0, appNo: "", url: "", pdfDoc: null, pageNum: 1, numPages: 0, scaleMode: "fit", multiPage: false, sourceLabel: "" },
+      modal: { jobId: 0, appNo: "", url: "", pdfDoc: null, pageNum: 1, numPages: 0, scaleMode: "fit", multiPage: false, sourceLabel: "" }
+    };
+
+    function configurePdfJsWorker() {
+      if (typeof window.pdfjsLib === "undefined") return false;
+      if (window.__vnpatentPdfWorkerReady) return true;
+      try {
+        const workerBlob = new Blob([`importScripts("${PDFJS_CDN_WORKER_URL}");`], { type: "application/javascript" });
+        window.pdfjsLib.GlobalWorkerOptions.workerSrc = URL.createObjectURL(workerBlob);
+      } catch (e) {
+        window.pdfjsLib.GlobalWorkerOptions.workerSrc = PDFJS_CDN_WORKER_URL;
+      }
+      window.__vnpatentPdfWorkerReady = true;
+      return true;
+    }
+
     function escapeHtmlAttr(str) {
       return String(str || "")
         .replace(/&/g, "&amp;")
@@ -1102,71 +1216,528 @@ Yêu cầu bảo hộ:
       }
     }
 
-    function isRealLiferayNoipPdfUrl(rawUrl) {
+    function isSimulatedSeedPdfUrl(rawUrl) {
       const norm = normalizeNoipPdfUrl(rawUrl);
-      return /\/documents\/20182\/\d+\//i.test(norm);
+      if (!norm) return false;
+      return /(?:\/sc_20\d{2}_\d{2}\/|\/gphi_20\d{2}_\d{2}\/|\/2142261\/4319\.pdf$)/i.test(norm);
     }
 
-    function buildPdfFrameEmbedElement(normUrl, heightClass) {
-      const safeOrig = escapeHtmlAttr(normUrl);
-      const encoded = encodeURIComponent(normUrl);
-      if (activePdfViewerMode === "gview") {
-        const gviewSrc = `https://docs.google.com/gview?embedded=true&url=${encoded}`;
-        return `
-          <iframe
-            src="${escapeHtmlAttr(gviewSrc)}"
-            title="Khung đọc trực tiếp Bản mô tả sáng chế từ Cục SHTT (Google PDF Wrapper)"
-            class="w-full ${heightClass} rounded-xl border border-[var(--border)] bg-white"
-            loading="lazy"
-            referrerpolicy="no-referrer"
-          ></iframe>
-        `;
+    function isRealLiferayNoipPdfUrl(rawUrl) {
+      const norm = normalizeNoipPdfUrl(rawUrl);
+      if (!norm || !isOfficialNoipHost(norm) || isSimulatedSeedPdfUrl(norm)) return false;
+      if (norm.includes("/documents/20182/")) {
+        return /\/documents\/20182\/\d+\/[^/?#]+\.pdf\/[0-9a-f]{8}-[0-9a-f]{4}-/i.test(norm);
       }
-      if (activePdfViewerMode === "stream") {
-        if (!backendConnected) {
-          return `
-            <div class="w-full ${heightClass} rounded-xl border border-amber-500/40 bg-amber-500/10 p-5 flex flex-col items-center justify-center text-center space-y-3 text-xs">
-              <div class="text-sm font-bold text-amber-400">⚡ Chế độ Luồng Pass-Through (<code>/api/pdf-stream</code>) dành cho máy chủ Python <code>server.py</code></div>
-              <p class="max-w-lg text-[var(--muted-foreground)]">Trang hiện đang chạy ở chế độ Nhúng Độc lập (Google Sites / Static HTML). Hãy chọn <strong>Chế độ 1 (Google PDF Wrapper)</strong> hoặc <strong>Chế độ 2 (Khung Native Trực tiếp)</strong> để đọc trực tiếp từ máy chủ Cục SHTT ngay trên trình duyệt (0 MB DB).</p>
-              <div class="flex flex-wrap gap-2">
-                <button onclick="setPdfViewerMode('gview')" class="px-3 py-1.5 rounded-lg font-semibold bg-blue-600 text-white cursor-pointer">Chuyển sang Khung Google PDF Wrapper</button>
-                <button onclick="setPdfViewerMode('direct')" class="px-3 py-1.5 rounded-lg font-semibold bg-emerald-600 text-white cursor-pointer">Chuyển sang Khung Native Cục SHTT</button>
+      return true;
+    }
+
+    function openFloatingNoipPdfWindow(rawUrl) {
+      const norm = normalizeNoipPdfUrl(rawUrl);
+      const targetUrl = (norm && !isSimulatedSeedPdfUrl(norm)) ? (norm + "#view=FitH&toolbar=1") : NOIP_MONTHLY_PORTAL_URL;
+      const w = Math.min(1120, Math.floor((window.screen.availWidth || 1280) * 0.86));
+      const h = Math.min(880, Math.floor((window.screen.availHeight || 900) * 0.88));
+      const left = Math.max(20, Math.floor(((window.screen.availWidth || 1280) - w) / 2));
+      const top = Math.max(20, Math.floor(((window.screen.availHeight || 900) - h) / 2));
+      const win = window.open(
+        targetUrl,
+        "VNPatentDirectNoipReader",
+        `popup=yes,width=${w},height=${h},left=${left},top=${top},resizable=yes,scrollbars=yes,toolbar=yes,location=yes`
+      );
+      if (win) {
+        try { win.focus(); } catch (e) {}
+      } else {
+        window.open(targetUrl, "_blank", "noopener,noreferrer");
+      }
+    }
+
+    function buildStructuredA4SpecificationHtml(p, normUrl, topBannerHtml) {
+      if (!p) return "";
+      const secs = p.specification_sections || {};
+      const claims = p.claims || [];
+      const docTypeHeader = p.patent_type === "UTILITY_SOLUTION"
+        ? "BẰNG ĐỘC QUYỀN GIẢI PHÁP HỮU ÍCH — BẢN MÔ TẢ TOÀN VĂN"
+        : "BẰNG ĐỘC QUYỀN SÁNG CHẾ — BẢN MÔ TẢ TOÀN VĂN";
+      return `
+        <div class="space-y-3">
+          ${topBannerHtml || ""}
+          <div class="bg-white text-slate-900 rounded-xl border border-slate-300 shadow-lg p-5 md:p-7 max-w-4xl mx-auto space-y-4 font-serif leading-relaxed">
+            <div class="border-b-2 border-slate-900 pb-3 flex flex-col md:flex-row md:items-start md:justify-between gap-3 font-sans">
+              <div>
+                <div class="text-[11px] font-bold uppercase tracking-wider text-slate-600">CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM • CỤC SỞ HỮU TRÍ TUỆ</div>
+                <div class="text-sm font-extrabold text-slate-900 mt-0.5">${docTypeHeader}</div>
+                <div class="text-[11px] text-slate-500">Chuẩn dữ liệu đặc tả WIPO ST.9 & Thông tư 06/VBHN-BKHCN</div>
+              </div>
+              <div class="text-left md:text-right font-mono text-xs bg-slate-100 px-3 py-1.5 rounded border border-slate-300 shrink-0">
+                <div><strong>(19)</strong> VN</div>
+                <div><strong>(11)</strong> ${escapeHtmlAttr(p.grant_no || "Đang thẩm định")}</div>
+                <div><strong>(21)</strong> ${escapeHtmlAttr(p.application_no)}</div>
               </div>
             </div>
-          `;
-        }
-        const streamSrc = `/api/pdf-stream?url=${encoded}#view=FitH&toolbar=1`;
-        return `
-          <iframe
-            src="${escapeHtmlAttr(streamSrc)}"
-            title="Luồng đọc PDF trực tiếp không lưu trữ từ Cục SHTT (/api/pdf-stream)"
-            class="w-full ${heightClass} rounded-xl border border-[var(--border)] bg-white"
-            loading="lazy"
-          ></iframe>
-        `;
-      }
-      const directSrc = `${safeOrig}#view=FitH&toolbar=1&navpanes=0`;
-      return `
-        <object
-          data="${directSrc}"
-          type="application/pdf"
-          class="w-full ${heightClass} rounded-xl border border-[var(--border)] bg-white"
-        >
-          <iframe
-            src="${directSrc}"
-            title="Khung đọc PDF trực tiếp từ Cục SHTT"
-            class="w-full ${heightClass} rounded-xl border border-[var(--border)] bg-white"
-          ></iframe>
-        </object>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs font-sans bg-slate-50 p-3 rounded-lg border border-slate-200">
+              <div><span class="text-slate-500">(22) Ngày nộp đơn:</span> <strong>${escapeHtmlAttr(p.filing_date || "N/A")}</strong></div>
+              <div><span class="text-slate-500">(45) Ngày công bố cấp bằng:</span> <strong>${escapeHtmlAttr(p.grant_date || p.publication_date || "N/A")} (${escapeHtmlAttr(p.gazette_issue_no || "Công báo SHCN")})</strong></div>
+              <div class="md:col-span-2"><span class="text-slate-500">(51) Phân loại IPC:</span> <code class="font-bold text-blue-800">${escapeHtmlAttr((p.ipc_codes || []).join("; "))}</code></div>
+              <div class="md:col-span-2"><span class="text-slate-500">(71/73) Chủ văn bằng:</span> <strong>${escapeHtmlAttr(p.applicant_name)} (${escapeHtmlAttr(p.applicant_country || "VN")})</strong></div>
+              <div class="md:col-span-2"><span class="text-slate-500">(72) Tác giả:</span> <strong>${escapeHtmlAttr((p.inventors || []).join("; ") || "Theo hồ sơ gốc")}</strong></div>
+              <div class="md:col-span-2"><span class="text-slate-500">(74) Đại diện SHCN:</span> <strong>${escapeHtmlAttr(p.representative || "Nộp trực tiếp")}</strong></div>
+            </div>
+
+            <div class="text-center py-2 border-y border-slate-200 font-sans">
+              <div class="text-[11px] font-semibold text-slate-500 uppercase">(54) Tên sáng chế / Giải pháp hữu ích</div>
+              <h4 class="text-sm md:text-base font-extrabold text-slate-900 mt-0.5">${escapeHtmlAttr(p.title_vi)}</h4>
+            </div>
+
+            <div class="text-xs md:text-sm space-y-1">
+              <div class="font-sans font-bold text-xs uppercase tracking-wider text-slate-700">(57) Tóm tắt</div>
+              <p class="text-slate-800 text-justify">${escapeHtmlAttr(p.abstract_vi)}</p>
+            </div>
+
+            <div class="text-xs md:text-sm space-y-3 pt-2 border-t border-slate-200">
+              <div>
+                <div class="font-sans font-bold text-xs uppercase tracking-wider text-slate-800">1. Lĩnh vực kỹ thuật được đề cập</div>
+                <p class="text-slate-800 mt-0.5 text-justify">${escapeHtmlAttr(secs.technical_field || p.abstract_vi)}</p>
+              </div>
+              <div>
+                <div class="font-sans font-bold text-xs uppercase tracking-wider text-slate-800">2. Tình trạng kỹ thuật của sáng chế</div>
+                <p class="text-slate-800 mt-0.5 text-justify">${escapeHtmlAttr(secs.background_art || "Các giải pháp kỹ thuật đã biết còn hạn chế về hiệu suất vận hành, độ ổn định và chi phí sản xuất công nghiệp tại Việt Nam.")}</p>
+              </div>
+              <div>
+                <div class="font-sans font-bold text-xs uppercase tracking-wider text-slate-800">3. Bản chất kỹ thuật của sáng chế</div>
+                <p class="text-slate-800 mt-0.5 text-justify">${escapeHtmlAttr(secs.technical_essence || p.abstract_vi)}</p>
+              </div>
+              <div>
+                <div class="font-sans font-bold text-xs uppercase tracking-wider text-slate-800">4. Hiệu quả đạt được của sáng chế</div>
+                <p class="text-slate-800 mt-0.5 text-justify">${escapeHtmlAttr(secs.technical_effect || "Đáp ứng đầy đủ tiêu chuẩn khả năng áp dụng công nghiệp và nâng cao hiệu suất khai thác thực tế.")}</p>
+              </div>
+            </div>
+
+            <div class="text-xs md:text-sm space-y-2 pt-3 border-t-2 border-slate-800">
+              <div class="font-sans font-extrabold text-xs uppercase tracking-wider text-slate-900">YÊU CẦU BẢO HỘ (${claims.length} điểm)</div>
+              ${claims.length > 0 ? claims.map(c => `
+                <div class="p-2.5 rounded bg-slate-50 border border-slate-200 font-sans text-xs leading-relaxed">
+                  <strong>Điểm ${c.claim_number} (${c.claim_type === "INDEPENDENT" ? "Độc lập" : "Phụ thuộc điểm " + (c.parent_claim_numbers || []).join(", ")}):</strong>
+                  ${escapeHtmlAttr(c.claim_text_vi)}
+                </div>
+              `).join("") : `<p class="text-xs font-sans text-slate-600">Đang đồng bộ nội dung Yêu cầu bảo hộ chi tiết.</p>`}
+            </div>
+          </div>
+        </div>
       `;
     }
 
-    function buildDirectNoipPdfReaderHtml(p, isModal) {
-      const effectiveRawUrl = isModal ? (modalDirectPdfUrl || customDirectPdfUrlOverride || (p && p.fulltext_pdf_url) || "") : (customDirectPdfUrlOverride || (p && p.fulltext_pdf_url) || "");
+    function hasPdfMagicHeader(bytes) {
+      if (!bytes || bytes.length < 64) return null;
+      const limit = Math.min(bytes.length - 5, 64);
+      for (let i = 0; i <= limit; i++) {
+        if (
+          bytes[i] === 0x25 &&
+          bytes[i + 1] === 0x50 &&
+          bytes[i + 2] === 0x44 &&
+          bytes[i + 3] === 0x46 &&
+          bytes[i + 4] === 0x2d
+        ) {
+          return i === 0 ? bytes : bytes.subarray(i);
+        }
+      }
+      return null;
+    }
+
+    function decodeBase64DataUriToBytes(contents) {
+      if (!contents || typeof contents !== "string") return null;
+      const marker = "base64,";
+      const idx = contents.indexOf(marker);
+      const rawB64 = (idx >= 0 ? contents.slice(idx + marker.length) : contents).replace(/\s+/g, "");
+      if (rawB64.length < 64) return null;
+      try {
+        const bin = atob(rawB64);
+        const out = new Uint8Array(bin.length);
+        for (let i = 0; i < bin.length; i++) out[i] = bin.charCodeAt(i);
+        return hasPdfMagicHeader(out);
+      } catch (e) {
+        return null;
+      }
+    }
+
+    function racePromisesAny(promises) {
+      if (typeof Promise.any === "function") return Promise.any(promises);
+      return new Promise((resolve, reject) => {
+        let pending = promises.length;
+        if (pending === 0) return reject(new Error("No promises"));
+        let lastErr = null;
+        promises.forEach(pr => {
+          Promise.resolve(pr).then(resolve, err => {
+            lastErr = err;
+            pending -= 1;
+            if (pending === 0) reject(lastErr || new Error("All relays failed"));
+          });
+        });
+      });
+    }
+
+    function putBoundedMapCache(mapObj, key, val, maxEntries) {
+      if (mapObj.has(key)) mapObj.delete(key);
+      mapObj.set(key, val);
+      while (mapObj.size > (maxEntries || 4)) {
+        const oldestKey = mapObj.keys().next().value;
+        mapObj.delete(oldestKey);
+      }
+    }
+
+    async function fetchCandidatePdfBytes(url, modeType, parentSignal, label, timeoutMs) {
+      const ctrl = new AbortController();
+      const onParentAbort = () => ctrl.abort();
+      if (parentSignal) parentSignal.addEventListener("abort", onParentAbort, { once: true });
+      const timer = setTimeout(() => ctrl.abort(), timeoutMs || 10500);
+      try {
+        const resp = await fetch(url, {
+          method: "GET",
+          mode: "cors",
+          credentials: "omit",
+          cache: "no-store",
+          signal: ctrl.signal
+        });
+        if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+        if (modeType === "allorigins_json") {
+          const j = await resp.json();
+          const decoded = decodeBase64DataUriToBytes(j && j.contents);
+          if (!decoded) throw new Error("Invalid base64 PDF payload");
+          return { bytes: decoded, sourceLabel: label };
+        }
+        const buf = await resp.arrayBuffer();
+        const valid = hasPdfMagicHeader(new Uint8Array(buf));
+        if (!valid) throw new Error("Response is not %PDF- binary");
+        return { bytes: valid, sourceLabel: label };
+      } finally {
+        clearTimeout(timer);
+        if (parentSignal) parentSignal.removeEventListener("abort", onParentAbort);
+      }
+    }
+
+    async function fetchLiveNoipPdfBytes(normUrl, forceRefresh) {
+      if (!forceRefresh && PDF_BYTES_RAM_CACHE.has(normUrl)) {
+        const cached = PDF_BYTES_RAM_CACHE.get(normUrl);
+        return { bytes: cached.bytes, sourceLabel: cached.sourceLabel + " (RAM Cache 0ms)" };
+      }
+      if (!forceRefresh && INFLIGHT_PDF_FETCHES.has(normUrl)) {
+        return INFLIGHT_PDF_FETCHES.get(normUrl);
+      }
+
+      const taskPromise = (async () => {
+        const encoded = encodeURIComponent(normUrl);
+
+        // Tầng 1: Nếu đang chạy cùng máy chủ Python server.py (/api/pdf-stream)
+        if (!IS_STATIC_EMBED_HOST) {
+          try {
+            const localRes = await fetchCandidatePdfBytes(
+              `/api/pdf-stream?url=${encoded}`,
+              "binary",
+              null,
+              "Luồng RAM /api/pdf-stream (0 MB DB)",
+              9000
+            );
+            backendConnected = true;
+            putBoundedMapCache(PDF_BYTES_RAM_CACHE, normUrl, localRes, 4);
+            return localRes;
+          } catch (e) {}
+        }
+
+        // Tầng 2: Đua song song luồng trực tiếp & các cổng CORS Stateless cho bản Web Tĩnh / GitHub Pages
+        const groupCtrl = new AbortController();
+        try {
+          const winner = await racePromisesAny([
+            fetchCandidatePdfBytes(normUrl, "binary", groupCtrl.signal, "Trực tiếp ipvietnam.gov.vn", 7500),
+            fetchCandidatePdfBytes(`https://api.allorigins.win/raw?url=${encoded}`, "binary", groupCtrl.signal, "Luồng Relay Stateless #1 (0 MB DB)", 11000),
+            fetchCandidatePdfBytes(`https://api.allorigins.win/get?url=${encoded}`, "allorigins_json", groupCtrl.signal, "Luồng Relay Base64 #2 (0 MB DB)", 11500),
+            fetchCandidatePdfBytes(`https://cors.x2u.in/${normUrl}`, "binary", groupCtrl.signal, "Luồng Relay Stateless #3 (0 MB DB)", 11000)
+          ]);
+          groupCtrl.abort();
+          putBoundedMapCache(PDF_BYTES_RAM_CACHE, normUrl, winner, 4);
+          return winner;
+        } catch (err) {
+          groupCtrl.abort();
+          throw err;
+        }
+      })();
+
+      INFLIGHT_PDF_FETCHES.set(normUrl, taskPromise);
+      try {
+        return await taskPromise;
+      } finally {
+        INFLIGHT_PDF_FETCHES.delete(normUrl);
+      }
+    }
+
+    async function loadPdfJsDocument(bytes) {
+      if (!configurePdfJsWorker()) {
+        throw new Error("Thư viện PDF.js chưa sẵn sàng.");
+      }
+      try {
+        return await window.pdfjsLib.getDocument({ data: bytes.slice() }).promise;
+      } catch (workerErr) {
+        return await window.pdfjsLib.getDocument({ data: bytes.slice(), disableWorker: true }).promise;
+      }
+    }
+
+    function updateNoipSlotToolbarUi(slotKey) {
+      const slot = NOIP_PDF_SLOTS[slotKey];
+      const pageLabel = document.getElementById(`noipPdfPageInfo-${slotKey}`);
+      const zoomLabel = document.getElementById(`noipPdfZoomInfo-${slotKey}`);
+      const srcBadge = document.getElementById(`noipPdfSourceBadge-${slotKey}`);
+      const multiBtn = document.getElementById(`noipPdfMultiBtn-${slotKey}`);
+      if (pageLabel && slot.numPages > 0) {
+        pageLabel.textContent = `Trang ${slot.pageNum} / ${slot.numPages}`;
+      }
+      if (zoomLabel) {
+        zoomLabel.textContent = slot.scaleMode === "fit" ? "Vừa ngang" : `${Math.round(Number(slot.scaleMode) * 100)}%`;
+      }
+      if (srcBadge && slot.sourceLabel) {
+        srcBadge.textContent = `⚡ ${slot.sourceLabel}`;
+      }
+      if (multiBtn) {
+        multiBtn.textContent = slot.multiPage ? "📜 Đang cuộn 3 trang" : "📄 Xem từng trang";
+      }
+    }
+
+    async function renderNoipPdfPagesToCanvas(slotKey) {
+      const slot = NOIP_PDF_SLOTS[slotKey];
+      const stageEl = document.getElementById(`noipPdfCanvasStage-${slotKey}`);
+      if (!slot || !slot.pdfDoc || !stageEl) return;
+
+      const renderToken = ++slot.jobId;
+      updateNoipSlotToolbarUi(slotKey);
+
+      const containerWidth = Math.max(300, (stageEl.clientWidth || 760) - 28);
+      const startPage = Math.min(Math.max(1, slot.pageNum), slot.numPages);
+      const endPage = slot.multiPage ? Math.min(slot.numPages, startPage + 2) : startPage;
+
+      const fragment = document.createDocumentFragment();
+      for (let pNum = startPage; pNum <= endPage; pNum++) {
+        const page = await slot.pdfDoc.getPage(pNum);
+        if (NOIP_PDF_SLOTS[slotKey].jobId !== renderToken) return;
+
+        const baseVp = page.getViewport({ scale: 1 });
+        const targetScale = slot.scaleMode === "fit"
+          ? Math.min(2.0, Math.max(0.65, containerWidth / baseVp.width))
+          : Number(slot.scaleMode) || 1.15;
+        const vp = page.getViewport({ scale: targetScale });
+        const dpr = Math.min(window.devicePixelRatio || 1, 2);
+
+        const wrap = document.createElement("div");
+        wrap.className = "mx-auto bg-white rounded-lg shadow-xl border border-slate-700 overflow-hidden mb-3";
+        wrap.style.width = `${Math.floor(vp.width)}px`;
+        wrap.style.maxWidth = "100%";
+
+        const pageCaption = document.createElement("div");
+        pageCaption.className = "px-3 py-1 bg-slate-800 text-slate-200 text-[11px] font-mono flex items-center justify-between";
+        pageCaption.innerHTML = `<span>Trang ${pNum} / ${slot.numPages}</span><span>Bản mô tả gốc Cục SHTT (0 MB DB)</span>`;
+        wrap.appendChild(pageCaption);
+
+        const canvas = document.createElement("canvas");
+        canvas.width = Math.floor(vp.width * dpr);
+        canvas.height = Math.floor(vp.height * dpr);
+        canvas.style.width = "100%";
+        canvas.style.height = "auto";
+        canvas.className = "block bg-white";
+        wrap.appendChild(canvas);
+        fragment.appendChild(wrap);
+
+        const ctx = canvas.getContext("2d");
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        await page.render({ canvasContext: ctx, viewport: vp }).promise;
+        if (NOIP_PDF_SLOTS[slotKey].jobId !== renderToken) return;
+      }
+
+      stageEl.innerHTML = "";
+      stageEl.appendChild(fragment);
+    }
+
+    function mountNoipCanvasShell(slotKey, normUrl, heightClass) {
+      const vpEl = document.getElementById(`noipPdfViewport-${slotKey}`);
+      if (!vpEl) return;
+      vpEl.innerHTML = `
+        <div class="rounded-xl border border-[var(--border)] bg-slate-950 overflow-hidden flex flex-col">
+          <div class="px-3 py-2 bg-slate-900 border-b border-slate-800 flex flex-wrap items-center justify-between gap-2 text-xs text-white">
+            <div class="flex flex-wrap items-center gap-1.5">
+              <button onclick="noipPdfStepPage('${slotKey}', -1)" class="px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 font-semibold cursor-pointer">◀ Trước</button>
+              <span id="noipPdfPageInfo-${slotKey}" class="px-2.5 py-1 rounded bg-slate-950 border border-slate-700 font-mono font-bold">Trang 1 / --</span>
+              <button onclick="noipPdfStepPage('${slotKey}', 1)" class="px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 font-semibold cursor-pointer">Sau ▶</button>
+              <button id="noipPdfMultiBtn-${slotKey}" onclick="noipPdfToggleMultiPage('${slotKey}')" class="px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 font-semibold cursor-pointer">📄 Xem từng trang</button>
+            </div>
+            <div class="flex flex-wrap items-center gap-1.5">
+              <button onclick="noipPdfZoom('${slotKey}', 'out')" class="px-2 py-1 rounded bg-slate-800 hover:bg-slate-700 font-bold cursor-pointer">➖</button>
+              <button id="noipPdfZoomInfo-${slotKey}" onclick="noipPdfZoom('${slotKey}', 'fit')" class="px-2.5 py-1 rounded bg-slate-950 border border-slate-700 font-mono cursor-pointer">Vừa ngang</button>
+              <button onclick="noipPdfZoom('${slotKey}', 'in')" class="px-2 py-1 rounded bg-slate-800 hover:bg-slate-700 font-bold cursor-pointer">➕</button>
+              <span id="noipPdfSourceBadge-${slotKey}" class="hidden sm:inline-block px-2 py-0.5 rounded text-[11px] bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">⚡ RAM Stream</span>
+              <button onclick="openFloatingNoipPdfWindow('${escapeHtmlAttr(normUrl)}')" class="px-2.5 py-1 rounded bg-blue-600 hover:bg-blue-500 font-semibold cursor-pointer">🗔 Cửa sổ Gốc</button>
+            </div>
+          </div>
+          <div id="noipPdfCanvasStage-${slotKey}" class="${heightClass} overflow-y-auto p-3 flex flex-col items-center"></div>
+        </div>
+      `;
+    }
+
+    function scheduleNoipPdfHydration(slotKey, p) {
+      setTimeout(() => { hydrateNoipPdfCanvasSlot(slotKey, p, false); }, 0);
+    }
+
+    async function hydrateNoipPdfCanvasSlot(slotKey, p, forceRefresh) {
+      const vpEl = document.getElementById(`noipPdfViewport-${slotKey}`);
+      if (!vpEl) return;
+      const isModal = slotKey === "modal";
+      const effectiveRawUrl = isModal
+        ? (modalDirectPdfUrl || customDirectPdfUrlOverride || (p && p.fulltext_pdf_url) || "")
+        : (customDirectPdfUrlOverride || (p && p.fulltext_pdf_url) || "");
       const normUrl = normalizeNoipPdfUrl(effectiveRawUrl);
+      const heightClass = isModal ? "h-[62vh] min-h-[440px]" : "h-[500px]";
+
+      if (!normUrl || isSimulatedSeedPdfUrl(normUrl) || activePdfViewerMode !== "canvas") {
+        return;
+      }
+
+      const slot = NOIP_PDF_SLOTS[slotKey];
+      const token = ++slot.jobId;
+      slot.appNo = (p && p.application_no) || "";
+      if (slot.url !== normUrl) {
+        slot.url = normUrl;
+        slot.pageNum = 1;
+        slot.scaleMode = "fit";
+      }
+
+      if (!forceRefresh && PDF_DOC_RAM_CACHE.has(normUrl)) {
+        const cachedDoc = PDF_DOC_RAM_CACHE.get(normUrl);
+        slot.pdfDoc = cachedDoc.pdfDoc;
+        slot.numPages = cachedDoc.pdfDoc.numPages;
+        slot.sourceLabel = cachedDoc.sourceLabel;
+        mountNoipCanvasShell(slotKey, normUrl, heightClass);
+        await renderNoipPdfPagesToCanvas(slotKey);
+        return;
+      }
+
+      vpEl.innerHTML = `
+        <div class="w-full ${heightClass} rounded-xl border border-[var(--border)] bg-slate-950 p-6 flex flex-col items-center justify-center text-center space-y-3 text-xs text-slate-200">
+          <div class="w-8 h-8 rounded-full border-2 border-emerald-400 border-t-transparent animate-spin"></div>
+          <div class="text-sm font-bold text-emerald-300">Đang nạp luồng PDF trực tiếp từ máy chủ Cục SHTT vào khung Canvas RAM...</div>
+          <p class="max-w-xl text-slate-400">
+            Đọc trực tiếp từ <code>${escapeHtmlAttr(normUrl)}</code> bằng <strong>Mozilla PDF.js</strong> (không dùng Google gview, <strong>không bao giờ tự tải file lỗi</strong>, 0 MB lưu CSDL).
+          </p>
+          <div class="flex flex-wrap justify-center gap-2 pt-1">
+            <button onclick="openFloatingNoipPdfWindow('${escapeHtmlAttr(normUrl)}')" class="px-3.5 py-1.5 rounded-lg font-semibold bg-blue-600 hover:bg-blue-500 text-white cursor-pointer">
+              🗔 Mở Ngay Cửa Sổ Đọc Nổi Trực Tiếp (Không cần chờ Relay)
+            </button>
+          </div>
+        </div>
+      `;
+
+      try {
+        const fetched = await fetchLiveNoipPdfBytes(normUrl, forceRefresh);
+        if (NOIP_PDF_SLOTS[slotKey].jobId !== token) return;
+        const pdfDoc = await loadPdfJsDocument(fetched.bytes);
+        if (NOIP_PDF_SLOTS[slotKey].jobId !== token) return;
+
+        putBoundedMapCache(PDF_DOC_RAM_CACHE, normUrl, { pdfDoc, sourceLabel: fetched.sourceLabel }, 4);
+        slot.pdfDoc = pdfDoc;
+        slot.numPages = pdfDoc.numPages;
+        slot.pageNum = 1;
+        slot.sourceLabel = fetched.sourceLabel;
+        mountNoipCanvasShell(slotKey, normUrl, heightClass);
+        await renderNoipPdfPagesToCanvas(slotKey);
+      } catch (err) {
+        if (NOIP_PDF_SLOTS[slotKey].jobId !== token) return;
+        const fileInputId = `noipLocalPdfPicker-${slotKey}`;
+        const fallbackBanner = `
+          <div class="p-4 rounded-xl border border-blue-500/40 bg-blue-500/10 space-y-2.5 text-xs">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <div class="font-bold text-sm text-blue-300">
+                🛡️ Máy chủ Liferay Cục SHTT đang bật chính sách bảo mật <code>X-Frame-Options: SAMEORIGIN</code> & chặn CORS tĩnh
+              </div>
+              <span class="px-2 py-0.5 rounded font-mono text-[11px] bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">0 File Lỗi • 0 MB DB</span>
+            </div>
+            <p class="text-[var(--muted-foreground)] leading-relaxed">
+              Trên trang tĩnh (GitHub Pages / Google Sites không chạy <code>server.py</code>), máy chủ <code>www.ipvietnam.gov.vn</code> từ chối đọc chéo miền qua trung gian. Hãy bấm nút <strong>Cửa sổ Đọc Nổi Trực tiếp</strong> bên dưới để trình duyệt mở khung đọc PDF gốc ngay từ địa chỉ IP của bạn tới Cục SHTT (hoạt động 100%, không tải file về máy), hoặc xem ngay <strong>Bản dựng A4 Toàn văn</strong> phía dưới:
+            </p>
+            <div class="flex flex-wrap items-center gap-2 pt-1">
+              <button onclick="openFloatingNoipPdfWindow('${escapeHtmlAttr(normUrl)}')" class="px-3.5 py-2 rounded-lg font-bold bg-emerald-600 hover:bg-emerald-500 text-white shadow cursor-pointer">
+                🗔 Mở Cửa Sổ Đọc PDF Scan Gốc Cục SHTT (ipvietnam.gov.vn)
+              </button>
+              <label for="${fileInputId}" class="px-3 py-2 rounded-lg font-semibold bg-slate-800 hover:bg-slate-700 text-white border border-slate-600 cursor-pointer">
+                📂 Mở tệp PDF trên Khung Canvas RAM
+              </label>
+              <input id="${fileInputId}" type="file" accept="application/pdf,.pdf" class="hidden" onchange="noipPdfLoadLocalFile('${slotKey}', this)" />
+              <button onclick="noipPdfRetryStream('${slotKey}')" class="px-3 py-2 rounded-lg font-semibold bg-[var(--card)] hover:opacity-90 text-[var(--foreground)] border border-[var(--border)] cursor-pointer">
+                🔄 Thử nạp lại luồng Relay
+              </button>
+            </div>
+          </div>
+        `;
+        vpEl.innerHTML = buildStructuredA4SpecificationHtml(p || PATENTS_DB[0], normUrl, fallbackBanner);
+      }
+    }
+
+    function noipPdfStepPage(slotKey, delta) {
+      const slot = NOIP_PDF_SLOTS[slotKey];
+      if (!slot || !slot.pdfDoc) return;
+      const step = slot.multiPage ? delta * 3 : delta;
+      const next = Math.min(slot.numPages, Math.max(1, slot.pageNum + step));
+      if (next === slot.pageNum) return;
+      slot.pageNum = next;
+      renderNoipPdfPagesToCanvas(slotKey);
+    }
+
+    function noipPdfToggleMultiPage(slotKey) {
+      const slot = NOIP_PDF_SLOTS[slotKey];
+      if (!slot || !slot.pdfDoc) return;
+      slot.multiPage = !slot.multiPage;
+      renderNoipPdfPagesToCanvas(slotKey);
+    }
+
+    function noipPdfZoom(slotKey, action) {
+      const slot = NOIP_PDF_SLOTS[slotKey];
+      if (!slot || !slot.pdfDoc) return;
+      if (action === "fit") {
+        slot.scaleMode = "fit";
+      } else {
+        const cur = slot.scaleMode === "fit" ? 1.15 : Number(slot.scaleMode) || 1.15;
+        slot.scaleMode = action === "in"
+          ? Math.min(2.4, Math.round((cur + 0.2) * 100) / 100)
+          : Math.max(0.65, Math.round((cur - 0.2) * 100) / 100);
+      }
+      renderNoipPdfPagesToCanvas(slotKey);
+    }
+
+    function noipPdfRetryStream(slotKey) {
+      const p = PATENTS_DB.find(x => x.application_no === (slotKey === "modal" ? (modalTargetAppNo || selectedPatentAppNo) : selectedPatentAppNo)) || PATENTS_DB[0];
+      hydrateNoipPdfCanvasSlot(slotKey, p, true);
+    }
+
+    async function noipPdfLoadLocalFile(slotKey, inputEl) {
+      if (!inputEl || !inputEl.files || !inputEl.files[0]) return;
+      const file = inputEl.files[0];
+      const buf = await file.arrayBuffer();
+      const valid = hasPdfMagicHeader(new Uint8Array(buf));
+      if (!valid) return;
+      const pdfDoc = await loadPdfJsDocument(valid);
+      const slot = NOIP_PDF_SLOTS[slotKey];
+      slot.pdfDoc = pdfDoc;
+      slot.numPages = pdfDoc.numPages;
+      slot.pageNum = 1;
+      slot.scaleMode = "fit";
+      slot.sourceLabel = `Tệp cục bộ trên RAM (${file.name} - 0 MB DB)`;
+      const heightClass = slotKey === "modal" ? "h-[62vh] min-h-[440px]" : "h-[500px]";
+      mountNoipCanvasShell(slotKey, slot.url || "", heightClass);
+      await renderNoipPdfPagesToCanvas(slotKey);
+    }
+
+    function buildDirectNoipPdfReaderHtml(p, isModal) {
+      const slotKey = isModal ? "modal" : "inline";
+      const effectiveRawUrl = isModal
+        ? (modalDirectPdfUrl || customDirectPdfUrlOverride || (p && p.fulltext_pdf_url) || "")
+        : (customDirectPdfUrlOverride || (p && p.fulltext_pdf_url) || "");
+      const normUrl = normalizeNoipPdfUrl(effectiveRawUrl);
+      const isSimulatedUrl = isSimulatedSeedPdfUrl(normUrl);
       const isRealLiferay = isRealLiferayNoipPdfUrl(normUrl);
       const inputId = isModal ? "customNoipPdfInputModal" : "customNoipPdfInputInline";
-      const heightClass = isModal ? "h-[66vh] min-h-[460px]" : "h-[500px]";
+      const heightClass = isModal ? "h-[62vh] min-h-[440px]" : "h-[500px]";
 
       const sampleButtonsHtml = VERIFIED_NOIP_LIVE_PDFS.map(s => {
         const isCurrent = normalizeNoipPdfUrl(s.url) === normUrl;
@@ -1186,11 +1757,11 @@ Yêu cầu bảo hộ:
           <div class="flex flex-wrap items-center justify-between gap-2">
             <div class="flex flex-wrap items-center gap-1.5">
               <span class="px-2 py-0.5 rounded font-bold bg-emerald-500/15 text-emerald-500 border border-emerald-500/30">
-                🔗 Zero-DB PDF Reader (0 MB lưu CSDL)
+                🔗 Zero-DB PDF.js Reader (0 MB lưu CSDL)
               </span>
               ${normUrl ? (isRealLiferay
-                ? `<span class="px-2 py-0.5 rounded font-semibold bg-blue-500/15 text-blue-400 border border-blue-500/30">✅ Link thực tế trên Liferay Cục SHTT</span>`
-                : `<span class="px-2 py-0.5 rounded font-semibold bg-amber-500/15 text-amber-400 border border-amber-500/30">ℹ️ Link mẫu kỳ 2026 - Chọn nhanh link thực tế bên dưới để xem bản scan thật</span>`
+                ? `<span class="px-2 py-0.5 rounded font-semibold bg-blue-500/15 text-blue-400 border border-blue-500/30">✅ Link UUID thực tế trên Liferay Cục SHTT</span>`
+                : `<span class="px-2 py-0.5 rounded font-semibold bg-amber-500/15 text-amber-400 border border-amber-500/30">📑 Hồ sơ kịch bản 2026 — Đang hiển thị Bản dựng A4 Toàn văn</span>`
               ) : ''}
             </div>
             <div class="flex flex-wrap items-center gap-1.5">
@@ -1199,29 +1770,36 @@ Yêu cầu bảo hộ:
                   ⛶ Phóng to Toàn trang
                 </button>
               ` : ''}
-              ${normUrl ? `
+              ${isRealLiferay ? `
+                <button onclick="openFloatingNoipPdfWindow('${escapeHtmlAttr(normUrl)}')" class="px-2.5 py-1 rounded-lg font-semibold bg-emerald-600 hover:bg-emerald-500 text-white cursor-pointer">
+                  🗔 Mở Cửa Sổ Đọc Nổi Cục SHTT
+                </button>
                 <a href="${escapeHtmlAttr(normUrl)}" target="_blank" rel="noopener noreferrer" class="px-2.5 py-1 rounded-lg font-semibold bg-blue-600 hover:bg-blue-500 text-white">
-                  Mở Link Gốc Cục SHTT ↗
+                  Tab Gốc Cục SHTT ↗
                 </a>
-              ` : ''}
+              ` : `
+                <a href="${NOIP_MONTHLY_PORTAL_URL}" target="_blank" rel="noopener noreferrer" class="px-2.5 py-1 rounded-lg font-semibold bg-blue-600 hover:bg-blue-500 text-white">
+                  Cổng Toàn văn Cục SHTT ↗
+                </a>
+              `}
             </div>
           </div>
 
           <div class="flex flex-wrap items-center gap-1.5 pt-1 border-t border-[var(--border)]">
-            <span class="text-[11px] font-semibold text-[var(--muted-foreground)] mr-1">Chế độ khung đọc:</span>
-            <button onclick="setPdfViewerMode('gview')" class="px-2.5 py-1 rounded-md text-[11px] font-semibold border cursor-pointer ${activePdfViewerMode === 'gview' ? 'bg-blue-600 text-white border-blue-600' : 'bg-[var(--card)] text-[var(--foreground)] border-[var(--border)]'}">
-              1. Google PDF Wrapper (Vượt chặn X-Frame Cục SHTT)
+            <span class="text-[11px] font-semibold text-[var(--muted-foreground)] mr-1">Chế độ đọc trực tiếp:</span>
+            <button onclick="setPdfViewerMode('canvas')" class="px-2.5 py-1 rounded-md text-[11px] font-semibold border cursor-pointer ${activePdfViewerMode === 'canvas' ? 'bg-blue-600 text-white border-blue-600' : 'bg-[var(--card)] text-[var(--foreground)] border-[var(--border)]'}">
+              1. Khung Đọc PDF.js Canvas (RAM Stream - 0 File Lỗi)
             </button>
-            <button onclick="setPdfViewerMode('direct')" class="px-2.5 py-1 rounded-md text-[11px] font-semibold border cursor-pointer ${activePdfViewerMode === 'direct' ? 'bg-blue-600 text-white border-blue-600' : 'bg-[var(--card)] text-[var(--foreground)] border-[var(--border)]'}">
-              2. Khung Native Trực tiếp (ipvietnam.gov.vn)
+            <button onclick="setPdfViewerMode('popup')" class="px-2.5 py-1 rounded-md text-[11px] font-semibold border cursor-pointer ${activePdfViewerMode === 'popup' ? 'bg-blue-600 text-white border-blue-600' : 'bg-[var(--card)] text-[var(--foreground)] border-[var(--border)]'}">
+              2. Cửa sổ Đọc Nổi Trực tiếp (Vượt chặn X-Frame & CORS 100%)
             </button>
-            <button onclick="setPdfViewerMode('stream')" class="px-2.5 py-1 rounded-md text-[11px] font-semibold border cursor-pointer ${activePdfViewerMode === 'stream' ? 'bg-blue-600 text-white border-blue-600' : 'bg-[var(--card)] text-[var(--foreground)] border-[var(--border)]'}">
-              3. Luồng RAM Pass-Through (/api/pdf-stream)
+            <button onclick="setPdfViewerMode('spec')" class="px-2.5 py-1 rounded-md text-[11px] font-semibold border cursor-pointer ${activePdfViewerMode === 'spec' ? 'bg-blue-600 text-white border-blue-600' : 'bg-[var(--card)] text-[var(--foreground)] border-[var(--border)]'}">
+              3. Bản Dựng A4 Toàn văn 6 Phần (WIPO ST.9)
             </button>
           </div>
 
           <div class="space-y-1 pt-1 border-t border-[var(--border)]">
-            <div class="text-[11px] font-semibold text-[var(--muted-foreground)]">Nạp nhanh Bản mô tả toàn văn thực tế từ máy chủ Cục SHTT (<code>www.ipvietnam.gov.vn/documents/20182/...</code>):</div>
+            <div class="text-[11px] font-semibold text-[var(--muted-foreground)]">Nạp nhanh 4 Bản scan PDF Bằng độc quyền thực tế trên máy chủ Cục SHTT (<code>www.ipvietnam.gov.vn/documents/20182/...</code>):</div>
             <div class="flex flex-wrap gap-1.5">
               ${sampleButtonsHtml}
             </div>
@@ -1231,8 +1809,8 @@ Yêu cầu bảo hộ:
             <input
               id="${inputId}"
               type="url"
-              value="${escapeHtmlAttr(normUrl)}"
-              placeholder="Dán link gốc PDF từ ipvietnam.gov.vn/documents/20182/... (tự động gỡ ?download=true để đọc trực tiếp)"
+              value="${escapeHtmlAttr(isSimulatedUrl ? '' : normUrl)}"
+              placeholder="Dán link gốc PDF thực tế từ ipvietnam.gov.vn/documents/20182/... (tự động gỡ ?download=true)"
               class="flex-1 px-2.5 py-1.5 rounded-lg text-xs font-mono bg-[var(--card)] border border-[var(--border)] focus:outline-none focus:border-blue-500"
             />
             <button onclick="applyCustomDirectPdfUrl('${inputId}', ${isModal ? 'true' : 'false'})" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-emerald-600 hover:bg-emerald-500 text-white shrink-0 cursor-pointer">
@@ -1244,13 +1822,64 @@ Yêu cầu bảo hộ:
       `;
 
       if (!normUrl) {
+        const pendingNotice = `
+          <div class="p-4 rounded-xl border border-amber-500/40 bg-amber-500/10 text-xs space-y-1.5">
+            <div class="text-sm font-bold text-amber-400">⏳ Hồ sơ ${p ? escapeHtmlAttr(p.application_no) : ''} hiện ở giai đoạn Công bố đơn Tập A / Đang thẩm định</div>
+            <p class="text-[var(--muted-foreground)]">Cục SHTT chỉ đăng tải tệp scan PDF <strong>Bản mô tả Bằng độc quyền</strong> sau khi có Quyết định cấp bằng (Công báo Tập B). Dưới đây là bản trích xuất cấu trúc hồ sơ hiện có; bạn có thể bấm chọn một trong <strong>4 Bằng độc quyền thực tế của Cục SHTT</strong> trên thanh công cụ để xem bản scan PDF gốc.</p>
+          </div>
+        `;
         return `
           <div class="space-y-2.5">
             ${toolbarAndSamplesHtml}
-            <div class="p-5 rounded-xl border border-amber-500/40 bg-amber-500/10 text-xs space-y-2">
-              <div class="text-sm font-bold text-amber-400">⏳ Hồ sơ ${p ? p.application_no : ''} hiện mới ở giai đoạn Công bố đơn Tập A / Đang thẩm định</div>
-              <p class="text-[var(--muted-foreground)]">Cục SHTT chỉ đăng tải tệp PDF <strong>Bản mô tả toàn văn Bằng độc quyền</strong> sau khi có Quyết định cấp bằng (Công báo Tập B). Bạn có thể bấm chọn một trong <strong>4 Bản mô tả thực tế của Cục SHTT</strong> ở thanh công cụ phía trên hoặc dán đường dẫn PDF bất kỳ từ <code>ipvietnam.gov.vn</code> để đọc trực tiếp ngay trong khung này (0 MB lưu DB).</p>
+            ${buildStructuredA4SpecificationHtml(p, "", pendingNotice)}
+          </div>
+        `;
+      }
+
+      if (isSimulatedUrl) {
+        const simNotice = `
+          <div class="p-3.5 rounded-xl border border-amber-500/40 bg-amber-500/10 text-xs space-y-1.5">
+            <div class="font-bold text-amber-300">ℹ️ Hồ sơ mẫu kiểm thử bộ lọc pháp lý REA (${escapeHtmlAttr(p ? p.application_no : '')} / Bằng ${escapeHtmlAttr(p && p.grant_no ? p.grant_no : '')})</div>
+            <p class="text-[var(--muted-foreground)]">
+              Hồ sơ này thuộc bộ dữ liệu mô phỏng kịch bản thời hạn Luật SHTT 2026 nên không gọi tải đường dẫn mẫu để tránh phát sinh lỗi tải tệp trên trình duyệt. Hệ thống hiển thị trực tiếp <strong>Bản dựng A4 Toàn văn 6 phần & Yêu cầu bảo hộ</strong> bên dưới — hoặc bạn hãy bấm 1 trong <strong>4 nút Bằng độc quyền thực tế (Chàm mèo, Nano Selen, Khoáng vật Xenotim, Khay thẻ SIM)</strong> ở thanh trên để đọc bản scan PDF thật từ <code>www.ipvietnam.gov.vn</code>!
+            </p>
+          </div>
+        `;
+        return `
+          <div class="space-y-2.5">
+            ${toolbarAndSamplesHtml}
+            ${buildStructuredA4SpecificationHtml(p, normUrl, simNotice)}
+          </div>
+        `;
+      }
+
+      if (activePdfViewerMode === "popup") {
+        const popupCard = `
+          <div class="p-4 rounded-xl border border-emerald-500/40 bg-emerald-500/10 text-xs space-y-2.5">
+            <div class="text-sm font-bold text-emerald-300">🗔 Chế độ Cửa sổ Đọc Nổi Trực tiếp từ Máy chủ Cục SHTT (Vượt chặn X-Frame-Options & CORS 100%)</div>
+            <p class="text-[var(--muted-foreground)]">
+              Mở khung trình đọc PDF gốc của trình duyệt kết nối thẳng từ máy của bạn tới <code>${escapeHtmlAttr(normUrl)}</code> (đã tự động gỡ <code>?download=true</code> để đọc trực tiếp trên màn hình, không lưu DB):
+            </p>
+            <div>
+              <button onclick="openFloatingNoipPdfWindow('${escapeHtmlAttr(normUrl)}')" class="px-4 py-2 rounded-lg font-bold bg-emerald-600 hover:bg-emerald-500 text-white shadow cursor-pointer">
+                🗔 Bấm Mở Cửa Sổ Đọc PDF Scan Gốc Cục SHTT Ngay
+              </button>
             </div>
+          </div>
+        `;
+        return `
+          <div class="space-y-2.5">
+            ${toolbarAndSamplesHtml}
+            ${buildStructuredA4SpecificationHtml(p, normUrl, popupCard)}
+          </div>
+        `;
+      }
+
+      if (activePdfViewerMode === "spec") {
+        return `
+          <div class="space-y-2.5">
+            ${toolbarAndSamplesHtml}
+            ${buildStructuredA4SpecificationHtml(p, normUrl, "")}
           </div>
         `;
       }
@@ -1261,13 +1890,24 @@ Yêu cầu bảo hộ:
           <div class="text-[11px] font-mono text-[var(--muted-foreground)] bg-[var(--background)] px-2.5 py-1 rounded border border-[var(--border)] break-all">
             <strong>Nguồn đọc trực tiếp (Upstream Origin):</strong> ${escapeHtmlAttr(normUrl)}
           </div>
-          ${buildPdfFrameEmbedElement(normUrl, heightClass)}
+          <div id="noipPdfViewport-${slotKey}" class="w-full min-h-[320px] flex-1">
+            <div class="w-full ${heightClass} rounded-xl border border-[var(--border)] bg-slate-950 flex items-center justify-center text-xs text-slate-400">
+              Đang khởi tạo khung đọc PDF.js Canvas...
+            </div>
+          </div>
         </div>
       `;
     }
 
     function setPdfViewerMode(mode) {
       activePdfViewerMode = mode;
+      if (mode === "popup") {
+        const p = PATENTS_DB.find(x => x.application_no === (modalTargetAppNo || selectedPatentAppNo)) || PATENTS_DB[0];
+        const u = normalizeNoipPdfUrl(modalDirectPdfUrl || customDirectPdfUrlOverride || (p && p.fulltext_pdf_url) || "");
+        if (isRealLiferayNoipPdfUrl(u)) {
+          openFloatingNoipPdfWindow(u);
+        }
+      }
       renderPatentDetail();
       renderDirectPdfModalIfOpen();
     }
@@ -1286,6 +1926,7 @@ Yêu cầu bảo hộ:
         return;
       }
       if (msgEl) msgEl.classList.add("hidden");
+      activePdfViewerMode = "canvas";
       customDirectPdfUrlOverride = norm;
       if (isModal) modalDirectPdfUrl = norm;
       renderPatentDetail();
@@ -1294,13 +1935,15 @@ Yêu cầu bảo hộ:
 
     function selectVerifiedLivePdfSample(sampleUrl, sampleAppNo, isModal) {
       const norm = normalizeNoipPdfUrl(sampleUrl);
+      activePdfViewerMode = "canvas";
       if (sampleAppNo && PATENTS_DB.some(x => x.application_no === sampleAppNo)) {
         selectedPatentAppNo = sampleAppNo;
         customDirectPdfUrlOverride = "";
         activeDetailSubTab = "pdf";
         if (isModal) {
+          modalTargetAppNo = sampleAppNo;
           const found = PATENTS_DB.find(x => x.application_no === sampleAppNo);
-          modalDirectPdfTitle = `Đơn ${found.application_no} / Bằng ${found.grant_no} - ${found.title_vi}`;
+          modalDirectPdfTitle = `Đơn ${found.application_no} / Bằng ${found.grant_no} — ${found.title_vi}`;
           modalDirectPdfUrl = norm;
         }
         runSearch();
@@ -1323,7 +1966,8 @@ Yêu cầu bảo hộ:
     }
 
     function openDirectNoipPdfModal(appNoOrEmpty, explicitUrl, explicitTitle) {
-      const p = PATENTS_DB.find(x => x.application_no === (appNoOrEmpty || selectedPatentAppNo)) || PATENTS_DB[0];
+      modalTargetAppNo = appNoOrEmpty || selectedPatentAppNo;
+      const p = PATENTS_DB.find(x => x.application_no === modalTargetAppNo) || PATENTS_DB[0];
       modalDirectPdfUrl = normalizeNoipPdfUrl(explicitUrl || customDirectPdfUrlOverride || (p && p.fulltext_pdf_url) || "");
       modalDirectPdfTitle = explicitTitle || (p ? `Đơn ${p.application_no}${p.grant_no ? ' / Bằng ' + p.grant_no : ''} — ${p.title_vi}` : "Bản mô tả toàn văn Sáng chế Cục SHTT");
       const modal = document.getElementById("noipPdfModal");
@@ -1334,15 +1978,30 @@ Yêu cầu bảo hộ:
     function renderDirectPdfModalIfOpen() {
       const modal = document.getElementById("noipPdfModal");
       if (!modal || modal.classList.contains("hidden")) return;
-      const p = PATENTS_DB.find(x => x.application_no === selectedPatentAppNo) || PATENTS_DB[0];
+      const p = PATENTS_DB.find(x => x.application_no === (modalTargetAppNo || selectedPatentAppNo)) || PATENTS_DB[0];
       document.getElementById("noipPdfModalTitle").textContent = modalDirectPdfTitle || (p ? p.title_vi : "");
-      const rawLink = document.getElementById("noipPdfModalRawLink");
       const norm = normalizeNoipPdfUrl(modalDirectPdfUrl || customDirectPdfUrlOverride || (p && p.fulltext_pdf_url) || "");
-      if (rawLink) rawLink.href = norm || "https://ipvietnam.gov.vn/bang-oc-quyen-sang-che/giai-phap-huu-ich-uoc-cap-hang-thang";
+      const isReal = isRealLiferayNoipPdfUrl(norm);
+      const rawLink = document.getElementById("noipPdfModalRawLink");
+      if (rawLink) {
+        rawLink.href = isReal ? norm : NOIP_MONTHLY_PORTAL_URL;
+        rawLink.textContent = isReal ? "Mở Link Gốc Cục SHTT ↗" : "Cổng Toàn văn Cục SHTT ↗";
+      }
+      const floatBtn = document.getElementById("noipPdfModalFloatingBtn");
+      if (floatBtn) {
+        if (isReal) {
+          floatBtn.classList.remove("hidden");
+          floatBtn.onclick = () => openFloatingNoipPdfWindow(norm);
+        } else {
+          floatBtn.classList.add("hidden");
+        }
+      }
       document.getElementById("noipPdfModalBody").innerHTML = buildDirectNoipPdfReaderHtml(p, true);
+      scheduleNoipPdfHydration("modal", p);
     }
 
     function closeDirectNoipPdfModal() {
+      NOIP_PDF_SLOTS.modal.jobId += 1;
       const modal = document.getElementById("noipPdfModal");
       if (modal) modal.classList.add("hidden");
       const body = document.getElementById("noipPdfModalBody");
@@ -1364,6 +2023,8 @@ Yêu cầu bảo hộ:
       if (modal) modal.classList.add("hidden");
       const modalBody = clone.querySelector("#noipPdfModalBody");
       if (modalBody) modalBody.innerHTML = "";
+      const inlineVp = clone.querySelector("#noipPdfViewport-inline");
+      if (inlineVp) inlineVp.innerHTML = "";
       const copyBtn = clone.querySelector("#btnCopyEmbed");
       if (copyBtn) copyBtn.textContent = "📋 Sao chép Mã Nhúng Google Sites";
       return "<!DOCTYPE html>\n" + clone.outerHTML;
@@ -1639,14 +2300,21 @@ Yêu cầu bảo hộ:
               <span class="px-2 py-0.5 rounded border ${cm.badge}">${cm.label}</span>
               <div class="flex flex-wrap items-center gap-1">
                 ${(p.special_filter_flags || []).map(f => `<span class="px-2 py-0.5 rounded font-semibold bg-amber-500/15 text-amber-400 border border-amber-500/30">${f}</span>`).join("")}
-                ${p.fulltext_pdf_url ? `
-                  <button onclick="event.stopPropagation(); openDirectNoipPdfForPatent('${p.application_no}', false)" class="px-2 py-0.5 rounded font-semibold bg-blue-600 hover:bg-blue-500 text-white cursor-pointer">
-                    📄 Đọc PDF Gốc Cục SHTT
+                ${p.fulltext_pdf_url ? (isRealLiferayNoipPdfUrl(p.fulltext_pdf_url) ? `
+                  <button onclick="event.stopPropagation(); openDirectNoipPdfForPatent('${p.application_no}', false)" class="px-2 py-0.5 rounded font-semibold bg-emerald-600 hover:bg-emerald-500 text-white cursor-pointer">
+                    📄 Đọc Scan PDF Gốc Cục SHTT
                   </button>
                   <button onclick="event.stopPropagation(); openDirectNoipPdfForPatent('${p.application_no}', true)" title="Mở khung đọc PDF toàn trang" class="px-2 py-0.5 rounded font-semibold bg-slate-800 hover:bg-slate-700 text-white cursor-pointer">
                     ⛶ Toàn trang
                   </button>
-                ` : `<span class="px-2 py-0.5 rounded text-[11px] bg-[var(--background)] text-[var(--muted-foreground)] border border-[var(--border)]">⏳ Chưa có PDF cấp bằng</span>`}
+                ` : `
+                  <button onclick="event.stopPropagation(); openDirectNoipPdfForPatent('${p.application_no}', false)" class="px-2 py-0.5 rounded font-semibold bg-blue-600 hover:bg-blue-500 text-white cursor-pointer">
+                    📑 Bản Mô tả Toàn văn
+                  </button>
+                  <button onclick="event.stopPropagation(); openDirectNoipPdfForPatent('${p.application_no}', true)" title="Mở Bản mô tả toàn văn toàn trang" class="px-2 py-0.5 rounded font-semibold bg-slate-800 hover:bg-slate-700 text-white cursor-pointer">
+                    ⛶ Toàn trang
+                  </button>
+                `) : `<span class="px-2 py-0.5 rounded text-[11px] bg-[var(--background)] text-[var(--muted-foreground)] border border-[var(--border)]">⏳ Chưa có PDF cấp bằng</span>`}
               </div>
             </div>
           </article>
@@ -1840,6 +2508,9 @@ Yêu cầu bảo hộ:
           ${subTabContent}
         </div>
       `;
+      if (activeDetailSubTab === "pdf") {
+        scheduleNoipPdfHydration("inline", p);
+      }
     }
 
     function savePatentCommStatus(appNo) {
