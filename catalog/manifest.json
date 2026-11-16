@@ -1,44 +1,44 @@
 {
   "schema_version": "2026.8-compact-v1",
   "generated_at": "2026-11-16",
-  "total_dossiers": 91802,
-  "granted_count": 47795,
-  "published_count": 42731,
+  "total_dossiers": 90458,
+  "granted_count": 47024,
+  "published_count": 42158,
   "pending_count": 1274,
-  "public_domain_count": 480,
+  "public_domain_count": 478,
   "verified_pdf_count": 44323,
   "binary_pdf_storage_mb": 0.0,
   "shard_count": 6,
   "shards": [
     {
       "file": "shard_0.json",
-      "count": 15301,
-      "bytes": 6498134
+      "count": 15077,
+      "bytes": 6404407
     },
     {
       "file": "shard_1.json",
-      "count": 15301,
-      "bytes": 6407772
+      "count": 15077,
+      "bytes": 6313468
     },
     {
       "file": "shard_2.json",
-      "count": 15301,
-      "bytes": 6022355
+      "count": 15077,
+      "bytes": 5969933
     },
     {
       "file": "shard_3.json",
-      "count": 15301,
-      "bytes": 4298667
+      "count": 15077,
+      "bytes": 4158547
     },
     {
       "file": "shard_4.json",
-      "count": 15301,
-      "bytes": 4068439
+      "count": 15077,
+      "bytes": 4004952
     },
     {
       "file": "shard_5.json",
-      "count": 15297,
-      "bytes": 4093696
+      "count": 15073,
+      "bytes": 4017586
     }
   ]
 }

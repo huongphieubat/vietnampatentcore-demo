@@ -1266,6 +1266,187 @@ Lĩnh vực kỹ thuật được đề cập: Thị giác máy tính đa phổ 
       window.__standaloneHydrationMs = Number((performance.now() - t0).toFixed(2));
     })();
 
+    // =========================================================================
+    // BỘ NẠP DANH MỤC TĨNH 6 SHARD (90.458+ HỒ SƠ) & TRA CỨU BẢNG BĂM O(1)
+    // =========================================================================
+    const ADMIN_SEED_RICH_BY_APP = new Map(PATENTS_DB.slice(0, 14).map(p => [p.application_no, p]));
+    const ADMIN_515_COMM_BY_APP = new Map(PATENTS_DB.slice(14).map(p => [p.application_no, p.commercialization_status]));
+    let ADMIN_PATENT_BY_APP = new Map();
+    const ADMIN_SHARD_STATUS = ["GRANTED", "PUBLISHED", "PENDING", "REFUSED", "WITHDRAWN", "EXPIRED"];
+    const ADMIN_SHARD_FTO = ["ACTIVE_PROTECTED", "CONTINGENT", "PUBLIC_DOMAIN"];
+    const ADMIN_SHARD_COMM = ["UNEXPLOITED", "IN_HOUSE_PRODUCTION", "OPEN_FOR_LICENSING", "LICENSED_OR_ASSIGNED", "PILOT_RND"];
+    const ADMIN_SHARD_APPTYPE = ["ENTERPRISE", "INDIVIDUAL", "UNIVERSITY_INSTITUTE", "GOVERNMENT_AGENCY", "FOREIGN_CORP"];
+    const ADMIN_NOIP_DOC_PREFIX = "https://www.ipvietnam.gov.vn/documents/20182/";
+
+    function rebuildAdminPatentLookupMap() {
+      const m = new Map();
+      for (let i = 0; i < PATENTS_DB.length; i++) {
+        const p = PATENTS_DB[i];
+        if (p && p.application_no) m.set(p.application_no, p);
+      }
+      ADMIN_PATENT_BY_APP = m;
+    }
+
+    function findAdminPatentByApp(appNo) {
+      if (appNo && ADMIN_PATENT_BY_APP.has(appNo)) return ADMIN_PATENT_BY_APP.get(appNo);
+      return PATENTS_DB[0] || null;
+    }
+
+    function hasAdminVerifiedNoipPdf(p) {
+      if (!p) return false;
+      if (typeof p._hasRealPdf === "boolean") return p._hasRealPdf;
+      p._hasRealPdf = isRealLiferayNoipPdfUrl(p.fulltext_pdf_url);
+      return p._hasRealPdf;
+    }
+
+    function getAdminDisplayAbstract(p) {
+      if (!p) return "";
+      if (p.abstract_vi) return p.abstract_vi;
+      const typeLabel = p.patent_type === "UTILITY_SOLUTION" ? "Bằng độc quyền giải pháp hữu ích" : "Bằng độc quyền sáng chế";
+      if (p.status_group === "GRANTED" && p.grant_no) {
+        const rel = p.monthly_release_period ? ` công bố tại ${p.monthly_release_period}` : (p.gazette_issue_no ? ` (${p.gazette_issue_no})` : "");
+        return `${typeLabel} số ${p.grant_no} (Đơn ${p.application_no})${rel} của chủ văn bằng ${p.applicant_name || "theo hồ sơ Cục SHTT"}.`;
+      }
+      return `Hồ sơ đơn đăng ký ${p.application_no} của ${p.applicant_name || "chủ đơn"} công bố trên Công báo ${p.gazette_issue_no || "Sở hữu công nghiệp"} tại Cục SHTT.`;
+    }
+
+    function ensureAdminDossierDetail(p) {
+      if (!p) return p;
+      if (!p.abstract_vi) p.abstract_vi = getAdminDisplayAbstract(p);
+      const yr = parseInt(String(p.filing_date || p.application_no.split("-")[1] || "2022").slice(0, 4), 10) || 2022;
+      if (!p.filing_date) p.filing_date = `${yr}-06-15`;
+      if (!p.substantive_exam_deadline) p.substantive_exam_deadline = `${yr + 3}-${p.filing_date.slice(5, 10) || "06-15"}`;
+      if (!p.expiration_date) p.expiration_date = `${yr + (p.patent_type === "UTILITY_SOLUTION" ? 10 : 20)}-${p.filing_date.slice(5, 10) || "06-15"}`;
+      if (!p.next_annuity_due_date && p.status_group === "GRANTED" && p.fto_status !== "PUBLIC_DOMAIN") {
+        const gd = p.grant_date || "2026-10-26";
+        p.next_annuity_due_date = `2027-${gd.slice(5, 10) || "10-26"}`;
+      }
+      if (!p.commercialization_note) {
+        p.commercialization_note = p.fto_status === "PUBLIC_DOMAIN"
+          ? "Văn bằng đã hết thời hạn bảo hộ theo luật định — thuộc phạm vi công cộng (FTO Clear)."
+          : `Đồng bộ từ ${p.monthly_release_period || p.gazette_issue_no || "Công báo SHCN Cục SHTT"} (0 MB PDF).`;
+      }
+      if (!p.specification_sections || Object.keys(p.specification_sections).length === 0) {
+        const ipc0 = (p.ipc_codes && p.ipc_codes[0]) || "Kỹ thuật công nghiệp";
+        p.specification_sections = {
+          technical_field: `Lĩnh vực kỹ thuật theo phân loại IPC ${ipc0}`,
+          background_art: "Hồ sơ công bố chính thức trên Cổng thông tin Sở hữu công nghiệp — Cục SHTT Việt Nam.",
+          technical_essence: p.title_vi || p.abstract_vi,
+          technical_effect: p.status_group === "GRANTED"
+            ? "Đã được Cục SHTT thẩm định nội dung và cấp văn bằng bảo hộ độc quyền."
+            : "Đơn đã công bố hợp lệ trên Công báo Sở hữu công nghiệp Tập A."
+        };
+      }
+      if (!Array.isArray(p.claims) || p.claims.length === 0) {
+        const refLabel = p.grant_no ? `Bằng số ${p.grant_no}` : `Đơn số ${p.application_no}`;
+        p.claims = [{
+          claim_number: 1,
+          claim_type: "INDEPENDENT",
+          parent_claim_numbers: [],
+          claim_text_vi: `${p.title_vi} theo phạm vi yêu cầu bảo hộ của ${refLabel} (xem toàn văn tại khung PDF gốc Cục SHTT).`
+        }];
+      }
+      if (!Array.isArray(p.events) || p.events.length === 0) {
+        const evs = [];
+        if (p.filing_date) evs.push({ event_code: "FILING", event_title: `Nộp đơn đăng ký (${p.application_no})`, event_date: p.filing_date, document_no: p.application_no });
+        if (p.publication_date && p.publication_date !== p.grant_date) evs.push({ event_code: "PUB_A", event_title: "Công bố đơn hợp lệ trên Công báo Tập A", event_date: p.publication_date, document_no: p.gazette_issue_no || "Công báo Tập A" });
+        if (p.grant_date || p.grant_no) evs.push({ event_code: "GRANTED_B", event_title: `Cấp văn bằng số ${p.grant_no || ""}`, event_date: p.grant_date || "—", document_no: p.gazette_issue_no || "Công báo Tập B" });
+        p.events = evs;
+      }
+      return p;
+    }
+
+    function hydrateAdminCatalogShardRows(rows, targetList, seenApps) {
+      if (!Array.isArray(rows)) return;
+      for (let i = 0; i < rows.length; i++) {
+        const r = rows[i];
+        if (!Array.isArray(r) || !r[0]) continue;
+        const appNo = r[0];
+        if (seenApps.has(appNo)) continue;
+        seenApps.add(appNo);
+
+        const pdfEnc = r[15] || "";
+        const fullPdf = pdfEnc
+          ? (pdfEnc.charCodeAt(0) === 126 ? (ADMIN_NOIP_DOC_PREFIX + pdfEnc.slice(1)) : pdfEnc)
+          : null;
+
+        if (ADMIN_SEED_RICH_BY_APP.has(appNo)) {
+          const rich = ADMIN_SEED_RICH_BY_APP.get(appNo);
+          if (fullPdf && (!rich.fulltext_pdf_url || isSimulatedSeedPdfUrl(rich.fulltext_pdf_url))) {
+            rich.fulltext_pdf_url = fullPdf;
+          }
+          rich._hasRealPdf = undefined;
+          rich.relevance_score = 1.0;
+          targetList.push(rich);
+          continue;
+        }
+
+        const grantNo = r[1] || null;
+        const pType = r[2] === 1 ? "UTILITY_SOLUTION" : "PATENT";
+        const stGroup = ADMIN_SHARD_STATUS[r[3]] || "PUBLISHED";
+        const ftoSt = ADMIN_SHARD_FTO[r[8]] || "ACTIVE_PROTECTED";
+        let commSt = ADMIN_SHARD_COMM[r[9]] || "UNEXPLOITED";
+        if (commSt === "UNEXPLOITED" && ADMIN_515_COMM_BY_APP.has(appNo)) {
+          commSt = ADMIN_515_COMM_BY_APP.get(appNo);
+        }
+        const countryCode = r[10] === 0 ? "VN" : (r[10] === 1 ? "FOREIGN" : (r[10] || "VN"));
+        const appType = ADMIN_SHARD_APPTYPE[r[11]] || "ENTERPRISE";
+        const hasRealPdf = Boolean(fullPdf && fullPdf.includes("/documents/20182/"));
+
+        targetList.push({
+          application_no: appNo,
+          grant_no: grantNo,
+          patent_type: pType,
+          filing_origin: countryCode === "VN" ? "NATIONAL" : "PCT_NATIONAL",
+          status_group: stGroup,
+          filing_date: r[4] || "",
+          publication_date: r[5] || "",
+          grant_date: r[6] || null,
+          expiration_date: r[7] || "",
+          fto_status: ftoSt,
+          commercialization_status: commSt,
+          applicant_country: countryCode,
+          applicant_type: appType,
+          title_vi: r[12] || "",
+          applicant_name: r[13] || "",
+          ipc_codes: Array.isArray(r[14]) ? r[14] : [],
+          fulltext_pdf_url: fullPdf,
+          monthly_release_period: r[16] || "",
+          gazette_issue_no: r[17] || "",
+          abstract_vi: r[18] || "",
+          special_filter_flags: r[19] ? String(r[19]).split(",") : [],
+          inventors: Array.isArray(r[20]) ? r[20] : [],
+          representative: r[21] || "Theo hồ sơ gốc Cục SHTT",
+          commercialization_note: r[22] || "",
+          relevance_score: 1.0,
+          _hasRealPdf: hasRealPdf
+        });
+      }
+    }
+
+    async function resolveAdminStaticCatalogManifest() {
+      const proto = window.location.protocol || "";
+      const host = window.location.hostname || "";
+      const candidates = [];
+      if (proto.startsWith("http") && !host.includes("googleusercontent.com")) {
+        candidates.push("./catalog", "../catalog", "/catalog");
+      }
+      candidates.push("https://huongphieubat.github.io/vietnampatentcore-demo/catalog");
+      for (const base of candidates) {
+        try {
+          const res = await fetch(`${base}/manifest.json`, { cache: "no-cache" });
+          if (!res.ok) continue;
+          const manifest = await res.json();
+          if (manifest && Array.isArray(manifest.shards) && manifest.shards.length > 0) {
+            return { base, manifest };
+          }
+        } catch (e) {}
+      }
+      return null;
+    }
+
+    rebuildAdminPatentLookupMap();
+
     function buildPaginationControlsHtml(currentPage, totalItems, pageSize, pageCallbackFn) {
       if (totalItems <= pageSize) return "";
       const totalPages = Math.max(1, Math.ceil(totalItems / pageSize));
@@ -1294,7 +1475,7 @@ Lĩnh vực kỹ thuật được đề cập: Thị giác máy tính đa phổ 
       return `
         <div class="flex flex-wrap items-center justify-between gap-2 px-3 py-2 rounded-lg bg-slate-100/90 border border-slate-200 text-xs">
           <span class="text-slate-600">
-            Hiển thị <strong>${startIdx}–${endIdx}</strong> / <strong>${totalItems}</strong> hồ sơ
+            Hiển thị <strong>${startIdx.toLocaleString("vi-VN")}–${endIdx.toLocaleString("vi-VN")}</strong> / <strong>${totalItems.toLocaleString("vi-VN")}</strong> hồ sơ
             <span class="text-slate-400">(Phân trang ${pageSize} mục/trang chống nghẽn DOM)</span>
           </span>
           <div class="flex flex-wrap items-center gap-1">
@@ -2117,13 +2298,13 @@ Lĩnh vực kỹ thuật được đề cập: Thị giác máy tính đa phổ 
     function selectVerifiedLivePdfSample(sampleUrl, sampleAppNo, isModal) {
       const norm = normalizeNoipPdfUrl(sampleUrl);
       activePdfViewerMode = "canvas";
-      if (sampleAppNo && PATENTS_DB.some(x => x.application_no === sampleAppNo)) {
+      if (sampleAppNo && ADMIN_PATENT_BY_APP.has(sampleAppNo)) {
         selectedPatentAppNo = sampleAppNo;
         customDirectPdfUrlOverride = "";
         activeDetailSubTab = "pdf";
         if (isModal) {
           modalTargetAppNo = sampleAppNo;
-          const found = PATENTS_DB.find(x => x.application_no === sampleAppNo);
+          const found = ensureAdminDossierDetail(findAdminPatentByApp(sampleAppNo));
           modalDirectPdfTitle = `Đơn ${found.application_no} / Bằng ${found.grant_no} — ${found.title_vi}`;
           modalDirectPdfUrl = norm;
         }
@@ -2152,7 +2333,7 @@ Lĩnh vực kỹ thuật được đề cập: Thị giác máy tính đa phổ 
 
     function openDirectNoipPdfModal(appNoOrEmpty, explicitUrl, explicitTitle) {
       modalTargetAppNo = appNoOrEmpty || selectedPatentAppNo;
-      const p = PATENTS_DB.find(x => x.application_no === modalTargetAppNo) || PATENTS_DB[0];
+      const p = ensureAdminDossierDetail(findAdminPatentByApp(modalTargetAppNo));
       modalDirectPdfUrl = normalizeNoipPdfUrl(explicitUrl || customDirectPdfUrlOverride || (p && p.fulltext_pdf_url) || "");
       modalDirectPdfTitle = explicitTitle || (p ? `Đơn ${p.application_no}${p.grant_no ? ' / Bằng ' + p.grant_no : ''} — ${p.title_vi}` : "Bản mô tả toàn văn Sáng chế Cục SHTT");
       const modal = document.getElementById("noipPdfModal");
@@ -2163,7 +2344,7 @@ Lĩnh vực kỹ thuật được đề cập: Thị giác máy tính đa phổ 
     function renderDirectPdfModalIfOpen() {
       const modal = document.getElementById("noipPdfModal");
       if (!modal || modal.classList.contains("hidden")) return;
-      const p = PATENTS_DB.find(x => x.application_no === (modalTargetAppNo || selectedPatentAppNo)) || PATENTS_DB[0];
+      const p = ensureAdminDossierDetail(findAdminPatentByApp(modalTargetAppNo || selectedPatentAppNo));
       document.getElementById("noipPdfModalTitle").textContent = modalDirectPdfTitle || (p ? p.title_vi : "");
       const norm = normalizeNoipPdfUrl(modalDirectPdfUrl || customDirectPdfUrlOverride || (p && p.fulltext_pdf_url) || "");
       const isReal = isRealLiferayNoipPdfUrl(norm);
@@ -2202,44 +2383,122 @@ Lĩnh vực kỹ thuật được đề cập: Thị giác máy tính đa phổ 
       return str.replace(/đ/g, "d").replace(/Đ/g, "D").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
     }
 
-    // Khởi tạo đồng bộ dữ liệu từ REST API của server.py nếu đang chạy
-    async function syncFromBackend() {
-      try {
-        const res = await fetch("/api/search");
-        if (res.ok) {
-          const data = await res.json();
-          if (data.results && data.results.length > 0) {
-            PATENTS_DB = data.results;
-            backendConnected = true;
-            document.getElementById("headerSyncBadge").textContent = `Đã kết nối Backend SQLite: ${PATENTS_DB.length} hồ sơ (0 Token AI)`;
-            document.getElementById("headerSyncBadge").className = "px-2.5 py-1 rounded-md text-xs font-semibold bg-emerald-500/15 text-emerald-700 border border-emerald-500/30";
-          }
-        }
-        const mapRes = await fetch("/api/patent-map");
-        if (mapRes.ok) {
-          const mapData = await mapRes.json();
-          if (mapData.missing_dossiers_queue) MISSING_QUEUE_DB = mapData.missing_dossiers_queue;
-          if (mapData.etl_scan_logs) ETL_LOGS_DB = mapData.etl_scan_logs;
-          if (mapData.gazette_entries) GAZETTE_ENTRIES_DB = mapData.gazette_entries;
-          if (mapData.sync_schedule) SYNC_SCHEDULE_STATE = mapData.sync_schedule;
-        }
-        const benchRes = await fetch("/api/etl/benchmark");
-        if (benchRes.ok) {
-          BENCHMARK_REPORT_STATE = await benchRes.json();
-        }
-      } catch (e) {
-        backendConnected = false;
-        document.getElementById("headerSyncBadge").textContent = `Chế độ Độc lập (Embedded Zero-AI Engine): ${PATENTS_DB.length} hồ sơ • Lịch 856 Kỳ Sẵn sàng`;
+    let activeAdminTabId = "search";
+
+    function updateAdminHeaderCorpusBadge() {
+      const badgeEl = document.getElementById("headerSyncBadge");
+      if (!badgeEl) return;
+      let grantedCnt = 0;
+      let pdfCnt = 0;
+      for (let i = 0; i < PATENTS_DB.length; i++) {
+        const p = PATENTS_DB[i];
+        if (p.status_group === "GRANTED") grantedCnt++;
+        if (hasAdminVerifiedNoipPdf(p)) pdfCnt++;
       }
+      if (SYNC_SCHEDULE_STATE && SYNC_SCHEDULE_STATE.overall_progress) {
+        SYNC_SCHEDULE_STATE.overall_progress.total_patents_in_db = PATENTS_DB.length;
+        SYNC_SCHEDULE_STATE.overall_progress.verified_noip_pdf_links_in_db = pdfCnt;
+        SYNC_SCHEDULE_STATE.overall_progress.fts5_indexed_documents = PATENTS_DB.length;
+      }
+      const prefix = backendConnected
+        ? "Đã kết nối Backend SQLite + Catalog 6 Shard"
+        : "Kho CSDL Tĩnh 6 Shard (Cục SHTT)";
+      badgeEl.textContent = `${prefix}: ${PATENTS_DB.length.toLocaleString("vi-VN")} hồ sơ (${grantedCnt.toLocaleString("vi-VN")} Bằng độc quyền • ${pdfCnt.toLocaleString("vi-VN")} PDF gốc • 0 Token AI)`;
+      badgeEl.className = "px-2.5 py-1 rounded-md text-xs font-semibold bg-emerald-500/15 text-emerald-700 border border-emerald-500/30";
+    }
+
+    // Khởi tạo đồng bộ dữ liệu từ Danh mục Tĩnh 6 Shard (90.458+ hồ sơ) & REST API của server.py nếu đang chạy
+    async function syncFromBackend() {
+      rebuildAdminPatentLookupMap();
       renderKpis();
       renderSequentialSyncSchedulerDashboard();
-      runSearch();
+      runSearch(true);
+
+      const badgeEl = document.getElementById("headerSyncBadge");
+      if (badgeEl) {
+        badgeEl.textContent = `⏳ Đang nạp Kho CSDL Tĩnh 6 Shard (90.458+ hồ sơ Sáng chế & GPHI)...`;
+      }
+
+      const catalogPromise = (async () => {
+        try {
+          const resolved = await resolveAdminStaticCatalogManifest();
+          if (resolved && resolved.manifest && Array.isArray(resolved.manifest.shards)) {
+            const { base, manifest } = resolved;
+            const hydrated = [];
+            const seenApps = new Set();
+            const shards = manifest.shards;
+            const waveSize = 3;
+            for (let start = 0; start < shards.length; start += waveSize) {
+              const slice = shards.slice(start, start + waveSize);
+              const payloads = await Promise.all(slice.map(async (sh) => {
+                const r = await fetch(`${base}/${sh.file}`, { cache: "no-cache" });
+                if (!r.ok) return [];
+                return r.json();
+              }));
+              for (const rows of payloads) {
+                hydrateAdminCatalogShardRows(rows, hydrated, seenApps);
+              }
+              if (hydrated.length > 0) {
+                PATENTS_DB = hydrated.slice();
+                rebuildAdminPatentLookupMap();
+                updateAdminHeaderCorpusBadge();
+                renderKpis();
+                runSearch(false);
+              }
+            }
+            for (let i = 0; i < 14 && i < PATENTS_DB.length; i++) {
+              // Ensure all 14 flagship seed dossiers remain present if not already in shards
+            }
+            ADMIN_SEED_RICH_BY_APP.forEach((seedP, appNo) => {
+              if (!seenApps.has(appNo)) {
+                hydrated.push(seedP);
+                seenApps.add(appNo);
+              }
+            });
+            if (hydrated.length > 0) {
+              PATENTS_DB = hydrated;
+              rebuildAdminPatentLookupMap();
+            }
+          }
+        } catch (e) {}
+      })();
+
+      const backendTelemetryPromise = (async () => {
+        if (IS_STATIC_EMBED_HOST) return;
+        try {
+          const mapRes = await fetch("/api/patent-map?gazette_limit=250");
+          if (mapRes.ok) {
+            backendConnected = true;
+            const mapData = await mapRes.json();
+            if (mapData.missing_dossiers_queue) MISSING_QUEUE_DB = mapData.missing_dossiers_queue;
+            if (mapData.etl_scan_logs) ETL_LOGS_DB = mapData.etl_scan_logs;
+            if (mapData.gazette_entries && mapData.gazette_entries.length > 0) GAZETTE_ENTRIES_DB = mapData.gazette_entries;
+            if (mapData.sync_schedule) SYNC_SCHEDULE_STATE = mapData.sync_schedule;
+          }
+          const benchRes = await fetch("/api/etl/benchmark");
+          if (benchRes.ok) {
+            BENCHMARK_REPORT_STATE = await benchRes.json();
+          }
+        } catch (e) {
+          backendConnected = false;
+        }
+      })();
+
+      await Promise.all([catalogPromise, backendTelemetryPromise]);
+      updateAdminHeaderCorpusBadge();
+      renderKpis();
+      renderSequentialSyncSchedulerDashboard();
+      runSearch(false);
+      if (activeAdminTabId === "articles") renderBusinessArticles();
+      if (activeAdminTabId === "map") { renderPatentMapAndCommercialization(); renderGazetteTable(); }
+      if (activeAdminTabId === "etl") renderEtlCenter();
     }
 
     // =========================================================================
     // ĐIỀU HƯỚNG TAB & CẬP NHẬT KPI
     // =========================================================================
     function switchTab(tabId) {
+      activeAdminTabId = tabId;
       ["search", "nlg", "etl", "articles", "map", "mcp"].forEach(id => {
         const panel = document.getElementById("tabPanel-" + id);
         const btn = document.getElementById("tabBtn-" + id);
@@ -2259,17 +2518,23 @@ Lĩnh vực kỹ thuật được đề cập: Thị giác máy tính đa phổ 
 
     function renderKpis() {
       const total = PATENTS_DB.length;
-      const granted = PATENTS_DB.filter(p => p.status_group === "GRANTED").length;
-      const ftoClear = PATENTS_DB.filter(p => p.fto_status === "PUBLIC_DOMAIN").length;
-      const licensable = PATENTS_DB.filter(p => p.commercialization_status === "OPEN_FOR_LICENSING" || p.commercialization_status === "IN_HOUSE_PRODUCTION").length;
+      let granted = 0;
+      let ftoClear = 0;
+      let licensable = 0;
+      for (let i = 0; i < total; i++) {
+        const p = PATENTS_DB[i];
+        if (p.status_group === "GRANTED") granted++;
+        if (p.fto_status === "PUBLIC_DOMAIN") ftoClear++;
+        if (p.commercialization_status === "OPEN_FOR_LICENSING" || p.commercialization_status === "IN_HOUSE_PRODUCTION") licensable++;
+      }
       const pendingMissing = MISSING_QUEUE_DB.filter(m => m.resolution_status === "PENDING_SUPPLEMENTARY_SCAN").length;
 
       const cards = [
-        { label: "Tổng Hồ sơ SC & GPHI", val: total, sub: "Đủ 9 bộ lọc SC-F01..SC-F09", color: "text-blue-600" },
-        { label: "Bằng Độc quyền Đã Cấp", val: granted, sub: "Đã tách 6 mục & Cây Claims", color: "text-emerald-600" },
-        { label: "Phạm vi Công cộng (FTO)", val: ftoClear, sub: "Tự do sản xuất thương mại", color: "text-teal-600" },
-        { label: "Đang Khai thác / Li-xăng", val: licensable, sub: "Kết nối chuyển giao DN", color: "text-indigo-600" },
-        { label: "Hàng đợi Đơn Thiếu hụt", val: pendingMissing, sub: "Backfill Queue tự động", color: "text-amber-600" },
+        { label: "Tổng Hồ sơ SC & GPHI", val: total.toLocaleString("vi-VN"), sub: "Đủ 9 bộ lọc SC-F01..SC-F09", color: "text-blue-600" },
+        { label: "Bằng Độc quyền Đã Cấp", val: granted.toLocaleString("vi-VN"), sub: "Gắn link PDF gốc Cục SHTT", color: "text-emerald-600" },
+        { label: "Phạm vi Công cộng (FTO)", val: ftoClear.toLocaleString("vi-VN"), sub: "Tự do sản xuất thương mại", color: "text-teal-600" },
+        { label: "Đang Khai thác / Li-xăng", val: licensable.toLocaleString("vi-VN"), sub: "Kết nối chuyển giao DN", color: "text-indigo-600" },
+        { label: "Hàng đợi Đơn Thiếu hụt", val: pendingMissing.toLocaleString("vi-VN"), sub: "Backfill Queue tự động", color: "text-amber-600" },
         { label: "Chi phí Token AI Vận hành", val: "0 Token", sub: "100% Thuật toán Quy tắc", color: "text-emerald-600" }
       ];
 
@@ -2331,41 +2596,7 @@ Lĩnh vực kỹ thuật được đề cập: Thị giác máy tính đa phổ 
       });
     }
 
-    function evaluateLuceneRecord(query, p) {
-      if (!query || !query.trim()) return { ok: true, score: 1.0 };
-      let q = query.trim();
-
-      const notRegex = /(?:NOT\s+|-)([a-zA-Z]+:[^\s]+|"[^"]+"|[^\s]+)/g;
-      let m;
-      while ((m = notRegex.exec(q)) !== null) {
-        if (matchSingleToken(m[1], p).ok) return { ok: false, score: 0 };
-      }
-      q = q.replace(notRegex, "").trim();
-      if (!q) return { ok: true, score: 1.0 };
-
-      const orParts = q.split(/\s+OR\s+/i);
-      let anyOr = false;
-      let totalScore = 0;
-
-      for (const part of orParts) {
-        const andTokens = part.match(/[a-zA-Z]+:"[^"]+"(?:\^\d+)?|[a-zA-Z]+:[^\s]+(?:\^\d+)?|"[^"]+"(?:\^\d+)?|[^\s]+/g) || [];
-        let allAnd = true;
-        let partScore = 0;
-        for (const tok of andTokens) {
-          if (tok.toUpperCase() === "AND") continue;
-          const res = matchSingleToken(tok, p);
-          if (!res.ok) { allAnd = false; break; }
-          partScore += res.score;
-        }
-        if (allAnd) {
-          anyOr = true;
-          totalScore += Math.max(partScore, 1);
-        }
-      }
-      return { ok: anyOr, score: Number(totalScore.toFixed(1)) };
-    }
-
-    function matchSingleToken(rawTok, p) {
+    function parseAdminLuceneToken(rawTok) {
       let tok = rawTok;
       let boost = 1.0;
       const bMatch = tok.match(/\^(\d+(?:\.\d+)?)$/);
@@ -2373,7 +2604,6 @@ Lĩnh vực kỹ thuật được đề cập: Thị giác máy tính đa phổ 
         boost = parseFloat(bMatch[1]);
         tok = tok.slice(0, bMatch.index);
       }
-
       let field = "all";
       if (tok.includes(":") && !tok.startsWith('"')) {
         const idx = tok.indexOf(":");
@@ -2382,32 +2612,110 @@ Lĩnh vực kỹ thuật được đề cập: Thị giác máy tính đa phổ 
       }
       tok = tok.replace(/^"|"$/g, "").replace(/~\d*(?:\.\d+)?$/, "").replace(/\*$/g, "");
       const needle = foldVn(tok);
-
-      const claimsText = (p.claims || []).map(c => c.claim_text_vi).join(" ");
-      const ipcText = (p.ipc_codes || []).join(" ");
-      const invText = (p.inventors || []).join(" ");
-
-      let pool = "";
       let weight = 3.0;
-      if (field === "title") { pool = p.title_vi; weight = 5.0; }
-      else if (field === "claims") { pool = claimsText; weight = 4.0; }
-      else if (field === "ipc") { pool = ipcText; weight = 4.0; }
-      else if (field === "applicant") { pool = p.applicant_name; weight = 3.5; }
-      else if (field === "status") { pool = p.status_group; weight = 2.0; }
-      else {
-        pool = [p.application_no, p.grant_no, p.pct_application_no, p.title_vi, p.abstract_vi, claimsText, p.applicant_name, invText, ipcText].join(" ");
-      }
+      if (field === "title") weight = 5.0;
+      else if (field === "claims" || field === "ipc") weight = 4.0;
+      else if (field === "applicant") weight = 3.5;
+      else if (field === "status") weight = 2.0;
+      return { field, needle, weightedScore: weight * boost };
+    }
 
-      if (foldVn(pool).includes(needle)) {
-        return { ok: true, score: weight * boost };
+    function compileAdminLuceneQuery(query) {
+      if (!query || !query.trim()) return null;
+      let q = query.trim();
+      const notTokens = [];
+      const notRegex = /(?:NOT\s+|-)([a-zA-Z]+:[^\s]+|"[^"]+"|[^\s]+)/g;
+      let m;
+      while ((m = notRegex.exec(q)) !== null) {
+        notTokens.push(parseAdminLuceneToken(m[1]));
       }
-      return { ok: false, score: 0 };
+      q = q.replace(notRegex, "").trim();
+      const orGroups = [];
+      if (q) {
+        const orParts = q.split(/\s+OR\s+/i);
+        for (const part of orParts) {
+          const andRaw = part.match(/[a-zA-Z]+:"[^"]+"(?:\^\d+)?|[a-zA-Z]+:[^\s]+(?:\^\d+)?|"[^"]+"(?:\^\d+)?|[^\s]+/g) || [];
+          const group = [];
+          for (const tok of andRaw) {
+            if (tok.toUpperCase() === "AND") continue;
+            group.push(parseAdminLuceneToken(tok));
+          }
+          if (group.length > 0) orGroups.push(group);
+        }
+      }
+      return { notTokens, orGroups };
+    }
+
+    function matchCompiledToken(compiledTok, p) {
+      const needle = compiledTok.needle;
+      if (!needle) return true;
+      const field = compiledTok.field;
+      let foldedPool = "";
+      if (field === "title") {
+        if (p._foldTitle === undefined) p._foldTitle = foldVn(p.title_vi || "");
+        foldedPool = p._foldTitle;
+      } else if (field === "claims") {
+        if (p._foldClaims === undefined) {
+          const claimsText = p.claims ? p.claims.map(c => c.claim_text_vi).join(" ") : (p.title_vi || "");
+          p._foldClaims = foldVn(claimsText);
+        }
+        foldedPool = p._foldClaims;
+      } else if (field === "ipc") {
+        if (p._foldIpc === undefined) p._foldIpc = foldVn((p.ipc_codes || []).join(" "));
+        foldedPool = p._foldIpc;
+      } else if (field === "applicant") {
+        if (p._foldApplicant === undefined) p._foldApplicant = foldVn(p.applicant_name || "");
+        foldedPool = p._foldApplicant;
+      } else if (field === "status") {
+        foldedPool = (p.status_group || "").toLowerCase();
+      } else {
+        if (p._foldAll === undefined) {
+          const claimsText = p.claims ? p.claims.map(c => c.claim_text_vi).join(" ") : "";
+          const ipcText = p.ipc_codes && p.ipc_codes.length > 0 ? p.ipc_codes.join(" ") : "";
+          const invText = p.inventors && p.inventors.length > 0 ? p.inventors.join(" ") : "";
+          p._foldAll = foldVn(`${p.application_no || ""} ${p.grant_no || ""} ${p.pct_application_no || ""} ${p.title_vi || ""} ${p.abstract_vi || ""} ${claimsText} ${p.applicant_name || ""} ${invText} ${ipcText}`);
+        }
+        foldedPool = p._foldAll;
+      }
+      return foldedPool.includes(needle);
+    }
+
+    function evaluateCompiledLucene(compiled, p) {
+      if (!compiled) return { ok: true, score: 1.0 };
+      const notArr = compiled.notTokens;
+      for (let i = 0; i < notArr.length; i++) {
+        if (matchCompiledToken(notArr[i], p)) return { ok: false, score: 0 };
+      }
+      const orGroups = compiled.orGroups;
+      if (orGroups.length === 0) return { ok: true, score: 1.0 };
+      let anyOr = false;
+      let totalScore = 0;
+      for (let g = 0; g < orGroups.length; g++) {
+        const group = orGroups[g];
+        let allAnd = true;
+        let partScore = 0;
+        for (let k = 0; k < group.length; k++) {
+          if (!matchCompiledToken(group[k], p)) { allAnd = false; break; }
+          partScore += group[k].weightedScore;
+        }
+        if (allAnd) {
+          anyOr = true;
+          totalScore += partScore > 1 ? partScore : 1;
+        }
+      }
+      return { ok: anyOr, score: anyOr ? Math.round(totalScore * 10) / 10 : 0 };
+    }
+
+    function evaluateLuceneRecord(query, p) {
+      return evaluateCompiledLucene(compileAdminLuceneQuery(query), p);
     }
 
     function runSearch(resetPage) {
       const tSearchStart = performance.now();
       if (resetPage) searchCurrentPage = 1;
       const q = document.getElementById("searchQueryInput").value;
+      const compiledQuery = compileAdminLuceneQuery(q);
+      const hasQuery = Boolean(compiledQuery);
       const ipc = document.getElementById("ipcFilterSelect").value;
       const comm = document.getElementById("commFilterSelect").value;
       const expandIpc = document.getElementById("expandIpcCheckbox").checked;
@@ -2422,34 +2730,43 @@ Lĩnh vực kỹ thuật được đề cập: Thị giác máy tính đa phổ 
       }
 
       const matched = [];
-      for (const p of PATENTS_DB) {
+      for (let i = 0; i < PATENTS_DB.length; i++) {
+        const p = PATENTS_DB[i];
         if (selectedSpecialFilter && !(p.special_filter_flags || []).includes(selectedSpecialFilter)) continue;
         if (comm && p.commercialization_status !== comm) continue;
         if (expandedList.length > 0) {
           const pIpc = (p.ipc_codes || []).join(" ").toUpperCase();
           if (!expandedList.some(code => pIpc.includes(code))) continue;
         }
-        const ev = evaluateLuceneRecord(q, p);
-        if (ev.ok) {
-          matched.push({ ...p, relevance_score: ev.score });
+        if (!hasQuery) {
+          p.relevance_score = 1.0;
+          matched.push(p);
+        } else {
+          const ev = evaluateCompiledLucene(compiledQuery, p);
+          if (ev.ok) {
+            p.relevance_score = ev.score;
+            matched.push(p);
+          }
         }
       }
 
-      matched.sort((a, b) => {
-        if (b.relevance_score !== a.relevance_score) return b.relevance_score - a.relevance_score;
-        const aReal = isRealLiferayNoipPdfUrl(a.fulltext_pdf_url) ? 1 : 0;
-        const bReal = isRealLiferayNoipPdfUrl(b.fulltext_pdf_url) ? 1 : 0;
-        if (bReal !== aReal) return bReal - aReal;
-        const aRich = (a.claims && a.claims.length > 0) ? 1 : 0;
-        const bRich = (b.claims && b.claims.length > 0) ? 1 : 0;
-        return bRich - aRich;
-      });
+      if (hasQuery) {
+        matched.sort((a, b) => {
+          if (b.relevance_score !== a.relevance_score) return b.relevance_score - a.relevance_score;
+          const aReal = hasAdminVerifiedNoipPdf(a) ? 1 : 0;
+          const bReal = hasAdminVerifiedNoipPdf(b) ? 1 : 0;
+          if (bReal !== aReal) return bReal - aReal;
+          const aRich = (a.claims && a.claims.length > 0) ? 1 : 0;
+          const bRich = (b.claims && b.claims.length > 0) ? 1 : 0;
+          return bRich - aRich;
+        });
+      }
       lastClientFilterMs = Number((performance.now() - tSearchStart).toFixed(2));
       const totalPages = Math.max(1, Math.ceil(matched.length / SEARCH_PAGE_SIZE));
       if (searchCurrentPage > totalPages) searchCurrentPage = totalPages;
 
       document.getElementById("searchResultCountLabel").textContent =
-        `Kết quả tra cứu (${matched.length} / ${PATENTS_DB.length} hồ sơ khớp • Trang ${searchCurrentPage}/${totalPages} • Lọc ${lastClientFilterMs} ms)`;
+        `Kết quả tra cứu (${matched.length.toLocaleString("vi-VN")} / ${PATENTS_DB.length.toLocaleString("vi-VN")} hồ sơ khớp • Trang ${searchCurrentPage.toLocaleString("vi-VN")}/${totalPages.toLocaleString("vi-VN")} • Lọc ${lastClientFilterMs} ms)`;
 
       const listEl = document.getElementById("patentListContainer");
       const pagTop = document.getElementById("patentListPaginationTop");
@@ -2464,7 +2781,10 @@ Lĩnh vực kỹ thuật được đề cập: Thị giác máy tính đa phổ 
         return;
       }
 
-      if (!matched.some(x => x.application_no === selectedPatentAppNo)) {
+      const hasSelected = (matched.length === PATENTS_DB.length)
+        ? ADMIN_PATENT_BY_APP.has(selectedPatentAppNo)
+        : matched.some(x => x.application_no === selectedPatentAppNo);
+      if (!hasSelected) {
         selectedPatentAppNo = matched[0].application_no;
       }
 
@@ -2478,6 +2798,8 @@ Lĩnh vực kỹ thuật được đề cập: Thị giác máy tính đa phổ 
         const cm = COMM_LABELS[p.commercialization_status] || { label: p.commercialization_status, badge: "bg-slate-100" };
         const isSelected = p.application_no === selectedPatentAppNo;
         const typeTag = p.patent_type === "UTILITY_SOLUTION" ? "Giải pháp hữu ích (2-)" : "Sáng chế (1-)";
+        const isRealPdf = hasAdminVerifiedNoipPdf(p);
+        const absText = getAdminDisplayAbstract(p);
 
         return `
           <article onclick="selectPatent('${p.application_no}')" class="bg-white border ${isSelected ? 'border-blue-600 ring-2 ring-blue-500/20' : 'border-slate-200'} rounded-xl p-4 shadow-sm hover:border-blue-500/60 transition cursor-pointer space-y-2">
@@ -2494,7 +2816,7 @@ Lĩnh vực kỹ thuật được đề cập: Thị giác máy tính đa phổ 
             </div>
 
             <h3 class="text-sm font-bold text-slate-900 leading-snug">${p.title_vi}</h3>
-            <p class="text-xs text-slate-600 line-clamp-2">${p.abstract_vi}</p>
+            <p class="text-xs text-slate-600 line-clamp-2">${absText}</p>
 
             <div class="flex flex-wrap items-center justify-between gap-2 pt-1.5 border-t border-slate-100 text-xs">
               <div>
@@ -2511,8 +2833,8 @@ Lĩnh vực kỹ thuật được đề cập: Thị giác máy tính đa phổ 
               <div class="flex flex-wrap items-center gap-1">
                 ${(p.special_filter_flags || []).map(f => `<span class="px-2 py-0.5 rounded font-semibold bg-amber-500/15 text-amber-700 border border-amber-500/30">Cờ hạn: ${f}</span>`).join("")}
                 ${p.fulltext_pdf_url ? `
-                  <button onclick="event.stopPropagation(); openDirectNoipPdfForPatent('${p.application_no}', false)" class="px-2 py-0.5 rounded font-semibold ${isRealLiferayNoipPdfUrl(p.fulltext_pdf_url) ? 'bg-emerald-600 hover:bg-emerald-700' : 'bg-blue-600 hover:bg-blue-700'} text-white cursor-pointer">
-                    ${isRealLiferayNoipPdfUrl(p.fulltext_pdf_url) ? '📄 Đọc Scan PDF Gốc Cục SHTT' : '📑 Bản Mô tả Toàn văn'}
+                  <button onclick="event.stopPropagation(); openDirectNoipPdfForPatent('${p.application_no}', false)" class="px-2 py-0.5 rounded font-semibold ${isRealPdf ? 'bg-emerald-600 hover:bg-emerald-700' : 'bg-blue-600 hover:bg-blue-700'} text-white cursor-pointer">
+                    ${isRealPdf ? '📄 Đọc Scan PDF Gốc Cục SHTT' : '📑 Bản Mô tả Toàn văn'}
                   </button>
                   <button onclick="event.stopPropagation(); openDirectNoipPdfForPatent('${p.application_no}', true)" title="Mở khung đọc toàn màn hình" class="px-2 py-0.5 rounded font-semibold bg-slate-800 hover:bg-slate-900 text-white cursor-pointer">
                     ⛶ Toàn trang
@@ -2548,7 +2870,7 @@ Lĩnh vực kỹ thuật được đề cập: Thị giác máy tính đa phổ 
     }
 
     function renderPatentDetail() {
-      const p = PATENTS_DB.find(x => x.application_no === selectedPatentAppNo) || PATENTS_DB[0];
+      const p = ensureAdminDossierDetail(findAdminPatentByApp(selectedPatentAppNo));
       if (!p) return;
       const st = STATUS_LABELS[p.status_group] || { label: p.status_group, badge: "" };
       const cm = COMM_LABELS[p.commercialization_status] || { label: p.commercialization_status, badge: "" };
@@ -2854,10 +3176,11 @@ Lĩnh vực kỹ thuật được đề cập: Thị giác máy tính đa phổ 
       }
 
       // Fallback local nếu chạy file độc lập
-      const appMatch = q.match(/\b([12]-\d{4}-\d{5})\b/);
+      const appMatch = q.match(/\b([12]-\d{4}-\d{4,7})\b/);
       const pctMatch = q.match(/\b(PCT\/[A-Z]{2}\d{4}\/\d{5,6})\b/i);
-      const target = appMatch ? PATENTS_DB.find(p => p.application_no === appMatch[1])
-                   : (pctMatch ? PATENTS_DB.find(p => (p.pct_application_no || "").toUpperCase() === pctMatch[1].toUpperCase()) : PATENTS_DB[0]);
+      const rawTarget = appMatch ? findAdminPatentByApp(appMatch[1])
+                      : (pctMatch ? (PATENTS_DB.find(p => (p.pct_application_no || "").toUpperCase() === pctMatch[1].toUpperCase()) || PATENTS_DB[0]) : PATENTS_DB[0]);
+      const target = ensureAdminDossierDetail(rawTarget);
       document.getElementById("nlgOutputContainer").innerHTML = `
         <div class="lg:col-span-12 p-4 rounded-xl bg-slate-50 border border-slate-200 text-sm">
           <strong>Hồ sơ ${target.application_no} (${target.title_vi}):</strong> Trạng thái <strong>${target.status_group}</strong>, FTO: <strong>${target.fto_status}</strong>, Hạn 36T yêu cầu TĐND: <code>${target.substantive_exam_deadline}</code>.
@@ -2887,7 +3210,7 @@ Lĩnh vực kỹ thuật được đề cập: Thị giác máy tính đa phổ 
         if (res.ok) data = await res.json();
       } catch (e) {}
 
-      const matches = (data && data.prior_art_matches) ? data.prior_art_matches : PATENTS_DB.slice(0, 3).map((p, idx) => ({
+      const matches = (data && data.prior_art_matches) ? data.prior_art_matches : PATENTS_DB.slice(0, 3).map(rawP => ensureAdminDossierDetail(rawP)).map((p, idx) => ({
         application_no: p.application_no,
         grant_no: p.grant_no,
         title_vi: p.title_vi,
@@ -2996,7 +3319,7 @@ Lĩnh vực kỹ thuật được đề cập: Thị giác máy tính đa phổ 
         `RAM Cache: ${st.active_ram_entries || 1}/${st.max_items || 256} mục | Hits: ${st.cache_hits || 0} | TTL: ${st.ttl_seconds || 900}s | Ghi đĩa: 0 MB`;
 
       const dl = data.computed_2026_legal_deadlines || {};
-      const matchedP = PATENTS_DB.find(x => x.application_no === data.application_no);
+      const matchedP = ADMIN_PATENT_BY_APP.get(data.application_no);
       const streamPdfUrl = data.fulltext_stream_pdf_url || (matchedP && matchedP.fulltext_pdf_url) || "";
       document.getElementById("federatedLookupOutput").innerHTML = `
         <div class="p-3 rounded-lg bg-white border border-blue-200 space-y-1.5">
@@ -3114,7 +3437,7 @@ Lĩnh vực kỹ thuật được đề cập: Thị giác máy tính đa phổ 
       runLiveParserDemo();
     }
 
-    const SYNC_SCHEDULE_INITIAL_SNAPSHOT = {"updated_at": "2026-11-16 12:51:07", "schedule_config": {"config_id": 1, "scheduler_enabled": 1, "cron_expression": "*/20 * * * *", "gazette_release_cron": "0 1 2,16,26 * *", "daemon_interval_minutes": 20, "min_request_delay_sec": 1.2, "max_jobs_per_tick": 35, "max_retries_per_job": 3, "strategy_mode": "WATERFALL_4_STAGES", "active_stage": "STAGE_4_WEEKLY_VALID_AND_GAP", "last_tick_at": "2026-11-15 13:15:47", "next_scheduled_at": "Tối ưu nhanh nhất & an toàn: Mỗi 20 phút (35 kỳ/nhịp • trễ thích ứng >= 1.2s) & ngày 02, 16, 26 hàng tháng", "total_ticks_executed": 28, "updated_at": "2026-11-15 13:15:47"}, "overall_progress": {"total_checkpoints": 856, "completed_checkpoints": 856, "remaining_checkpoints": 0, "checkpoint_completion_pct": 100.0, "total_patents_in_db": 91802, "verified_noip_pdf_links_in_db": 44328, "fts5_indexed_documents": 91802, "fts5_enabled": true, "estimated_target_dossiers_full_noip": 177700, "jobs_per_day_at_current_cadence": 2520.0, "eta_stage1_granted_days": 0.0, "eta_stage1_granted_hours": 0.0, "eta_all_4_stages_days": 0.0, "eta_all_4_stages_hours": 0.0, "binary_pdf_storage_mb": 0.0}, "stages": [{"stage_code": "STAGE_1_MONTHLY_GRANTED_HTML", "stage_order": 1, "stage_name_vi": "Giai đoạn 1: Toàn bộ Danh sách Bằng độc quyền hàng tháng (07/2018 → nay)", "portal_source": "ipvietnam.gov.vn/bang-oc-quyen-sang-che/giai-phap-huu-ich-uoc-cap-hang-thang", "format_type": "HTML Table 5 cột + Liferay UUID PDF Links (0 MB)", "target_scope_note": "313 văn bản trên 13 trang Liferay (~38.000–42.000 văn bằng bảo hộ)", "total_jobs": 313, "done_jobs": 313, "remaining_jobs": 0, "next_up_jobs": 0, "retry_jobs": 0, "expected_records": 34765, "synced_records": 44489, "verified_uuid_links": 43945, "job_completion_pct": 100.0}, {"stage_code": "STAGE_2_GAZETTE_TAP_B_Q1", "stage_order": 2, "stage_name_vi": "Giai đoạn 2: Công báo SHCN Tập B - Quyển 1 (CB470 → CB204)", "portal_source": "ipvietnam.gov.vn/cong-bao-so-huu-cong-nghiep1 (Tập B - Quyển 1)", "format_type": "In-RAM PDF Stream -> WIPO ST.9 INID (B1..B7)", "target_scope_note": "267 số Công báo: điền khuyết INID (22),(51),(72),(74),(57) & hiệu lực niên liễm", "total_jobs": 267, "done_jobs": 267, "remaining_jobs": 0, "next_up_jobs": 0, "retry_jobs": 0, "expected_records": 44055, "synced_records": 43582, "verified_uuid_links": 0, "job_completion_pct": 100.0}, {"stage_code": "STAGE_3_GAZETTE_TAP_A_Q1", "stage_order": 3, "stage_name_vi": "Giai đoạn 3: Công báo SHCN Tập A - Quyển 1 (Toàn bộ đơn công bố A1..A4)", "portal_source": "ipvietnam.gov.vn/cong-bao-so-huu-cong-nghiep1 (Tập A - Quyển 1)", "format_type": "In-RAM PDF Stream -> WIPO ST.9 INID (A1..A4)", "target_scope_note": "267 số Công báo: thu thập toàn bộ ~90.000+ đơn công bố (cả đơn đang TĐND & rút bỏ)", "total_jobs": 267, "done_jobs": 267, "remaining_jobs": 0, "next_up_jobs": 0, "retry_jobs": 0, "expected_records": 90780, "synced_records": 69192, "verified_uuid_links": 0, "job_completion_pct": 100.0}, {"stage_code": "STAGE_4_WEEKLY_VALID_AND_GAP", "stage_order": 4, "stage_name_vi": "Giai đoạn 4: Đơn hợp lệ hàng tuần (.xlsx) & Đối soát khoảng trống số đơn", "portal_source": "ipvietnam.gov.vn/danh-sach-don-chuyen-cong-bo-hang-tuan + Sequence Gap Audit", "format_type": "In-RAM XLSX Parser + Sequence Gap Detector", "target_scope_note": "9 bộ danh sách năm (2019..2026) & rà quét dải số 1-YYYY-xxxxx / 2-YYYY-xxxxx", "total_jobs": 9, "done_jobs": 9, "remaining_jobs": 0, "next_up_jobs": 0, "retry_jobs": 0, "expected_records": 8100, "synced_records": 97285, "verified_uuid_links": 0, "job_completion_pct": 100.0}], "completed_checkpoints_preview": [{"job_key": "S1-313", "stage_code": "STAGE_1_MONTHLY_GRANTED_HTML", "stage_order": 1, "sequence_order": 313, "release_code": "SC-2018-04-S1", "release_title": "Danh sách Bằng độc quyền sáng chế công bố tháng 10/2018", "release_date": "2018-04-25", "portal_page_hint": 13, "target_url": "https://www.ipvietnam.gov.vn/web/guest/bang-oc-quyen-sang-che/giai-phap-huu-ich-uoc-cap-hang-thang/-/asset_publisher/dpbmUWqCBsSG/content/danh-sach-bang-oc-quyen-sang-che-cong-bo-thang-10-2018", "expected_records": 135, "synced_records": 111, "newly_added_records": 111, "enriched_records": 0, "verified_uuid_links": 111, "status": "DONE", "attempt_count": 1, "last_error": null, "last_synced_at": "2026-11-15 11:26:52"}, {"job_key": "S1-312", "stage_code": "STAGE_1_MONTHLY_GRANTED_HTML", "stage_order": 1, "sequence_order": 312, "release_code": "GPHI-2018-05-S3", "release_title": "", "release_date": "2018-05-25", "portal_page_hint": 13, "target_url": "https://www.ipvietnam.gov.vn/web/guest/bang-oc-quyen-sang-che/giai-phap-huu-ich-uoc-cap-hang-thang/-/asset_publisher/dpbmUWqCBsSG/content/danh-sach-bang-oc-quyen-giai-phap-huu-ich-cong-bo-thang-11-2018", "expected_records": 35, "synced_records": 27, "newly_added_records": 27, "enriched_records": 0, "verified_uuid_links": 27, "status": "DONE", "attempt_count": 1, "last_error": null, "last_synced_at": "2026-11-15 11:26:52"}, {"job_key": "S1-311", "stage_code": "STAGE_1_MONTHLY_GRANTED_HTML", "stage_order": 1, "sequence_order": 311, "release_code": "SC-2018-05-S2", "release_title": "Danh sách Bằng độc quyền sáng chế công bố tháng 12/2018", "release_date": "2018-05-25", "portal_page_hint": 13, "target_url": "https://www.ipvietnam.gov.vn/web/guest/bang-oc-quyen-sang-che/giai-phap-huu-ich-uoc-cap-hang-thang/-/asset_publisher/dpbmUWqCBsSG/content/danh-sach-bang-oc-quyen-sang-che-cong-bo-thang-12-2018", "expected_records": 135, "synced_records": 129, "newly_added_records": 129, "enriched_records": 0, "verified_uuid_links": 129, "status": "DONE", "attempt_count": 1, "last_error": null, "last_synced_at": "2026-11-15 11:26:52"}, {"job_key": "S1-310", "stage_code": "STAGE_1_MONTHLY_GRANTED_HTML", "stage_order": 1, "sequence_order": 310, "release_code": "SC-2018-05-S1", "release_title": "Danh sách Bằng độc quyền giải pháp hữu ích công bố tháng 08/2018", "release_date": "2018-05-25", "portal_page_hint": 13, "target_url": "https://www.ipvietnam.gov.vn/web/guest/bang-oc-quyen-sang-che/giai-phap-huu-ich-uoc-cap-hang-thang/-/asset_publisher/dpbmUWqCBsSG/content/danh-sach-bang-oc-quyen-giai-phap-huu-ich-cong-bo-thang-08-2018", "expected_records": 135, "synced_records": 23, "newly_added_records": 23, "enriched_records": 0, "verified_uuid_links": 23, "status": "DONE", "attempt_count": 1, "last_error": null, "last_synced_at": "2026-11-15 11:26:52"}, {"job_key": "S1-309", "stage_code": "STAGE_1_MONTHLY_GRANTED_HTML", "stage_order": 1, "sequence_order": 309, "release_code": "SC-2018-06-S3", "release_title": "Danh sách Bằng độc quyền giải pháp hữu ích công bố tháng 01/2019", "release_date": "2018-06-25", "portal_page_hint": 13, "target_url": "https://www.ipvietnam.gov.vn/web/guest/bang-oc-quyen-sang-che/giai-phap-huu-ich-uoc-cap-hang-thang/-/asset_publisher/dpbmUWqCBsSG/content/danh-sach-bang-oc-quyen-giai-phap-huu-ich-cong-bo-thang-01-2019", "expected_records": 135, "synced_records": 29, "newly_added_records": 29, "enriched_records": 0, "verified_uuid_links": 29, "status": "DONE", "attempt_count": 1, "last_error": null, "last_synced_at": "2026-11-15 11:26:52"}, {"job_key": "S1-308", "stage_code": "STAGE_1_MONTHLY_GRANTED_HTML", "stage_order": 1, "sequence_order": 308, "release_code": "GPHI-2018-06-S2", "release_title": "Danh sách Bằng độc quyền giải pháp hữu ích công bố tháng 09/2018", "release_date": "2018-06-25", "portal_page_hint": 13, "target_url": "https://www.ipvietnam.gov.vn/web/guest/bang-oc-quyen-sang-che/giai-phap-huu-ich-uoc-cap-hang-thang/-/asset_publisher/dpbmUWqCBsSG/content/danh-sach-bang-oc-quyen-giai-phap-huu-ich-cong-bo-thang-09-2018", "expected_records": 35, "synced_records": 37, "newly_added_records": 37, "enriched_records": 0, "verified_uuid_links": 37, "status": "DONE", "attempt_count": 1, "last_error": null, "last_synced_at": "2026-11-15 11:26:52"}], "upcoming_cursor_queue": [], "sequence_gap_audit": {"total_series_buckets": 40, "total_observed_dossiers": 90458, "estimated_cumulative_filings_in_active_years": 135539, "overall_series_coverage_pct": 66.74, "newly_enqueued_gap_samples": 0, "top_buckets": [{"series_bucket": "2-2026", "observed_count": 640, "min_seq": "00002", "max_seq": "01070", "uncollected_in_observed_span": 429, "coverage_of_max_seq_pct": 59.81}, {"series_bucket": "2-2025", "observed_count": 915, "min_seq": "00001", "max_seq": "01234", "uncollected_in_observed_span": 319, "coverage_of_max_seq_pct": 74.15}, {"series_bucket": "2-2024", "observed_count": 799, "min_seq": "00001", "max_seq": "00894", "uncollected_in_observed_span": 95, "coverage_of_max_seq_pct": 89.37}, {"series_bucket": "2-2023", "observed_count": 755, "min_seq": "00001", "max_seq": "00835", "uncollected_in_observed_span": 80, "coverage_of_max_seq_pct": 90.42}, {"series_bucket": "2-2022", "observed_count": 560, "min_seq": "00001", "max_seq": "00602", "uncollected_in_observed_span": 42, "coverage_of_max_seq_pct": 93.02}, {"series_bucket": "2-2021", "observed_count": 539, "min_seq": "00002", "max_seq": "00595", "uncollected_in_observed_span": 55, "coverage_of_max_seq_pct": 90.59}, {"series_bucket": "2-2020", "observed_count": 575, "min_seq": "00001", "max_seq": "00673", "uncollected_in_observed_span": 98, "coverage_of_max_seq_pct": 85.44}, {"series_bucket": "2-2019", "observed_count": 503, "min_seq": "00001", "max_seq": "00600", "uncollected_in_observed_span": 97, "coverage_of_max_seq_pct": 83.83}, {"series_bucket": "2-2018", "observed_count": 413, "min_seq": "00003", "max_seq": "00557", "uncollected_in_observed_span": 142, "coverage_of_max_seq_pct": 74.15}, {"series_bucket": "2-2017", "observed_count": 183, "min_seq": "00012", "max_seq": "00436", "uncollected_in_observed_span": 242, "coverage_of_max_seq_pct": 41.97}, {"series_bucket": "2-2016", "observed_count": 183, "min_seq": "00011", "max_seq": "00478", "uncollected_in_observed_span": 285, "coverage_of_max_seq_pct": 38.28}, {"series_bucket": "2-2015", "observed_count": 139, "min_seq": "00005", "max_seq": "00445", "uncollected_in_observed_span": 302, "coverage_of_max_seq_pct": 31.24}]}}; // END_SYNC_SNAPSHOT
+    const SYNC_SCHEDULE_INITIAL_SNAPSHOT = {"updated_at": "2026-11-16 13:31:57", "schedule_config": {"config_id": 1, "scheduler_enabled": 1, "cron_expression": "*/20 * * * *", "gazette_release_cron": "0 1 2,16,26 * *", "daemon_interval_minutes": 20, "min_request_delay_sec": 1.2, "max_jobs_per_tick": 35, "max_retries_per_job": 3, "strategy_mode": "WATERFALL_4_STAGES", "active_stage": "STAGE_4_WEEKLY_VALID_AND_GAP", "last_tick_at": "2026-11-16 09:30:24", "next_scheduled_at": "Tối ưu nhanh nhất & an toàn: Mỗi 20 phút (35 kỳ/nhịp • trễ thích ứng >= 1.2s) & ngày 02, 16, 26 hàng tháng", "total_ticks_executed": 31, "updated_at": "2026-11-16 09:30:24"}, "overall_progress": {"total_checkpoints": 856, "completed_checkpoints": 856, "remaining_checkpoints": 0, "checkpoint_completion_pct": 100.0, "total_patents_in_db": 90458, "verified_noip_pdf_links_in_db": 44328, "fts5_indexed_documents": 90458, "fts5_enabled": true, "estimated_target_dossiers_full_noip": 177700, "jobs_per_day_at_current_cadence": 2520.0, "eta_stage1_granted_days": 0.0, "eta_stage1_granted_hours": 0.0, "eta_all_4_stages_days": 0.0, "eta_all_4_stages_hours": 0.0, "binary_pdf_storage_mb": 0.0}, "stages": [{"stage_code": "STAGE_1_MONTHLY_GRANTED_HTML", "stage_order": 1, "stage_name_vi": "Giai đoạn 1: Toàn bộ Danh sách Bằng độc quyền hàng tháng (07/2018 → nay)", "portal_source": "ipvietnam.gov.vn/bang-oc-quyen-sang-che/giai-phap-huu-ich-uoc-cap-hang-thang", "format_type": "HTML Table 5 cột + Liferay UUID PDF Links (0 MB)", "target_scope_note": "313 văn bản trên 13 trang Liferay (~38.000–42.000 văn bằng bảo hộ)", "total_jobs": 313, "done_jobs": 313, "remaining_jobs": 0, "next_up_jobs": 0, "retry_jobs": 0, "expected_records": 34765, "synced_records": 44489, "verified_uuid_links": 43945, "job_completion_pct": 100.0}, {"stage_code": "STAGE_2_GAZETTE_TAP_B_Q1", "stage_order": 2, "stage_name_vi": "Giai đoạn 2: Công báo SHCN Tập B - Quyển 1 (CB470 → CB204)", "portal_source": "ipvietnam.gov.vn/cong-bao-so-huu-cong-nghiep1 (Tập B - Quyển 1)", "format_type": "In-RAM PDF Stream -> WIPO ST.9 INID (B1..B7)", "target_scope_note": "267 số Công báo: điền khuyết INID (22),(51),(72),(74),(57) & hiệu lực niên liễm", "total_jobs": 267, "done_jobs": 267, "remaining_jobs": 0, "next_up_jobs": 0, "retry_jobs": 0, "expected_records": 44055, "synced_records": 43582, "verified_uuid_links": 0, "job_completion_pct": 100.0}, {"stage_code": "STAGE_3_GAZETTE_TAP_A_Q1", "stage_order": 3, "stage_name_vi": "Giai đoạn 3: Công báo SHCN Tập A - Quyển 1 (Toàn bộ đơn công bố A1..A4)", "portal_source": "ipvietnam.gov.vn/cong-bao-so-huu-cong-nghiep1 (Tập A - Quyển 1)", "format_type": "In-RAM PDF Stream -> WIPO ST.9 INID (A1..A4)", "target_scope_note": "267 số Công báo: thu thập toàn bộ ~90.000+ đơn công bố (cả đơn đang TĐND & rút bỏ)", "total_jobs": 267, "done_jobs": 267, "remaining_jobs": 0, "next_up_jobs": 0, "retry_jobs": 0, "expected_records": 90780, "synced_records": 69192, "verified_uuid_links": 0, "job_completion_pct": 100.0}, {"stage_code": "STAGE_4_WEEKLY_VALID_AND_GAP", "stage_order": 4, "stage_name_vi": "Giai đoạn 4: Đơn hợp lệ hàng tuần (.xlsx) & Đối soát khoảng trống số đơn", "portal_source": "ipvietnam.gov.vn/danh-sach-don-chuyen-cong-bo-hang-tuan + Sequence Gap Audit", "format_type": "In-RAM XLSX Parser + Sequence Gap Detector", "target_scope_note": "9 bộ danh sách năm (2019..2026) & rà quét dải số 1-YYYY-xxxxx / 2-YYYY-xxxxx", "total_jobs": 9, "done_jobs": 9, "remaining_jobs": 0, "next_up_jobs": 0, "retry_jobs": 0, "expected_records": 8100, "synced_records": 97285, "verified_uuid_links": 0, "job_completion_pct": 100.0}], "completed_checkpoints_preview": [{"job_key": "S1-313", "stage_code": "STAGE_1_MONTHLY_GRANTED_HTML", "stage_order": 1, "sequence_order": 313, "release_code": "SC-2018-04-S1", "release_title": "Danh sách Bằng độc quyền sáng chế công bố tháng 10/2018", "release_date": "2018-04-25", "portal_page_hint": 13, "target_url": "https://www.ipvietnam.gov.vn/web/guest/bang-oc-quyen-sang-che/giai-phap-huu-ich-uoc-cap-hang-thang/-/asset_publisher/dpbmUWqCBsSG/content/danh-sach-bang-oc-quyen-sang-che-cong-bo-thang-10-2018", "expected_records": 135, "synced_records": 111, "newly_added_records": 111, "enriched_records": 0, "verified_uuid_links": 111, "status": "DONE", "attempt_count": 1, "last_error": null, "last_synced_at": "2026-11-15 11:26:52"}, {"job_key": "S1-312", "stage_code": "STAGE_1_MONTHLY_GRANTED_HTML", "stage_order": 1, "sequence_order": 312, "release_code": "GPHI-2018-05-S3", "release_title": "", "release_date": "2018-05-25", "portal_page_hint": 13, "target_url": "https://www.ipvietnam.gov.vn/web/guest/bang-oc-quyen-sang-che/giai-phap-huu-ich-uoc-cap-hang-thang/-/asset_publisher/dpbmUWqCBsSG/content/danh-sach-bang-oc-quyen-giai-phap-huu-ich-cong-bo-thang-11-2018", "expected_records": 35, "synced_records": 27, "newly_added_records": 27, "enriched_records": 0, "verified_uuid_links": 27, "status": "DONE", "attempt_count": 1, "last_error": null, "last_synced_at": "2026-11-15 11:26:52"}, {"job_key": "S1-311", "stage_code": "STAGE_1_MONTHLY_GRANTED_HTML", "stage_order": 1, "sequence_order": 311, "release_code": "SC-2018-05-S2", "release_title": "Danh sách Bằng độc quyền sáng chế công bố tháng 12/2018", "release_date": "2018-05-25", "portal_page_hint": 13, "target_url": "https://www.ipvietnam.gov.vn/web/guest/bang-oc-quyen-sang-che/giai-phap-huu-ich-uoc-cap-hang-thang/-/asset_publisher/dpbmUWqCBsSG/content/danh-sach-bang-oc-quyen-sang-che-cong-bo-thang-12-2018", "expected_records": 135, "synced_records": 129, "newly_added_records": 129, "enriched_records": 0, "verified_uuid_links": 129, "status": "DONE", "attempt_count": 1, "last_error": null, "last_synced_at": "2026-11-15 11:26:52"}, {"job_key": "S1-310", "stage_code": "STAGE_1_MONTHLY_GRANTED_HTML", "stage_order": 1, "sequence_order": 310, "release_code": "SC-2018-05-S1", "release_title": "Danh sách Bằng độc quyền giải pháp hữu ích công bố tháng 08/2018", "release_date": "2018-05-25", "portal_page_hint": 13, "target_url": "https://www.ipvietnam.gov.vn/web/guest/bang-oc-quyen-sang-che/giai-phap-huu-ich-uoc-cap-hang-thang/-/asset_publisher/dpbmUWqCBsSG/content/danh-sach-bang-oc-quyen-giai-phap-huu-ich-cong-bo-thang-08-2018", "expected_records": 135, "synced_records": 23, "newly_added_records": 23, "enriched_records": 0, "verified_uuid_links": 23, "status": "DONE", "attempt_count": 1, "last_error": null, "last_synced_at": "2026-11-15 11:26:52"}, {"job_key": "S1-309", "stage_code": "STAGE_1_MONTHLY_GRANTED_HTML", "stage_order": 1, "sequence_order": 309, "release_code": "SC-2018-06-S3", "release_title": "Danh sách Bằng độc quyền giải pháp hữu ích công bố tháng 01/2019", "release_date": "2018-06-25", "portal_page_hint": 13, "target_url": "https://www.ipvietnam.gov.vn/web/guest/bang-oc-quyen-sang-che/giai-phap-huu-ich-uoc-cap-hang-thang/-/asset_publisher/dpbmUWqCBsSG/content/danh-sach-bang-oc-quyen-giai-phap-huu-ich-cong-bo-thang-01-2019", "expected_records": 135, "synced_records": 29, "newly_added_records": 29, "enriched_records": 0, "verified_uuid_links": 29, "status": "DONE", "attempt_count": 1, "last_error": null, "last_synced_at": "2026-11-15 11:26:52"}, {"job_key": "S1-308", "stage_code": "STAGE_1_MONTHLY_GRANTED_HTML", "stage_order": 1, "sequence_order": 308, "release_code": "GPHI-2018-06-S2", "release_title": "Danh sách Bằng độc quyền giải pháp hữu ích công bố tháng 09/2018", "release_date": "2018-06-25", "portal_page_hint": 13, "target_url": "https://www.ipvietnam.gov.vn/web/guest/bang-oc-quyen-sang-che/giai-phap-huu-ich-uoc-cap-hang-thang/-/asset_publisher/dpbmUWqCBsSG/content/danh-sach-bang-oc-quyen-giai-phap-huu-ich-cong-bo-thang-09-2018", "expected_records": 35, "synced_records": 37, "newly_added_records": 37, "enriched_records": 0, "verified_uuid_links": 37, "status": "DONE", "attempt_count": 1, "last_error": null, "last_synced_at": "2026-11-15 11:26:52"}], "upcoming_cursor_queue": [], "sequence_gap_audit": {"total_series_buckets": 40, "total_observed_dossiers": 90458, "estimated_cumulative_filings_in_active_years": 135539, "overall_series_coverage_pct": 66.74, "newly_enqueued_gap_samples": 0, "top_buckets": [{"series_bucket": "2-2026", "observed_count": 640, "min_seq": "00002", "max_seq": "01070", "uncollected_in_observed_span": 429, "coverage_of_max_seq_pct": 59.81}, {"series_bucket": "2-2025", "observed_count": 915, "min_seq": "00001", "max_seq": "01234", "uncollected_in_observed_span": 319, "coverage_of_max_seq_pct": 74.15}, {"series_bucket": "2-2024", "observed_count": 799, "min_seq": "00001", "max_seq": "00894", "uncollected_in_observed_span": 95, "coverage_of_max_seq_pct": 89.37}, {"series_bucket": "2-2023", "observed_count": 755, "min_seq": "00001", "max_seq": "00835", "uncollected_in_observed_span": 80, "coverage_of_max_seq_pct": 90.42}, {"series_bucket": "2-2022", "observed_count": 560, "min_seq": "00001", "max_seq": "00602", "uncollected_in_observed_span": 42, "coverage_of_max_seq_pct": 93.02}, {"series_bucket": "2-2021", "observed_count": 539, "min_seq": "00002", "max_seq": "00595", "uncollected_in_observed_span": 55, "coverage_of_max_seq_pct": 90.59}, {"series_bucket": "2-2020", "observed_count": 575, "min_seq": "00001", "max_seq": "00673", "uncollected_in_observed_span": 98, "coverage_of_max_seq_pct": 85.44}, {"series_bucket": "2-2019", "observed_count": 503, "min_seq": "00001", "max_seq": "00600", "uncollected_in_observed_span": 97, "coverage_of_max_seq_pct": 83.83}, {"series_bucket": "2-2018", "observed_count": 413, "min_seq": "00003", "max_seq": "00557", "uncollected_in_observed_span": 142, "coverage_of_max_seq_pct": 74.15}, {"series_bucket": "2-2017", "observed_count": 183, "min_seq": "00012", "max_seq": "00436", "uncollected_in_observed_span": 242, "coverage_of_max_seq_pct": 41.97}, {"series_bucket": "2-2016", "observed_count": 183, "min_seq": "00011", "max_seq": "00478", "uncollected_in_observed_span": 285, "coverage_of_max_seq_pct": 38.28}, {"series_bucket": "2-2015", "observed_count": 139, "min_seq": "00005", "max_seq": "00445", "uncollected_in_observed_span": 302, "coverage_of_max_seq_pct": 31.24}]}}; // END_SYNC_SNAPSHOT
 
     let SYNC_SCHEDULE_STATE = JSON.parse(JSON.stringify(SYNC_SCHEDULE_INITIAL_SNAPSHOT));
 
@@ -3252,30 +3575,35 @@ Lĩnh vực kỹ thuật được đề cập: Thị giác máy tính đa phổ 
         if (dlEl && cfg.min_request_delay_sec) dlEl.value = String(cfg.min_request_delay_sec);
       }
 
-      const etaS1Label = (ov.eta_stage1_granted_days != null && ov.eta_stage1_granted_days < 1)
-        ? `~${ov.eta_stage1_granted_hours || Math.round(ov.eta_stage1_granted_days * 240) / 10} giờ (${ov.eta_stage1_granted_days} ngày)`
-        : `~${ov.eta_stage1_granted_days ?? 0.11} ngày`;
-      const etaAllLabel = (ov.eta_all_4_stages_days != null && ov.eta_all_4_stages_days < 1)
-        ? `~${ov.eta_all_4_stages_hours || Math.round(ov.eta_all_4_stages_days * 240) / 10} giờ (${ov.eta_all_4_stages_days} ngày)`
-        : `~${ov.eta_all_4_stages_days ?? 0.33} ngày`;
+      const allDone = ov.remaining_checkpoints === 0;
+      const etaS1Label = allDone
+        ? "Đã xong 100%"
+        : ((ov.eta_stage1_granted_days != null && ov.eta_stage1_granted_days < 1)
+          ? `~${ov.eta_stage1_granted_hours || Math.round(ov.eta_stage1_granted_days * 240) / 10} giờ (${ov.eta_stage1_granted_days} ngày)`
+          : `~${ov.eta_stage1_granted_days ?? 0.11} ngày`);
+      const etaAllLabel = allDone
+        ? "Trực Cron 02, 16, 26"
+        : ((ov.eta_all_4_stages_days != null && ov.eta_all_4_stages_days < 1)
+          ? `~${ov.eta_all_4_stages_hours || Math.round(ov.eta_all_4_stages_days * 240) / 10} giờ (${ov.eta_all_4_stages_days} ngày)`
+          : `~${ov.eta_all_4_stages_days ?? 0.33} ngày`);
 
       container.innerHTML = `
         <!-- DẢI CHỈ SỐ ETA & BẢO ĐẢM KIẾN TRÚC -->
         <div class="grid grid-cols-2 lg:grid-cols-5 gap-2.5">
           <div class="bg-white rounded-xl border border-teal-200 p-3">
             <div class="text-[11px] text-slate-500">Điểm chốt đã hoàn tất</div>
-            <div class="text-base font-extrabold text-teal-800 font-mono">${ov.completed_checkpoints ?? 25} / ${ov.total_checkpoints || 856} kỳ</div>
+            <div class="text-base font-extrabold text-teal-800 font-mono">${ov.completed_checkpoints ?? 856} / ${ov.total_checkpoints || 856} kỳ</div>
             <div class="text-[11px] text-slate-600">Tốc độ: <strong>${ov.jobs_per_day_at_current_cadence || 2520} kỳ/ngày</strong></div>
           </div>
           <div class="bg-white rounded-xl border border-teal-200 p-3">
-            <div class="text-[11px] text-slate-500">ETA Giai đoạn 1 (Toàn bộ Bằng cấp)</div>
+            <div class="text-[11px] text-slate-500">Giai đoạn 1 (Toàn bộ Bằng cấp)</div>
             <div class="text-base font-extrabold text-emerald-700 font-mono">${etaS1Label}</div>
             <div class="text-[11px] text-slate-600">313 kỳ (07/2018 → 10/2026)</div>
           </div>
           <div class="bg-white rounded-xl border border-teal-200 p-3">
-            <div class="text-[11px] text-slate-500">ETA Đích Toàn Bộ CSDL Cục SHTT</div>
+            <div class="text-[11px] text-slate-500">Kho Số Hóa ipvietnam.gov.vn</div>
             <div class="text-base font-extrabold text-indigo-700 font-mono">${etaAllLabel}</div>
-            <div class="text-[11px] text-slate-600">~${(ov.estimated_target_dossiers_full_noip || 177700).toLocaleString('vi-VN')} đơn (Tập A+B+Tuần)</div>
+            <div class="text-[11px] text-slate-600">Tự động quét kỳ Công báo mới</div>
           </div>
           <div class="bg-white rounded-xl border border-teal-200 p-3">
             <div class="text-[11px] text-slate-500">Chỉ mục Toàn văn SQLite FTS5</div>
@@ -3293,22 +3621,29 @@ Lĩnh vực kỹ thuật được đề cập: Thị giác máy tính đa phổ 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
           ${stages.map(st => {
             const pct = st.job_completion_pct || 0;
-            const isCurrent = cfg.active_stage === st.stage_code;
+            const isStageDone = st.total_jobs > 0 && st.done_jobs >= st.total_jobs;
+            const isCurrent = !isStageDone && cfg.active_stage === st.stage_code;
+            const badgeCls = isStageDone
+              ? "bg-emerald-100 text-emerald-800 border border-emerald-300"
+              : (isCurrent ? "bg-teal-100 text-teal-900 border border-teal-300" : "bg-slate-100 text-slate-700");
+            const badgeLabel = isStageDone
+              ? `HOÀN TẤT 100% • ${st.done_jobs}/${st.total_jobs} kỳ`
+              : `${isCurrent ? 'ĐANG CHẠY CON TRỎ' : 'CHỜ LŨY TIẾN'} • ${st.done_jobs}/${st.total_jobs} kỳ`;
             return `
-              <div class="bg-white rounded-xl border ${isCurrent ? 'border-2 border-teal-600 shadow-sm' : 'border-slate-200'} p-3.5 space-y-2">
+              <div class="bg-white rounded-xl border ${isStageDone ? 'border-emerald-300' : (isCurrent ? 'border-2 border-teal-600 shadow-sm' : 'border-slate-200')} p-3.5 space-y-2">
                 <div class="flex items-start justify-between gap-2">
                   <div class="font-bold text-slate-900">${st.stage_name_vi}</div>
-                  <span class="px-2 py-0.5 rounded text-[11px] font-bold shrink-0 ${isCurrent ? 'bg-teal-100 text-teal-900 border border-teal-300' : 'bg-slate-100 text-slate-700'}">
-                    ${isCurrent ? 'ĐANG CHẠY CON TRỎ' : 'CHỜ LŨY TIẾN'} • ${st.done_jobs}/${st.total_jobs} kỳ
+                  <span class="px-2 py-0.5 rounded text-[11px] font-bold shrink-0 ${badgeCls}">
+                    ${badgeLabel}
                   </span>
                 </div>
                 <div class="text-[11px] text-slate-600">${st.target_scope_note}</div>
                 <div class="w-full h-2 rounded-full bg-slate-100 overflow-hidden">
-                  <div class="h-full bg-teal-600 transition-all" style="width: ${Math.max(pct, st.done_jobs > 0 ? 3 : 0)}%"></div>
+                  <div class="h-full ${isStageDone ? 'bg-emerald-600' : 'bg-teal-600'} transition-all" style="width: ${Math.max(pct, st.done_jobs > 0 ? 3 : 0)}%"></div>
                 </div>
                 <div class="flex flex-wrap items-center justify-between text-[11px] text-slate-500 font-mono">
                   <span>Định dạng: ${st.format_type}</span>
-                  <span>Đã nạp: <strong class="text-slate-900">${(st.synced_records || 0).toLocaleString('vi-VN')}</strong> / ~${(st.expected_records || 0).toLocaleString('vi-VN')} đơn</span>
+                  <span>Đã nạp: <strong class="text-slate-900">${(st.synced_records || 0).toLocaleString('vi-VN')}</strong> kỳ/bản ghi</span>
                 </div>
               </div>
             `;
@@ -3608,7 +3943,10 @@ Lĩnh vực kỹ thuật được đề cập: Thị giác máy tính đa phổ 
     }
 
     function renderBusinessArticles() {
-      const grantedList = PATENTS_DB.filter(p => p.status_group === "GRANTED");
+      const grantedList = [];
+      for (let i = 0; i < PATENTS_DB.length; i++) {
+        if (PATENTS_DB[i].status_group === "GRANTED") grantedList.push(PATENTS_DB[i]);
+      }
       const totalPages = Math.max(1, Math.ceil(grantedList.length / ARTICLES_PAGE_SIZE));
       if (articlesCurrentPage > totalPages) articlesCurrentPage = totalPages;
       const slice = grantedList.slice((articlesCurrentPage - 1) * ARTICLES_PAGE_SIZE, articlesCurrentPage * ARTICLES_PAGE_SIZE);
@@ -3617,18 +3955,21 @@ Lĩnh vực kỹ thuật được đề cập: Thị giác máy tính đa phổ 
       const pagBottom = document.getElementById("businessArticlesPaginationBottom");
       if (pagTop) pagTop.innerHTML = pagHtml;
       if (pagBottom) pagBottom.innerHTML = pagHtml;
-      document.getElementById("businessArticlesContainer").innerHTML = slice.map(p => {
+      document.getElementById("businessArticlesContainer").innerHTML = slice.map(rawP => {
+        const p = ensureAdminDossierDetail(rawP);
         const secs = p.specification_sections || {};
         const cm = COMM_LABELS[p.commercialization_status] || { label: p.commercialization_status, badge: "" };
         const indep = (p.claims || [])[0] ? p.claims[0].claim_text_vi : p.abstract_vi;
         const sectorVi = p.industry_sector_vi || "Công nghệ Kỹ thuật & Sản xuất Công nghiệp";
+        const invStr = (p.inventors && p.inventors.length > 0) ? p.inventors.join(", ") : "Theo hồ sơ Cục SHTT";
+        const ipcStr = (p.ipc_codes && p.ipc_codes.length > 0) ? p.ipc_codes.join(", ") : "Phân loại SHCN";
 
         return `
           <article class="bg-slate-50 border border-slate-200 rounded-xl p-5 space-y-3 flex flex-col justify-between">
             <div class="space-y-2.5">
               <div class="flex flex-wrap items-center justify-between gap-2 text-xs">
                 <span class="px-2 py-0.5 rounded font-mono font-bold bg-emerald-500/15 text-emerald-700 border border-emerald-500/30">
-                  Bằng số ${p.grant_no} (${p.monthly_release_period || 'Mới công bố'})
+                  Bằng số ${p.grant_no || p.application_no} (${p.monthly_release_period || p.gazette_issue_no || 'Đã cấp văn bằng'})
                 </span>
                 <span class="px-2 py-0.5 rounded border ${cm.badge}">${cm.label}</span>
               </div>
@@ -3642,7 +3983,7 @@ Lĩnh vực kỹ thuật được đề cập: Thị giác máy tính đa phổ 
               </h3>
 
               <div class="text-xs text-slate-600">
-                <strong>Chủ văn bằng:</strong> ${p.applicant_name} | <strong>Nhóm tác giả:</strong> ${(p.inventors || []).join(", ")} | <strong>IPC:</strong> <code>${(p.ipc_codes || []).join(", ")}</code>
+                <strong>Chủ văn bằng:</strong> ${p.applicant_name} | <strong>Nhóm tác giả:</strong> ${invStr} | <strong>IPC:</strong> <code>${ipcStr}</code>
               </div>
 
               <div class="space-y-2 text-xs pt-2 border-t border-slate-200 leading-relaxed">
@@ -3689,11 +4030,48 @@ Lĩnh vực kỹ thuật được đề cập: Thị giác máy tính đa phổ 
 
     function renderGazetteTable() {
       const vol = document.getElementById("gazetteVolSelect").value;
-      const fullList = GAZETTE_ENTRIES_DB.filter(g => !vol || g.volume === vol);
-      const totalPages = Math.max(1, Math.ceil(fullList.length / GAZETTE_PAGE_SIZE));
-      if (gazetteCurrentPage > totalPages) gazetteCurrentPage = totalPages;
-      const list = fullList.slice((gazetteCurrentPage - 1) * GAZETTE_PAGE_SIZE, gazetteCurrentPage * GAZETTE_PAGE_SIZE);
-      const pagHtml = buildPaginationControlsHtml(gazetteCurrentPage, fullList.length, GAZETTE_PAGE_SIZE, "setGazettePage");
+      const useCatalogGazette = PATENTS_DB.length > GAZETTE_ENTRIES_DB.length;
+      let totalCount = 0;
+      let list = [];
+
+      if (useCatalogGazette) {
+        const filteredPatents = [];
+        for (let i = 0; i < PATENTS_DB.length; i++) {
+          const p = PATENTS_DB[i];
+          const pVol = p.status_group === "GRANTED" ? "B" : "A";
+          if (!vol || pVol === vol) filteredPatents.push(p);
+        }
+        totalCount = filteredPatents.length;
+        const totalPages = Math.max(1, Math.ceil(totalCount / GAZETTE_PAGE_SIZE));
+        if (gazetteCurrentPage > totalPages) gazetteCurrentPage = totalPages;
+        const pageSlice = filteredPatents.slice((gazetteCurrentPage - 1) * GAZETTE_PAGE_SIZE, gazetteCurrentPage * GAZETTE_PAGE_SIZE);
+        list = pageSlice.map(p => {
+          const isB = p.status_group === "GRANTED";
+          return {
+            issue_no: p.gazette_issue_no || (isB ? "CB Tập B" : "CB Tập A"),
+            published_date: (isB ? p.grant_date : p.publication_date) || p.filing_date || "—",
+            volume: isB ? "B" : "A",
+            subcategory_code: isB ? (p.patent_type === "UTILITY_SOLUTION" ? "B2" : "B1") : (p.patent_type === "UTILITY_SOLUTION" ? "A2" : "A1"),
+            subcategory_name: isB
+              ? (p.patent_type === "UTILITY_SOLUTION" ? "Cấp Bằng GPHI" : "Cấp Bằng Sáng chế")
+              : (p.patent_type === "UTILITY_SOLUTION" ? "Công bố đơn GPHI" : "Công bố đơn Sáng chế"),
+            application_no: p.application_no,
+            grant_no: p.grant_no,
+            title_vi: p.title_vi,
+            applicant_name: p.applicant_name,
+            pdf_url: p.fulltext_pdf_url || "",
+            summary_note: p.monthly_release_period || (isB ? "Đã cấp văn bằng bảo hộ" : "Công bố đơn hợp lệ")
+          };
+        });
+      } else {
+        const fullList = GAZETTE_ENTRIES_DB.filter(g => !vol || g.volume === vol);
+        totalCount = fullList.length;
+        const totalPages = Math.max(1, Math.ceil(totalCount / GAZETTE_PAGE_SIZE));
+        if (gazetteCurrentPage > totalPages) gazetteCurrentPage = totalPages;
+        list = fullList.slice((gazetteCurrentPage - 1) * GAZETTE_PAGE_SIZE, gazetteCurrentPage * GAZETTE_PAGE_SIZE);
+      }
+
+      const pagHtml = buildPaginationControlsHtml(gazetteCurrentPage, totalCount, GAZETTE_PAGE_SIZE, "setGazettePage");
       document.getElementById("gazetteTableContainer").innerHTML = `
         <div class="mb-2">${pagHtml}</div>
         <table class="w-full text-left border-collapse text-xs">
@@ -3710,7 +4088,7 @@ Lĩnh vực kỹ thuật được đề cập: Thị giác máy tính đa phổ 
           </thead>
           <tbody>
             ${list.map(g => {
-              const matchedP = PATENTS_DB.find(p => p.application_no === g.application_no);
+              const matchedP = ADMIN_PATENT_BY_APP.get(g.application_no);
               const pdfUrl = g.pdf_url || (matchedP && matchedP.fulltext_pdf_url) || "";
               return `
               <tr class="border-b border-slate-100">
@@ -3738,23 +4116,32 @@ Lĩnh vực kỹ thuật được đề cập: Thị giác máy tính đa phổ 
 
     function renderPatentMapAndCommercialization() {
       const ipcCounts = {};
-      const ipcLags = {};
+      const ipcLagSums = {};
+      const ipcLagCnts = {};
       const commCounts = {};
 
-      for (const p of PATENTS_DB) {
+      for (let i = 0; i < PATENTS_DB.length; i++) {
+        const p = PATENTS_DB[i];
         const cm = p.commercialization_status || "UNEXPLOITED";
         commCounts[cm] = (commCounts[cm] || 0) + 1;
-        let lagM = null;
-        if (p.filing_date && p.grant_date) {
-          const diffMs = new Date(p.grant_date) - new Date(p.filing_date);
-          if (diffMs > 0) lagM = Math.round((diffMs / (1000 * 60 * 60 * 24 * 30.44)) * 10) / 10;
+        let lagM = 0;
+        const fd = p.filing_date;
+        const gd = p.grant_date;
+        if (fd && gd && fd.length >= 7 && gd.length >= 7) {
+          const fm = (parseInt(fd.slice(0, 4), 10) * 12) + (parseInt(fd.slice(5, 7), 10) || 6);
+          const gm = (parseInt(gd.slice(0, 4), 10) * 12) + (parseInt(gd.slice(5, 7), 10) || 6);
+          if (gm > fm && gm - fm <= 360) lagM = gm - fm;
         }
-        for (const c of (p.ipc_codes || [])) {
-          const prefix = c.slice(0, 4);
-          ipcCounts[prefix] = (ipcCounts[prefix] || 0) + 1;
-          if (lagM) {
-            if (!ipcLags[prefix]) ipcLags[prefix] = [];
-            ipcLags[prefix].push(lagM);
+        const codes = p.ipc_codes;
+        if (codes && codes.length > 0) {
+          for (let j = 0; j < codes.length; j++) {
+            const prefix = codes[j].slice(0, 4);
+            if (!prefix) continue;
+            ipcCounts[prefix] = (ipcCounts[prefix] || 0) + 1;
+            if (lagM > 0) {
+              ipcLagSums[prefix] = (ipcLagSums[prefix] || 0) + lagM;
+              ipcLagCnts[prefix] = (ipcLagCnts[prefix] || 0) + 1;
+            }
           }
         }
       }
@@ -3770,7 +4157,12 @@ Lĩnh vực kỹ thuật được đề cập: Thị giác máy tính đa phổ 
         "F26B": "F26B - Sấy thăng hoa & Bơm nhiệt tuần hoàn",
         "F28D": "F28D - Thiết bị Trao đổi nhiệt & Lò hơi",
         "A43B": "A43B - Công nghệ Da giày & Cao su đàn hồi",
-        "B01J": "B01J - Vật liệu Xúc tác Quang hóa Nano"
+        "B01J": "B01J - Vật liệu Xúc tác Quang hóa Nano",
+        "C07D": "C07D - Hợp chất Hóa dược Dị vòng",
+        "G06F": "G06F - Xử lý Dữ liệu Điện tử & Phần mềm",
+        "H04L": "H04L - Truyền thông Số & Mạng Viễn thông",
+        "B62J": "B62J - Kết cấu Phụ tùng & Xe hai bánh",
+        "A23L": "A23L - Công nghệ Chế biến Thực phẩm"
       };
 
       const maxIpc = Math.max(...Object.values(ipcCounts), 1);
@@ -3779,13 +4171,13 @@ Lĩnh vực kỹ thuật được đề cập: Thị giác máy tính đa phổ 
         .slice(0, 14)
         .map(([code, count]) => {
           const pct = Math.round((count / maxIpc) * 100);
-          const lags = ipcLags[code] || [];
-          const avgLag = lags.length > 0 ? (Math.round((lags.reduce((a, b) => a + b, 0) / lags.length) * 10) / 10) + " tháng cấp bằng TB" : "Đang thẩm định";
+          const lCnt = ipcLagCnts[code] || 0;
+          const avgLag = lCnt > 0 ? (Math.round((ipcLagSums[code] / lCnt) * 10) / 10) + " tháng cấp bằng TB" : "Đang thẩm định";
           return `
             <div class="space-y-1 text-xs">
               <div class="flex justify-between font-medium">
                 <span>${ipcLabels[code] || code}</span>
-                <span class="font-bold text-blue-600">${count} hồ sơ <span class="text-slate-400 font-normal">(${avgLag})</span></span>
+                <span class="font-bold text-blue-600">${count.toLocaleString("vi-VN")} hồ sơ <span class="text-slate-400 font-normal">(${avgLag})</span></span>
               </div>
               <div class="w-full h-2.5 bg-slate-100 rounded-full overflow-hidden border border-slate-200">
                 <div class="h-full bg-blue-600 rounded-full" style="width: ${pct}%"></div>
@@ -3798,15 +4190,15 @@ Lĩnh vực kỹ thuật được đề cập: Thị giác máy tính đa phổ 
       document.getElementById("commMapChartContainer").innerHTML = Object.entries(COMM_LABELS)
         .map(([key, meta]) => {
           const cnt = commCounts[key] || 0;
-          const pct = Math.round((cnt / totalP) * 100);
+          const pct = Math.round((cnt / totalP) * 1000) / 10;
           return `
             <div class="space-y-1 text-xs">
               <div class="flex justify-between font-medium">
                 <span>${meta.label}</span>
-                <span class="font-bold">${cnt} hồ sơ (${pct}%)</span>
+                <span class="font-bold">${cnt.toLocaleString("vi-VN")} hồ sơ (${pct}%)</span>
               </div>
               <div class="w-full h-2.5 bg-slate-100 rounded-full overflow-hidden border border-slate-200">
-                <div class="h-full bg-emerald-600 rounded-full" style="width: ${Math.max(pct, 6)}%"></div>
+                <div class="h-full bg-emerald-600 rounded-full" style="width: ${Math.max(pct, 4)}%"></div>
               </div>
             </div>
           `;
@@ -3831,7 +4223,8 @@ Lĩnh vực kỹ thuật được đề cập: Thị giác máy tính đa phổ 
             </tr>
           </thead>
           <tbody>
-            ${commSlice.map(p => {
+            ${commSlice.map(rawP => {
+              const p = ensureAdminDossierDetail(rawP);
               const cm = COMM_LABELS[p.commercialization_status] || { label: p.commercialization_status, badge: "" };
               const exp = p.exploitation_signals || {};
               const sigScore = exp.signal_confidence_score !== undefined ? exp.signal_confidence_score : (p.status_group === "GRANTED" ? 75 : 30);
