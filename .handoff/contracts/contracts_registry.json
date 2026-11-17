@@ -1,0 +1,26 @@
+{
+  "schema_version": "1.0",
+  "description": "Sổ cái khóa cứng hợp đồng giao diện & catalog tĩnh cho VIETNAMPATENTCORE_DEMO",
+  "shared_symbols": [],
+  "api_endpoints": [],
+  "db_tables": [],
+  "dom_bindings": [
+    {
+      "html_file": "index.html",
+      "element_ids": ["siteHeader", "brandHomeLink", "navBtn-search", "navBtn-assistant", "navBtn-insights"],
+      "js_handlers": ["rebuildPatentLookupMaps", "findDossierByApp", "hydrateCatalogShardRows"]
+    },
+    {
+      "html_file": "vietnampatentcore_fullpage_embed.html",
+      "element_ids": ["siteHeader", "brandHomeLink", "navBtn-search", "navBtn-assistant", "navBtn-insights"],
+      "js_handlers": ["rebuildPatentLookupMaps", "findDossierByApp", "hydrateCatalogShardRows"]
+    },
+    {
+      "html_file": "admin.html",
+      "element_ids": ["headerSyncBadge", "kpiContainer", "tabBtn-search", "tabBtn-nlg"],
+      "js_handlers": ["rebuildAdminPatentLookupMap", "findAdminPatentByApp", "hydrateAdminCatalogShardRows"]
+    }
+  ],
+  "env_variables": [],
+  "test_commands": []
+}

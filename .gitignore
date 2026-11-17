@@ -1,0 +1,4 @@
+# Code Anti-Compaction Ephemeral State
+.handoff/archive/snapshots/
+.handoff/logs/
+.handoff/context_meter.json

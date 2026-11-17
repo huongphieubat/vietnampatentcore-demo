@@ -1,0 +1,4692 @@
+{
+  "schema_version": "1.0",
+  "generated_at": "2026-11-17T04:18:25+00:00",
+  "root": "/home/antigravity/huongphieubat/vietnampatentcore-demo",
+  "summary": {
+    "indexed_files": 5,
+    "total_lines": 24020,
+    "total_est_tokens": 594899,
+    "total_symbols": 410,
+    "monolith_files_count": 5,
+    "monolith_slice_only_files": [
+      "admin.html",
+      "index.html",
+      "vietnampatentcore_fullpage_embed.html",
+      "admin/index.html",
+      "full-page-embed/index.html"
+    ]
+  },
+  "files": {
+    "admin.html": {
+      "sha256": "8fa6414919c68bf28d9b2685d7e9bbb30b22fec9d04dfc922628b7a3c520912c",
+      "bytes": 415184,
+      "lines": 4447,
+      "est_tokens": 120847,
+      "monolith_slice_only": true,
+      "symbols": [
+        {
+          "name": "rebuildAdminPatentLookupMap",
+          "kind": "function",
+          "signature": "function rebuildAdminPatentLookupMap()",
+          "start_line": 1281,
+          "end_line": 1288
+        },
+        {
+          "name": "findAdminPatentByApp",
+          "kind": "function",
+          "signature": "function findAdminPatentByApp(appNo)",
+          "start_line": 1290,
+          "end_line": 1293
+        },
+        {
+          "name": "hasAdminVerifiedNoipPdf",
+          "kind": "function",
+          "signature": "function hasAdminVerifiedNoipPdf(p)",
+          "start_line": 1295,
+          "end_line": 1300
+        },
+        {
+          "name": "getAdminDisplayAbstract",
+          "kind": "function",
+          "signature": "function getAdminDisplayAbstract(p)",
+          "start_line": 1302,
+          "end_line": 1311
+        },
+        {
+          "name": "ensureAdminDossierDetail",
+          "kind": "function",
+          "signature": "function ensureAdminDossierDetail(p)",
+          "start_line": 1313,
+          "end_line": 1357
+        },
+        {
+          "name": "hydrateAdminCatalogShardRows",
+          "kind": "function",
+          "signature": "function hydrateAdminCatalogShardRows(rows, targetList, seenApps)",
+          "start_line": 1359,
+          "end_line": 1425
+        },
+        {
+          "name": "resolveAdminStaticCatalogManifest",
+          "kind": "function",
+          "signature": "function resolveAdminStaticCatalogManifest()",
+          "start_line": 1427,
+          "end_line": 1446
+        },
+        {
+          "name": "buildPaginationControlsHtml",
+          "kind": "function",
+          "signature": "function buildPaginationControlsHtml(currentPage, totalItems, pageSize, pageCallbackFn)",
+          "start_line": 1450,
+          "end_line": 1488
+        },
+        {
+          "name": "configurePdfJsWorker",
+          "kind": "function",
+          "signature": "function configurePdfJsWorker()",
+          "start_line": 1517,
+          "end_line": 1528
+        },
+        {
+          "name": "escapeHtmlAttr",
+          "kind": "function",
+          "signature": "function escapeHtmlAttr(val)",
+          "start_line": 1530,
+          "end_line": 1538
+        },
+        {
+          "name": "normalizeNoipPdfUrl",
+          "kind": "function",
+          "signature": "function normalizeNoipPdfUrl(rawUrl)",
+          "start_line": 1541,
+          "end_line": 1562
+        },
+        {
+          "name": "isOfficialNoipHost",
+          "kind": "function",
+          "signature": "function isOfficialNoipHost(rawUrl)",
+          "start_line": 1564,
+          "end_line": 1579
+        },
+        {
+          "name": "isSimulatedSeedPdfUrl",
+          "kind": "function",
+          "signature": "function isSimulatedSeedPdfUrl(rawUrl)",
+          "start_line": 1581,
+          "end_line": 1585
+        },
+        {
+          "name": "isRealLiferayNoipPdfUrl",
+          "kind": "function",
+          "signature": "function isRealLiferayNoipPdfUrl(rawUrl)",
+          "start_line": 1587,
+          "end_line": 1594
+        },
+        {
+          "name": "openFloatingNoipPdfWindow",
+          "kind": "function",
+          "signature": "function openFloatingNoipPdfWindow(rawUrl)",
+          "start_line": 1596,
+          "end_line": 1613
+        },
+        {
+          "name": "buildStructuredA4SpecificationHtml",
+          "kind": "function",
+          "signature": "function buildStructuredA4SpecificationHtml(p, normUrl, topBannerHtml)",
+          "start_line": 1615,
+          "end_line": 1689
+        },
+        {
+          "name": "hasPdfMagicHeader",
+          "kind": "function",
+          "signature": "function hasPdfMagicHeader(bytes)",
+          "start_line": 1691,
+          "end_line": 1706
+        },
+        {
+          "name": "decodeBase64DataUriToBytes",
+          "kind": "function",
+          "signature": "function decodeBase64DataUriToBytes(contents)",
+          "start_line": 1708,
+          "end_line": 1722
+        },
+        {
+          "name": "racePromisesAny",
+          "kind": "function",
+          "signature": "function racePromisesAny(promises)",
+          "start_line": 1724,
+          "end_line": 1738
+        },
+        {
+          "name": "putBoundedMapCache",
+          "kind": "function",
+          "signature": "function putBoundedMapCache(mapObj, key, val, maxEntries)",
+          "start_line": 1740,
+          "end_line": 1747
+        },
+        {
+          "name": "fetchCandidatePdfBytes",
+          "kind": "function",
+          "signature": "function fetchCandidatePdfBytes(url, modeType, parentSignal, label, timeoutMs)",
+          "start_line": 1749,
+          "end_line": 1777
+        },
+        {
+          "name": "onParentAbort",
+          "kind": "arrow_fn",
+          "signature": "const onParentAbort = (...) =>",
+          "start_line": 1751,
+          "end_line": 1752
+        },
+        {
+          "name": "fetchLiveNoipPdfBytes",
+          "kind": "function",
+          "signature": "function fetchLiveNoipPdfBytes(normUrl, forceRefresh)",
+          "start_line": 1779,
+          "end_line": 1828
+        },
+        {
+          "name": "taskPromise",
+          "kind": "arrow_fn",
+          "signature": "const taskPromise = (...) =>",
+          "start_line": 1788,
+          "end_line": 1820
+        },
+        {
+          "name": "loadPdfJsDocument",
+          "kind": "function",
+          "signature": "function loadPdfJsDocument(bytes)",
+          "start_line": 1830,
+          "end_line": 1839
+        },
+        {
+          "name": "updateNoipSlotToolbarUi",
+          "kind": "function",
+          "signature": "function updateNoipSlotToolbarUi(slotKey)",
+          "start_line": 1841,
+          "end_line": 1859
+        },
+        {
+          "name": "renderNoipPdfPagesToCanvas",
+          "kind": "function",
+          "signature": "function renderNoipPdfPagesToCanvas(slotKey)",
+          "start_line": 1861,
+          "end_line": 1912
+        },
+        {
+          "name": "mountNoipCanvasShell",
+          "kind": "function",
+          "signature": "function mountNoipCanvasShell(slotKey, normUrl, heightClass)",
+          "start_line": 1914,
+          "end_line": 1937
+        },
+        {
+          "name": "scheduleNoipPdfHydration",
+          "kind": "function",
+          "signature": "function scheduleNoipPdfHydration(slotKey, p)",
+          "start_line": 1939,
+          "end_line": 1941
+        },
+        {
+          "name": "hydrateNoipPdfCanvasSlot",
+          "kind": "function",
+          "signature": "function hydrateNoipPdfCanvasSlot(slotKey, p, forceRefresh)",
+          "start_line": 1943,
+          "end_line": 2034
+        },
+        {
+          "name": "noipPdfStepPage",
+          "kind": "function",
+          "signature": "function noipPdfStepPage(slotKey, delta)",
+          "start_line": 2036,
+          "end_line": 2044
+        },
+        {
+          "name": "noipPdfToggleMultiPage",
+          "kind": "function",
+          "signature": "function noipPdfToggleMultiPage(slotKey)",
+          "start_line": 2046,
+          "end_line": 2051
+        },
+        {
+          "name": "noipPdfZoom",
+          "kind": "function",
+          "signature": "function noipPdfZoom(slotKey, action)",
+          "start_line": 2053,
+          "end_line": 2065
+        },
+        {
+          "name": "noipPdfRetryStream",
+          "kind": "function",
+          "signature": "function noipPdfRetryStream(slotKey)",
+          "start_line": 2067,
+          "end_line": 2070
+        },
+        {
+          "name": "noipPdfLoadLocalFile",
+          "kind": "function",
+          "signature": "function noipPdfLoadLocalFile(slotKey, inputEl)",
+          "start_line": 2072,
+          "end_line": 2088
+        },
+        {
+          "name": "buildDirectNoipPdfReaderHtml",
+          "kind": "function",
+          "signature": "function buildDirectNoipPdfReaderHtml(p, isModal)",
+          "start_line": 2090,
+          "end_line": 2260
+        },
+        {
+          "name": "setPdfViewerMode",
+          "kind": "function",
+          "signature": "function setPdfViewerMode(mode)",
+          "start_line": 2262,
+          "end_line": 2273
+        },
+        {
+          "name": "applyCustomDirectPdfUrl",
+          "kind": "function",
+          "signature": "function applyCustomDirectPdfUrl(inputId, isModal)",
+          "start_line": 2275,
+          "end_line": 2296
+        },
+        {
+          "name": "selectVerifiedLivePdfSample",
+          "kind": "function",
+          "signature": "function selectVerifiedLivePdfSample(sampleUrl, sampleAppNo, isModal)",
+          "start_line": 2298,
+          "end_line": 2321
+        },
+        {
+          "name": "openDirectNoipPdfForPatent",
+          "kind": "function",
+          "signature": "function openDirectNoipPdfForPatent(appNo, expandModal)",
+          "start_line": 2323,
+          "end_line": 2332
+        },
+        {
+          "name": "openDirectNoipPdfModal",
+          "kind": "function",
+          "signature": "function openDirectNoipPdfModal(appNoOrEmpty, explicitUrl, explicitTitle)",
+          "start_line": 2334,
+          "end_line": 2342
+        },
+        {
+          "name": "renderDirectPdfModalIfOpen",
+          "kind": "function",
+          "signature": "function renderDirectPdfModalIfOpen()",
+          "start_line": 2344,
+          "end_line": 2367
+        },
+        {
+          "name": "closeDirectNoipPdfModal",
+          "kind": "function",
+          "signature": "function closeDirectNoipPdfModal()",
+          "start_line": 2369,
+          "end_line": 2375
+        },
+        {
+          "name": "foldVn",
+          "kind": "function",
+          "signature": "function foldVn(str)",
+          "start_line": 2381,
+          "end_line": 2384
+        },
+        {
+          "name": "updateAdminHeaderCorpusBadge",
+          "kind": "function",
+          "signature": "function updateAdminHeaderCorpusBadge()",
+          "start_line": 2388,
+          "end_line": 2408
+        },
+        {
+          "name": "syncFromBackend",
+          "kind": "function",
+          "signature": "function syncFromBackend()",
+          "start_line": 2411,
+          "end_line": 2495
+        },
+        {
+          "name": "catalogPromise",
+          "kind": "arrow_fn",
+          "signature": "const catalogPromise = (...) =>",
+          "start_line": 2422,
+          "end_line": 2464
+        },
+        {
+          "name": "backendTelemetryPromise",
+          "kind": "arrow_fn",
+          "signature": "const backendTelemetryPromise = (...) =>",
+          "start_line": 2466,
+          "end_line": 2485
+        },
+        {
+          "name": "switchTab",
+          "kind": "function",
+          "signature": "function switchTab(tabId)",
+          "start_line": 2500,
+          "end_line": 2517
+        },
+        {
+          "name": "renderKpis",
+          "kind": "function",
+          "signature": "function renderKpis()",
+          "start_line": 2519,
+          "end_line": 2548
+        },
+        {
+          "name": "setQuickLucene",
+          "kind": "function",
+          "signature": "function setQuickLucene(q)",
+          "start_line": 2553,
+          "end_line": 2556
+        },
+        {
+          "name": "resetAllFilters",
+          "kind": "function",
+          "signature": "function resetAllFilters()",
+          "start_line": 2558,
+          "end_line": 2565
+        },
+        {
+          "name": "toggleSpecialFilter",
+          "kind": "function",
+          "signature": "function toggleSpecialFilter(sf)",
+          "start_line": 2567,
+          "end_line": 2582
+        },
+        {
+          "name": "setSearchPage",
+          "kind": "function",
+          "signature": "function setSearchPage(pageNum)",
+          "start_line": 2584,
+          "end_line": 2587
+        },
+        {
+          "name": "updateSpecialFilterButtons",
+          "kind": "function",
+          "signature": "function updateSpecialFilterButtons()",
+          "start_line": 2589,
+          "end_line": 2597
+        },
+        {
+          "name": "parseAdminLuceneToken",
+          "kind": "function",
+          "signature": "function parseAdminLuceneToken(rawTok)",
+          "start_line": 2599,
+          "end_line": 2621
+        },
+        {
+          "name": "compileAdminLuceneQuery",
+          "kind": "function",
+          "signature": "function compileAdminLuceneQuery(query)",
+          "start_line": 2623,
+          "end_line": 2647
+        },
+        {
+          "name": "matchCompiledToken",
+          "kind": "function",
+          "signature": "function matchCompiledToken(compiledTok, p)",
+          "start_line": 2649,
+          "end_line": 2681
+        },
+        {
+          "name": "evaluateCompiledLucene",
+          "kind": "function",
+          "signature": "function evaluateCompiledLucene(compiled, p)",
+          "start_line": 2683,
+          "end_line": 2707
+        },
+        {
+          "name": "evaluateLuceneRecord",
+          "kind": "function",
+          "signature": "function evaluateLuceneRecord(query, p)",
+          "start_line": 2709,
+          "end_line": 2711
+        },
+        {
+          "name": "runSearch",
+          "kind": "function",
+          "signature": "function runSearch(resetPage)",
+          "start_line": 2713,
+          "end_line": 2850
+        },
+        {
+          "name": "selectPatent",
+          "kind": "function",
+          "signature": "function selectPatent(appNo)",
+          "start_line": 2852,
+          "end_line": 2856
+        },
+        {
+          "name": "inspectDossierFromAudit",
+          "kind": "function",
+          "signature": "function inspectDossierFromAudit(queryOrAppNo, targetSubTab)",
+          "start_line": 2858,
+          "end_line": 2865
+        },
+        {
+          "name": "switchDetailSubTab",
+          "kind": "function",
+          "signature": "function switchDetailSubTab(subTab)",
+          "start_line": 2867,
+          "end_line": 2870
+        },
+        {
+          "name": "renderPatentDetail",
+          "kind": "function",
+          "signature": "function renderPatentDetail()",
+          "start_line": 2872,
+          "end_line": 3095
+        },
+        {
+          "name": "savePatentCommStatus",
+          "kind": "function",
+          "signature": "function savePatentCommStatus(appNo)",
+          "start_line": 3097,
+          "end_line": 3114
+        },
+        {
+          "name": "askSampleQuestion",
+          "kind": "function",
+          "signature": "function askSampleQuestion(q)",
+          "start_line": 3119,
+          "end_line": 3122
+        },
+        {
+          "name": "runDeterministicNlg",
+          "kind": "function",
+          "signature": "function runDeterministicNlg()",
+          "start_line": 3124,
+          "end_line": 3189
+        },
+        {
+          "name": "setSamplePriorArt",
+          "kind": "function",
+          "signature": "function setSamplePriorArt(txt)",
+          "start_line": 3194,
+          "end_line": 3197
+        },
+        {
+          "name": "runPriorArtSearch",
+          "kind": "function",
+          "signature": "function runPriorArtSearch()",
+          "start_line": 3199,
+          "end_line": 3258
+        },
+        {
+          "name": "triggerAutomatedEtlScan",
+          "kind": "function",
+          "signature": "function triggerAutomatedEtlScan()",
+          "start_line": 3263,
+          "end_line": 3287
+        },
+        {
+          "name": "runFederatedLiveLookup",
+          "kind": "function",
+          "signature": "function runFederatedLiveLookup(overrideAppNo)",
+          "start_line": 3289,
+          "end_line": 3347
+        },
+        {
+          "name": "addManualMissingDossier",
+          "kind": "function",
+          "signature": "function addManualMissingDossier()",
+          "start_line": 3349,
+          "end_line": 3380
+        },
+        {
+          "name": "renderEtlCenter",
+          "kind": "function",
+          "signature": "function renderEtlCenter()",
+          "start_line": 3382,
+          "end_line": 3438
+        },
+        {
+          "name": "openSequentialSyncPanel",
+          "kind": "function",
+          "signature": "function openSequentialSyncPanel()",
+          "start_line": 3444,
+          "end_line": 3449
+        },
+        {
+          "name": "recomputeSyncEtaPreview",
+          "kind": "function",
+          "signature": "function recomputeSyncEtaPreview()",
+          "start_line": 3451,
+          "end_line": 3478
+        },
+        {
+          "name": "saveSequentialSyncConfig",
+          "kind": "function",
+          "signature": "function saveSequentialSyncConfig()",
+          "start_line": 3480,
+          "end_line": 3520
+        },
+        {
+          "name": "triggerSequentialSyncTick",
+          "kind": "function",
+          "signature": "function triggerSequentialSyncTick()",
+          "start_line": 3522,
+          "end_line": 3556
+        },
+        {
+          "name": "renderSequentialSyncSchedulerDashboard",
+          "kind": "function",
+          "signature": "function renderSequentialSyncSchedulerDashboard(skipSyncControls)",
+          "start_line": 3558,
+          "end_line": 3720
+        },
+        {
+          "name": "openBulkBenchmarkPanel",
+          "kind": "function",
+          "signature": "function openBulkBenchmarkPanel()",
+          "start_line": 3722,
+          "end_line": 3726
+        },
+        {
+          "name": "runLiveBulkIngestion",
+          "kind": "function",
+          "signature": "function runLiveBulkIngestion(commitMode)",
+          "start_line": 3728,
+          "end_line": 3761
+        },
+        {
+          "name": "runLiveScaleBenchmark",
+          "kind": "function",
+          "signature": "function runLiveScaleBenchmark(forceRerun)",
+          "start_line": 3763,
+          "end_line": 3777
+        },
+        {
+          "name": "renderBulkBenchmarkDashboard",
+          "kind": "function",
+          "signature": "function renderBulkBenchmarkDashboard()",
+          "start_line": 3779,
+          "end_line": 3914
+        },
+        {
+          "name": "runLiveParserDemo",
+          "kind": "function",
+          "signature": "function runLiveParserDemo()",
+          "start_line": 3916,
+          "end_line": 3935
+        },
+        {
+          "name": "setArticlesPage",
+          "kind": "function",
+          "signature": "function setArticlesPage(pageNum)",
+          "start_line": 3940,
+          "end_line": 3943
+        },
+        {
+          "name": "renderBusinessArticles",
+          "kind": "function",
+          "signature": "function renderBusinessArticles()",
+          "start_line": 3945,
+          "end_line": 4021
+        },
+        {
+          "name": "setGazettePage",
+          "kind": "function",
+          "signature": "function setGazettePage(pageNum)",
+          "start_line": 4026,
+          "end_line": 4029
+        },
+        {
+          "name": "renderGazetteTable",
+          "kind": "function",
+          "signature": "function renderGazetteTable()",
+          "start_line": 4031,
+          "end_line": 4110
+        },
+        {
+          "name": "setCommTablePage",
+          "kind": "function",
+          "signature": "function setCommTablePage(pageNum)",
+          "start_line": 4112,
+          "end_line": 4115
+        },
+        {
+          "name": "renderPatentMapAndCommercialization",
+          "kind": "function",
+          "signature": "function renderPatentMapAndCommercialization()",
+          "start_line": 4117,
+          "end_line": 4252
+        },
+        {
+          "name": "populateMcpSampleArgs",
+          "kind": "function",
+          "signature": "function populateMcpSampleArgs()",
+          "start_line": 4268,
+          "end_line": 4271
+        },
+        {
+          "name": "selectMcpToolFromCard",
+          "kind": "function",
+          "signature": "function selectMcpToolFromCard(toolName)",
+          "start_line": 4273,
+          "end_line": 4277
+        },
+        {
+          "name": "loadMcpDashboard",
+          "kind": "function",
+          "signature": "function loadMcpDashboard()",
+          "start_line": 4279,
+          "end_line": 4300
+        },
+        {
+          "name": "renderMcpCatalogAndTables",
+          "kind": "function",
+          "signature": "function renderMcpCatalogAndTables(data)",
+          "start_line": 4302,
+          "end_line": 4363
+        },
+        {
+          "name": "executeMcpToolSandbox",
+          "kind": "function",
+          "signature": "function executeMcpToolSandbox()",
+          "start_line": 4365,
+          "end_line": 4399
+        },
+        {
+          "name": "generateNewMcpKey",
+          "kind": "function",
+          "signature": "function generateNewMcpKey()",
+          "start_line": 4401,
+          "end_line": 4423
+        },
+        {
+          "name": "navigateToUserPortal",
+          "kind": "function",
+          "signature": "function navigateToUserPortal(evt)",
+          "start_line": 4425,
+          "end_line": 4436
+        }
+      ],
+      "dom_ids": [
+        {
+          "id": "headerSyncBadge",
+          "line": 23
+        },
+        {
+          "id": "btnOpenUserPortalFromAdmin",
+          "line": 36
+        },
+        {
+          "id": "btnQuickScanHeader",
+          "line": 45
+        },
+        {
+          "id": "kpiContainer",
+          "line": 52
+        },
+        {
+          "id": "tabBtn-search",
+          "line": 56
+        },
+        {
+          "id": "tabBtn-nlg",
+          "line": 59
+        },
+        {
+          "id": "tabBtn-etl",
+          "line": 62
+        },
+        {
+          "id": "tabBtn-articles",
+          "line": 65
+        },
+        {
+          "id": "tabBtn-map",
+          "line": 68
+        },
+        {
+          "id": "tabBtn-mcp",
+          "line": 71
+        },
+        {
+          "id": "tabPanel-search",
+          "line": 79
+        },
+        {
+          "id": "searchQueryInput",
+          "line": 86
+        },
+        {
+          "id": "ipcFilterSelect",
+          "line": 91
+        },
+        {
+          "id": "commFilterSelect",
+          "line": 110
+        },
+        {
+          "id": "expandIpcCheckbox",
+          "line": 143
+        },
+        {
+          "id": "expandedIpcNotice",
+          "line": 148
+        },
+        {
+          "id": "specialFilterButtons",
+          "line": 158
+        },
+        {
+          "id": "specialFilterExplainBox",
+          "line": 190
+        },
+        {
+          "id": "searchResultCountLabel",
+          "line": 198
+        },
+        {
+          "id": "patentListPaginationTop",
+          "line": 201
+        },
+        {
+          "id": "patentListContainer",
+          "line": 202
+        },
+        {
+          "id": "patentListPaginationBottom",
+          "line": 203
+        },
+        {
+          "id": "patentDetailPanel",
+          "line": 207
+        },
+        {
+          "id": "tabPanel-nlg",
+          "line": 215
+        },
+        {
+          "id": "nlgQuestionInput",
+          "line": 233
+        },
+        {
+          "id": "nlgOutputContainer",
+          "line": 258
+        },
+        {
+          "id": "priorArtInput",
+          "line": 278
+        },
+        {
+          "id": "priorArtOutputContainer",
+          "line": 297
+        },
+        {
+          "id": "tabPanel-etl",
+          "line": 304
+        },
+        {
+          "id": "btnMainEtlScan",
+          "line": 315
+        },
+        {
+          "id": "etlScanResultBanner",
+          "line": 320
+        },
+        {
+          "id": "sequentialSyncSchedulerSection",
+          "line": 323
+        },
+        {
+          "id": "btnRunSyncTickNow",
+          "line": 342
+        },
+        {
+          "id": "syncIntervalSelect",
+          "line": 352
+        },
+        {
+          "id": "syncMaxJobsSelect",
+          "line": 362
+        },
+        {
+          "id": "syncDelaySecInput",
+          "line": 371
+        },
+        {
+          "id": "btnSaveSyncConfig",
+          "line": 374
+        },
+        {
+          "id": "sequentialSyncDashboardContent",
+          "line": 380
+        },
+        {
+          "id": "bulkBenchmarkSection",
+          "line": 384
+        },
+        {
+          "id": "btnRunBulkWal",
+          "line": 400
+        },
+        {
+          "id": "btnRunLiveBenchmark",
+          "line": 403
+        },
+        {
+          "id": "bulkBenchmarkContent",
+          "line": 408
+        },
+        {
+          "id": "ramCacheStatsBadge",
+          "line": 422
+        },
+        {
+          "id": "federatedAppNoInput",
+          "line": 426
+        },
+        {
+          "id": "federatedLookupOutput",
+          "line": 437
+        },
+        {
+          "id": "newMissingAppNoInput",
+          "line": 450
+        },
+        {
+          "id": "missingQueueContainer",
+          "line": 455
+        },
+        {
+          "id": "rawGazetteSandboxInput",
+          "line": 468
+        },
+        {
+          "id": "rawGazetteSandboxOutput",
+          "line": 470
+        },
+        {
+          "id": "etlLogsTableContainer",
+          "line": 477
+        },
+        {
+          "id": "tabPanel-articles",
+          "line": 485
+        },
+        {
+          "id": "businessArticlesPaginationTop",
+          "line": 500
+        },
+        {
+          "id": "businessArticlesContainer",
+          "line": 501
+        },
+        {
+          "id": "businessArticlesPaginationBottom",
+          "line": 502
+        },
+        {
+          "id": "tabPanel-map",
+          "line": 509
+        },
+        {
+          "id": "ipcMapChartContainer",
+          "line": 518
+        },
+        {
+          "id": "commMapChartContainer",
+          "line": 528
+        },
+        {
+          "id": "gazetteVolSelect",
+          "line": 544
+        },
+        {
+          "id": "gazetteTableContainer",
+          "line": 551
+        },
+        {
+          "id": "commercializationTableContainer",
+          "line": 558
+        },
+        {
+          "id": "tabPanel-mcp",
+          "line": 565
+        },
+        {
+          "id": "newMcpKeyName",
+          "line": 580
+        },
+        {
+          "id": "newMcpKeyBanner",
+          "line": 587
+        },
+        {
+          "id": "mcpToolsCatalogContainer",
+          "line": 593
+        },
+        {
+          "id": "mcpToolSelect",
+          "line": 606
+        },
+        {
+          "id": "mcpApiKeyInput",
+          "line": 619
+        },
+        {
+          "id": "mcpArgsTextarea",
+          "line": 622
+        },
+        {
+          "id": "mcpResponseOutput",
+          "line": 623
+        },
+        {
+          "id": "mcpKeysTableContainer",
+          "line": 631
+        },
+        {
+          "id": "mcpLogsTableContainer",
+          "line": 635
+        },
+        {
+          "id": "noipPdfModal",
+          "line": 644
+        },
+        {
+          "id": "noipPdfModalTitle",
+          "line": 651
+        },
+        {
+          "id": "noipPdfModalFloatingBtn",
+          "line": 656
+        },
+        {
+          "id": "noipPdfModalRawLink",
+          "line": 659
+        },
+        {
+          "id": "noipPdfModalBody",
+          "line": 667
+        },
+        {
+          "id": "detailCommSelect",
+          "line": 2922
+        }
+      ],
+      "dom_id_count": 76,
+      "script_blocks": [
+        {
+          "start_line": 671,
+          "end_line": 4445,
+          "is_js": true
+        }
+      ],
+      "api_calls": [
+        {
+          "path": "${base}/manifest.json",
+          "line": 1437
+        },
+        {
+          "path": "${base}/${sh.file}",
+          "line": 2434
+        },
+        {
+          "path": "/api/patent-map?gazette_limit=250",
+          "line": 2469
+        },
+        {
+          "path": "/api/etl/benchmark",
+          "line": 2478
+        },
+        {
+          "path": "/api/commercialization",
+          "line": 3101
+        },
+        {
+          "path": "/api/ask-nlg",
+          "line": 3130
+        },
+        {
+          "path": "/api/prior-art",
+          "line": 3205
+        },
+        {
+          "path": "/api/etl/scan",
+          "line": 3267
+        },
+        {
+          "path": "/api/federated/lookup?app_no=",
+          "line": 3296
+        },
+        {
+          "path": "/api/missing-queue",
+          "line": 3353
+        },
+        {
+          "path": "/api/sync/config",
+          "line": 3503
+        },
+        {
+          "path": "/api/sync/tick",
+          "line": 3527
+        },
+        {
+          "path": "/api/etl/ingest-latest-gazette",
+          "line": 3732
+        },
+        {
+          "path": "/api/etl/benchmark?force=",
+          "line": 3767
+        },
+        {
+          "path": "/api/etl/parse-live",
+          "line": 3919
+        },
+        {
+          "path": "/api/mcp/status",
+          "line": 4282
+        },
+        {
+          "path": "/api/mcp/call",
+          "line": 4374
+        },
+        {
+          "path": "/api/mcp/status",
+          "line": 4388
+        },
+        {
+          "path": "/api/mcp/keys",
+          "line": 4404
+        }
+      ]
+    },
+    "index.html": {
+      "sha256": "0abf5aabe3e01b8520434c6c72f02517298cad995a63175418b01c86f8876aab",
+      "bytes": 401433,
+      "lines": 5042,
+      "est_tokens": 117735,
+      "monolith_slice_only": true,
+      "symbols": [
+        {
+          "name": "rebuildPatentLookupMaps",
+          "kind": "function",
+          "signature": "function rebuildPatentLookupMaps()",
+          "start_line": 2656,
+          "end_line": 2666
+        },
+        {
+          "name": "findDossierByApp",
+          "kind": "function",
+          "signature": "function findDossierByApp(appNo)",
+          "start_line": 2668,
+          "end_line": 2671
+        },
+        {
+          "name": "getDossierDisplayAbstract",
+          "kind": "function",
+          "signature": "function getDossierDisplayAbstract(p)",
+          "start_line": 2673,
+          "end_line": 2683
+        },
+        {
+          "name": "ensureDossierDetailFields",
+          "kind": "function",
+          "signature": "function ensureDossierDetailFields(p)",
+          "start_line": 2685,
+          "end_line": 2741
+        },
+        {
+          "name": "hydrateCatalogShardRows",
+          "kind": "function",
+          "signature": "function hydrateCatalogShardRows(rows, targetList, seenApps)",
+          "start_line": 2743,
+          "end_line": 2808
+        },
+        {
+          "name": "escapeHtmlAttr",
+          "kind": "function",
+          "signature": "function escapeHtmlAttr(str)",
+          "start_line": 2838,
+          "end_line": 2845
+        },
+        {
+          "name": "formatReadablePatentTitle",
+          "kind": "function",
+          "signature": "function formatReadablePatentTitle(rawTitle)",
+          "start_line": 2856,
+          "end_line": 2874
+        },
+        {
+          "name": "highlightText",
+          "kind": "function",
+          "signature": "function highlightText(text, rawQuery)",
+          "start_line": 2876,
+          "end_line": 2890
+        },
+        {
+          "name": "navigateToAdminConsole",
+          "kind": "function",
+          "signature": "function navigateToAdminConsole(evt)",
+          "start_line": 2892,
+          "end_line": 2910
+        },
+        {
+          "name": "toggleColorTheme",
+          "kind": "function",
+          "signature": "function toggleColorTheme()",
+          "start_line": 2912,
+          "end_line": 2918
+        },
+        {
+          "name": "updateThemeButtonLabel",
+          "kind": "function",
+          "signature": "function updateThemeButtonLabel(theme)",
+          "start_line": 2920,
+          "end_line": 2925
+        },
+        {
+          "name": "switchUserView",
+          "kind": "function",
+          "signature": "function switchUserView(viewName)",
+          "start_line": 2937,
+          "end_line": 2959
+        },
+        {
+          "name": "buildPaginationControlsHtml",
+          "kind": "function",
+          "signature": "function buildPaginationControlsHtml(currentPage, totalItems, pageSize, pageCallbackFn)",
+          "start_line": 2961,
+          "end_line": 3001
+        },
+        {
+          "name": "normalizeNoipPdfUrl",
+          "kind": "function",
+          "signature": "function normalizeNoipPdfUrl(rawUrl)",
+          "start_line": 3022,
+          "end_line": 3043
+        },
+        {
+          "name": "isOfficialNoipHost",
+          "kind": "function",
+          "signature": "function isOfficialNoipHost(rawUrl)",
+          "start_line": 3045,
+          "end_line": 3060
+        },
+        {
+          "name": "isSimulatedSeedPdfUrl",
+          "kind": "function",
+          "signature": "function isSimulatedSeedPdfUrl(rawUrl)",
+          "start_line": 3062,
+          "end_line": 3066
+        },
+        {
+          "name": "isRealLiferayNoipPdfUrl",
+          "kind": "function",
+          "signature": "function isRealLiferayNoipPdfUrl(rawUrl)",
+          "start_line": 3068,
+          "end_line": 3075
+        },
+        {
+          "name": "hasVerifiedNoipPdf",
+          "kind": "function",
+          "signature": "function hasVerifiedNoipPdf(p)",
+          "start_line": 3077,
+          "end_line": 3082
+        },
+        {
+          "name": "openFloatingNoipPdfWindow",
+          "kind": "function",
+          "signature": "function openFloatingNoipPdfWindow(rawUrl)",
+          "start_line": 3084,
+          "end_line": 3101
+        },
+        {
+          "name": "buildStructuredA4SpecificationHtml",
+          "kind": "function",
+          "signature": "function buildStructuredA4SpecificationHtml(p, normUrl, topBannerHtml)",
+          "start_line": 3103,
+          "end_line": 3146
+        },
+        {
+          "name": "fetchPdfArrayBufferZeroDisk",
+          "kind": "function",
+          "signature": "function fetchPdfArrayBufferZeroDisk(normUrl)",
+          "start_line": 3148,
+          "end_line": 3163
+        },
+        {
+          "name": "renderNoipPdfPagesToCanvas",
+          "kind": "function",
+          "signature": "function renderNoipPdfPagesToCanvas(slotKey)",
+          "start_line": 3165,
+          "end_line": 3215
+        },
+        {
+          "name": "hydrateNoipPdfCanvasSlot",
+          "kind": "function",
+          "signature": "function hydrateNoipPdfCanvasSlot(slotKey, p, forceRefresh)",
+          "start_line": 3217,
+          "end_line": 3280
+        },
+        {
+          "name": "changeNoipPdfPage",
+          "kind": "function",
+          "signature": "function changeNoipPdfPage(slotKey, delta)",
+          "start_line": 3282,
+          "end_line": 3288
+        },
+        {
+          "name": "zoomNoipPdfCanvas",
+          "kind": "function",
+          "signature": "function zoomNoipPdfCanvas(slotKey, deltaScale)",
+          "start_line": 3290,
+          "end_line": 3295
+        },
+        {
+          "name": "toggleNoipPdfAllPages",
+          "kind": "function",
+          "signature": "function toggleNoipPdfAllPages(slotKey)",
+          "start_line": 3297,
+          "end_line": 3302
+        },
+        {
+          "name": "buildDirectNoipPdfReaderHtml",
+          "kind": "function",
+          "signature": "function buildDirectNoipPdfReaderHtml(p, isModal)",
+          "start_line": 3304,
+          "end_line": 3372
+        },
+        {
+          "name": "setPdfViewerMode",
+          "kind": "function",
+          "signature": "function setPdfViewerMode(mode, isModal)",
+          "start_line": 3374,
+          "end_line": 3381
+        },
+        {
+          "name": "selectVerifiedLivePdfSample",
+          "kind": "function",
+          "signature": "function selectVerifiedLivePdfSample(url, sampleAppNo, isModal)",
+          "start_line": 3383,
+          "end_line": 3394
+        },
+        {
+          "name": "openDirectNoipPdfModal",
+          "kind": "function",
+          "signature": "function openDirectNoipPdfModal(appNo, explicitUrl)",
+          "start_line": 3396,
+          "end_line": 3403
+        },
+        {
+          "name": "renderDirectNoipPdfModalBody",
+          "kind": "function",
+          "signature": "function renderDirectNoipPdfModalBody()",
+          "start_line": 3405,
+          "end_line": 3418
+        },
+        {
+          "name": "closeDirectNoipPdfModal",
+          "kind": "function",
+          "signature": "function closeDirectNoipPdfModal()",
+          "start_line": 3420,
+          "end_line": 3423
+        },
+        {
+          "name": "getExploitationBucketKey",
+          "kind": "function",
+          "signature": "function getExploitationBucketKey(p)",
+          "start_line": 3485,
+          "end_line": 3495
+        },
+        {
+          "name": "getExploitationPresentation",
+          "kind": "function",
+          "signature": "function getExploitationPresentation(p)",
+          "start_line": 3497,
+          "end_line": 3509
+        },
+        {
+          "name": "evaluateUserExploitationSignals",
+          "kind": "function",
+          "signature": "function evaluateUserExploitationSignals(p)",
+          "start_line": 3511,
+          "end_line": 3574
+        },
+        {
+          "name": "applySavedUserExploitationOverrides",
+          "kind": "function",
+          "signature": "function applySavedUserExploitationOverrides()",
+          "start_line": 3576,
+          "end_line": 3592
+        },
+        {
+          "name": "getStatusPresentation",
+          "kind": "function",
+          "signature": "function getStatusPresentation(p)",
+          "start_line": 3597,
+          "end_line": 3611
+        },
+        {
+          "name": "getCommLabelVi",
+          "kind": "function",
+          "signature": "function getCommLabelVi(code, pOpt)",
+          "start_line": 3613,
+          "end_line": 3619
+        },
+        {
+          "name": "syncExploitDropdownFromState",
+          "kind": "function",
+          "signature": "function syncExploitDropdownFromState()",
+          "start_line": 3621,
+          "end_line": 3624
+        },
+        {
+          "name": "onAdvExploitSelectChange",
+          "kind": "function",
+          "signature": "function onAdvExploitSelectChange()",
+          "start_line": 3626,
+          "end_line": 3632
+        },
+        {
+          "name": "ensureLowercaseSearchCache",
+          "kind": "function",
+          "signature": "function ensureLowercaseSearchCache(p)",
+          "start_line": 3634,
+          "end_line": 3644
+        },
+        {
+          "name": "scoreDossierForUserQuery",
+          "kind": "function",
+          "signature": "function scoreDossierForUserQuery(p, qLc, qTokens, advTitleLc, advAppLc, advNumLc, advOrigin)",
+          "start_line": 3646,
+          "end_line": 3681
+        },
+        {
+          "name": "handleSearchInputDebounce",
+          "kind": "function",
+          "signature": "function handleSearchInputDebounce()",
+          "start_line": 3683,
+          "end_line": 3689
+        },
+        {
+          "name": "clearUserSearch",
+          "kind": "function",
+          "signature": "function clearUserSearch()",
+          "start_line": 3691,
+          "end_line": 3695
+        },
+        {
+          "name": "toggleAdvancedSearchDrawer",
+          "kind": "function",
+          "signature": "function toggleAdvancedSearchDrawer()",
+          "start_line": 3697,
+          "end_line": 3703
+        },
+        {
+          "name": "toggleMobileFilterRail",
+          "kind": "function",
+          "signature": "function toggleMobileFilterRail()",
+          "start_line": 3705,
+          "end_line": 3708
+        },
+        {
+          "name": "applyQuickTopic",
+          "kind": "function",
+          "signature": "function applyQuickTopic(btnEl, queryText, ipcPrefix, commMode)",
+          "start_line": 3710,
+          "end_line": 3722
+        },
+        {
+          "name": "resetAllUserFilters",
+          "kind": "function",
+          "signature": "function resetAllUserFilters()",
+          "start_line": 3724,
+          "end_line": 3742
+        },
+        {
+          "name": "setFacetFilter",
+          "kind": "function",
+          "signature": "function setFacetFilter(kind, val)",
+          "start_line": 3744,
+          "end_line": 3755
+        },
+        {
+          "name": "setUserSearchPage",
+          "kind": "function",
+          "signature": "function setUserSearchPage(pageNum)",
+          "start_line": 3757,
+          "end_line": 3761
+        },
+        {
+          "name": "renderSidebarFacets",
+          "kind": "function",
+          "signature": "function renderSidebarFacets()",
+          "start_line": 3763,
+          "end_line": 3892
+        },
+        {
+          "name": "runUserSearch",
+          "kind": "function",
+          "signature": "function runUserSearch(resetPage)",
+          "start_line": 3894,
+          "end_line": 4107
+        },
+        {
+          "name": "computeStatutoryAnnuityTable",
+          "kind": "function",
+          "signature": "function computeStatutoryAnnuityTable(p)",
+          "start_line": 4112,
+          "end_line": 4139
+        },
+        {
+          "name": "refreshDrawerHeaderBadges",
+          "kind": "function",
+          "signature": "function refreshDrawerHeaderBadges(p)",
+          "start_line": 4141,
+          "end_line": 4154
+        },
+        {
+          "name": "openDossierDrawer",
+          "kind": "function",
+          "signature": "function openDossierDrawer(appNo, initialTab)",
+          "start_line": 4156,
+          "end_line": 4168
+        },
+        {
+          "name": "closeDossierDrawer",
+          "kind": "function",
+          "signature": "function closeDossierDrawer()",
+          "start_line": 4170,
+          "end_line": 4172
+        },
+        {
+          "name": "toggleExploitUpdateForm",
+          "kind": "function",
+          "signature": "function toggleExploitUpdateForm()",
+          "start_line": 4174,
+          "end_line": 4177
+        },
+        {
+          "name": "saveUserExploitationUpdate",
+          "kind": "function",
+          "signature": "function saveUserExploitationUpdate(appNo)",
+          "start_line": 4179,
+          "end_line": 4228
+        },
+        {
+          "name": "switchDrawerTab",
+          "kind": "function",
+          "signature": "function switchDrawerTab(tabName)",
+          "start_line": 4230,
+          "end_line": 4443
+        },
+        {
+          "name": "populateQaPatentSelector",
+          "kind": "function",
+          "signature": "function populateQaPatentSelector()",
+          "start_line": 4455,
+          "end_line": 4468
+        },
+        {
+          "name": "syncQaFromSelectedDossier",
+          "kind": "function",
+          "signature": "function syncQaFromSelectedDossier()",
+          "start_line": 4470,
+          "end_line": 4472
+        },
+        {
+          "name": "askPresetUserQuestion",
+          "kind": "function",
+          "signature": "function askPresetUserQuestion(mode)",
+          "start_line": 4474,
+          "end_line": 4489
+        },
+        {
+          "name": "answerUserLegalQuestion",
+          "kind": "function",
+          "signature": "function answerUserLegalQuestion()",
+          "start_line": 4491,
+          "end_line": 4560
+        },
+        {
+          "name": "runUserPriorArtCheck",
+          "kind": "function",
+          "signature": "function runUserPriorArtCheck()",
+          "start_line": 4562,
+          "end_line": 4622
+        },
+        {
+          "name": "setTransferPage",
+          "kind": "function",
+          "signature": "function setTransferPage(p)",
+          "start_line": 4627,
+          "end_line": 4630
+        },
+        {
+          "name": "renderTransferShowcase",
+          "kind": "function",
+          "signature": "function renderTransferShowcase()",
+          "start_line": 4632,
+          "end_line": 4740
+        },
+        {
+          "name": "setUserGazettePage",
+          "kind": "function",
+          "signature": "function setUserGazettePage(p)",
+          "start_line": 4745,
+          "end_line": 4748
+        },
+        {
+          "name": "renderUserInsightsAndGazette",
+          "kind": "function",
+          "signature": "function renderUserInsightsAndGazette()",
+          "start_line": 4750,
+          "end_line": 4844
+        },
+        {
+          "name": "renderUserGazetteTable",
+          "kind": "function",
+          "signature": "function renderUserGazetteTable()",
+          "start_line": 4846,
+          "end_line": 4904
+        },
+        {
+          "name": "resolveStaticCatalogManifest",
+          "kind": "function",
+          "signature": "function resolveStaticCatalogManifest()",
+          "start_line": 4909,
+          "end_line": 4927
+        },
+        {
+          "name": "refreshAllActiveUserPortalViews",
+          "kind": "function",
+          "signature": "function refreshAllActiveUserPortalViews(resetPage)",
+          "start_line": 4929,
+          "end_line": 4937
+        },
+        {
+          "name": "syncPublicPortalData",
+          "kind": "function",
+          "signature": "function syncPublicPortalData()",
+          "start_line": 4939,
+          "end_line": 5035
+        }
+      ],
+      "dom_ids": [
+        {
+          "id": "siteHeader",
+          "line": 1658
+        },
+        {
+          "id": "brandHomeLink",
+          "line": 1660
+        },
+        {
+          "id": "navBtn-search",
+          "line": 1669
+        },
+        {
+          "id": "navBtn-assistant",
+          "line": 1672
+        },
+        {
+          "id": "navBtn-transfer",
+          "line": 1675
+        },
+        {
+          "id": "navBtn-insights",
+          "line": 1678
+        },
+        {
+          "id": "themeToggleBtn",
+          "line": 1684
+        },
+        {
+          "id": "themeToggleIcon",
+          "line": 1685
+        },
+        {
+          "id": "themeToggleLabel",
+          "line": 1686
+        },
+        {
+          "id": "adminConsoleEntryLink",
+          "line": 1688
+        },
+        {
+          "id": "userView-search",
+          "line": 1698
+        },
+        {
+          "id": "heroLiveCorpusBadge",
+          "line": 1702
+        },
+        {
+          "id": "heroLiveCorpusText",
+          "line": 1704
+        },
+        {
+          "id": "mainSearchForm",
+          "line": 1712
+        },
+        {
+          "id": "userSearchInput",
+          "line": 1717
+        },
+        {
+          "id": "clearSearchBtn",
+          "line": 1724
+        },
+        {
+          "id": "advToggleBtn",
+          "line": 1727
+        },
+        {
+          "id": "submitSearchBtn",
+          "line": 1730
+        },
+        {
+          "id": "advancedSearchDrawer",
+          "line": 1736
+        },
+        {
+          "id": "advTitleInput",
+          "line": 1740
+        },
+        {
+          "id": "advApplicantInput",
+          "line": 1744
+        },
+        {
+          "id": "advNumberInput",
+          "line": 1748
+        },
+        {
+          "id": "advOriginSelect",
+          "line": 1752
+        },
+        {
+          "id": "advExploitSelect",
+          "line": 1760
+        },
+        {
+          "id": "searchFilterRail",
+          "line": 1804
+        },
+        {
+          "id": "onlyWithPdfSwitch",
+          "line": 1808
+        },
+        {
+          "id": "patentTypeFacets",
+          "line": 1817
+        },
+        {
+          "id": "legalStatusFacets",
+          "line": 1824
+        },
+        {
+          "id": "exploitationStatusFacets",
+          "line": 1831
+        },
+        {
+          "id": "ipcSectorFacets",
+          "line": 1838
+        },
+        {
+          "id": "specialLegalFacets",
+          "line": 1845
+        },
+        {
+          "id": "resultsSummaryText",
+          "line": 1852
+        },
+        {
+          "id": "mobileFilterToggleBtn",
+          "line": 1856
+        },
+        {
+          "id": "sortOrderSelect",
+          "line": 1859
+        },
+        {
+          "id": "activeSpecialFilterBanner",
+          "line": 1869
+        },
+        {
+          "id": "patentResultsStream",
+          "line": 1871
+        },
+        {
+          "id": "searchPaginationWrap",
+          "line": 1873
+        },
+        {
+          "id": "userView-assistant",
+          "line": 1881
+        },
+        {
+          "id": "qaPatentSelect",
+          "line": 1897
+        },
+        {
+          "id": "userQaInput",
+          "line": 1917
+        },
+        {
+          "id": "userQaOutput",
+          "line": 1928
+        },
+        {
+          "id": "priorArtUserText",
+          "line": 1938
+        },
+        {
+          "id": "userPriorArtResults",
+          "line": 1948
+        },
+        {
+          "id": "userView-transfer",
+          "line": 1956
+        },
+        {
+          "id": "transferFilterSelect",
+          "line": 1968
+        },
+        {
+          "id": "transferDirectoryList",
+          "line": 1977
+        },
+        {
+          "id": "transferPaginationWrap",
+          "line": 1978
+        },
+        {
+          "id": "transferArticleReader",
+          "line": 1981
+        },
+        {
+          "id": "userView-insights",
+          "line": 1988
+        },
+        {
+          "id": "insightsMetricsStrip",
+          "line": 1996
+        },
+        {
+          "id": "insightsIpcChart",
+          "line": 2002
+        },
+        {
+          "id": "insightsOriginBreakdown",
+          "line": 2008
+        },
+        {
+          "id": "userGazetteVolFilter",
+          "line": 2018
+        },
+        {
+          "id": "userGazetteTableBody",
+          "line": 2039
+        },
+        {
+          "id": "userGazettePaginationWrap",
+          "line": 2042
+        },
+        {
+          "id": "dossierDrawerBackdrop",
+          "line": 2049
+        },
+        {
+          "id": "drawerBadgeCluster",
+          "line": 2053
+        },
+        {
+          "id": "drawerPatentTitle",
+          "line": 2054
+        },
+        {
+          "id": "dTab-overview",
+          "line": 2062
+        },
+        {
+          "id": "dTab-pdf",
+          "line": 2065
+        },
+        {
+          "id": "dTab-claims",
+          "line": 2068
+        },
+        {
+          "id": "dTab-timeline",
+          "line": 2071
+        },
+        {
+          "id": "drawerContentBody",
+          "line": 2076
+        },
+        {
+          "id": "noipPdfModal",
+          "line": 2083
+        },
+        {
+          "id": "noipPdfModalTitle",
+          "line": 2087
+        },
+        {
+          "id": "noipPdfModalSubtitle",
+          "line": 2090
+        },
+        {
+          "id": "noipPdfModalBody",
+          "line": 2096
+        },
+        {
+          "id": "footerDataFreshnessNote",
+          "line": 2107
+        },
+        {
+          "id": "drawerExploitDetailCard",
+          "line": 4252
+        },
+        {
+          "id": "drawerCommSaveMsg",
+          "line": 4281
+        },
+        {
+          "id": "drawerExploitUpdateForm",
+          "line": 4307
+        },
+        {
+          "id": "drawerCommStatusSelect",
+          "line": 4311
+        },
+        {
+          "id": "drawerCommNoteInput",
+          "line": 4321
+        }
+      ],
+      "dom_id_count": 73,
+      "script_blocks": [
+        {
+          "start_line": 2123,
+          "end_line": 5040,
+          "is_js": true
+        }
+      ],
+      "api_calls": [
+        {
+          "path": "/api/commercialization",
+          "line": 4203
+        },
+        {
+          "path": "/api/qa",
+          "line": 4501
+        },
+        {
+          "path": "${base}/manifest.json",
+          "line": 4918
+        },
+        {
+          "path": "${base}/${sh.file}",
+          "line": 4971
+        },
+        {
+          "path": "/api/gazettes",
+          "line": 5025
+        }
+      ]
+    },
+    "vietnampatentcore_fullpage_embed.html": {
+      "sha256": "0abf5aabe3e01b8520434c6c72f02517298cad995a63175418b01c86f8876aab",
+      "bytes": 401433,
+      "lines": 5042,
+      "est_tokens": 117735,
+      "monolith_slice_only": true,
+      "symbols": [
+        {
+          "name": "rebuildPatentLookupMaps",
+          "kind": "function",
+          "signature": "function rebuildPatentLookupMaps()",
+          "start_line": 2656,
+          "end_line": 2666
+        },
+        {
+          "name": "findDossierByApp",
+          "kind": "function",
+          "signature": "function findDossierByApp(appNo)",
+          "start_line": 2668,
+          "end_line": 2671
+        },
+        {
+          "name": "getDossierDisplayAbstract",
+          "kind": "function",
+          "signature": "function getDossierDisplayAbstract(p)",
+          "start_line": 2673,
+          "end_line": 2683
+        },
+        {
+          "name": "ensureDossierDetailFields",
+          "kind": "function",
+          "signature": "function ensureDossierDetailFields(p)",
+          "start_line": 2685,
+          "end_line": 2741
+        },
+        {
+          "name": "hydrateCatalogShardRows",
+          "kind": "function",
+          "signature": "function hydrateCatalogShardRows(rows, targetList, seenApps)",
+          "start_line": 2743,
+          "end_line": 2808
+        },
+        {
+          "name": "escapeHtmlAttr",
+          "kind": "function",
+          "signature": "function escapeHtmlAttr(str)",
+          "start_line": 2838,
+          "end_line": 2845
+        },
+        {
+          "name": "formatReadablePatentTitle",
+          "kind": "function",
+          "signature": "function formatReadablePatentTitle(rawTitle)",
+          "start_line": 2856,
+          "end_line": 2874
+        },
+        {
+          "name": "highlightText",
+          "kind": "function",
+          "signature": "function highlightText(text, rawQuery)",
+          "start_line": 2876,
+          "end_line": 2890
+        },
+        {
+          "name": "navigateToAdminConsole",
+          "kind": "function",
+          "signature": "function navigateToAdminConsole(evt)",
+          "start_line": 2892,
+          "end_line": 2910
+        },
+        {
+          "name": "toggleColorTheme",
+          "kind": "function",
+          "signature": "function toggleColorTheme()",
+          "start_line": 2912,
+          "end_line": 2918
+        },
+        {
+          "name": "updateThemeButtonLabel",
+          "kind": "function",
+          "signature": "function updateThemeButtonLabel(theme)",
+          "start_line": 2920,
+          "end_line": 2925
+        },
+        {
+          "name": "switchUserView",
+          "kind": "function",
+          "signature": "function switchUserView(viewName)",
+          "start_line": 2937,
+          "end_line": 2959
+        },
+        {
+          "name": "buildPaginationControlsHtml",
+          "kind": "function",
+          "signature": "function buildPaginationControlsHtml(currentPage, totalItems, pageSize, pageCallbackFn)",
+          "start_line": 2961,
+          "end_line": 3001
+        },
+        {
+          "name": "normalizeNoipPdfUrl",
+          "kind": "function",
+          "signature": "function normalizeNoipPdfUrl(rawUrl)",
+          "start_line": 3022,
+          "end_line": 3043
+        },
+        {
+          "name": "isOfficialNoipHost",
+          "kind": "function",
+          "signature": "function isOfficialNoipHost(rawUrl)",
+          "start_line": 3045,
+          "end_line": 3060
+        },
+        {
+          "name": "isSimulatedSeedPdfUrl",
+          "kind": "function",
+          "signature": "function isSimulatedSeedPdfUrl(rawUrl)",
+          "start_line": 3062,
+          "end_line": 3066
+        },
+        {
+          "name": "isRealLiferayNoipPdfUrl",
+          "kind": "function",
+          "signature": "function isRealLiferayNoipPdfUrl(rawUrl)",
+          "start_line": 3068,
+          "end_line": 3075
+        },
+        {
+          "name": "hasVerifiedNoipPdf",
+          "kind": "function",
+          "signature": "function hasVerifiedNoipPdf(p)",
+          "start_line": 3077,
+          "end_line": 3082
+        },
+        {
+          "name": "openFloatingNoipPdfWindow",
+          "kind": "function",
+          "signature": "function openFloatingNoipPdfWindow(rawUrl)",
+          "start_line": 3084,
+          "end_line": 3101
+        },
+        {
+          "name": "buildStructuredA4SpecificationHtml",
+          "kind": "function",
+          "signature": "function buildStructuredA4SpecificationHtml(p, normUrl, topBannerHtml)",
+          "start_line": 3103,
+          "end_line": 3146
+        },
+        {
+          "name": "fetchPdfArrayBufferZeroDisk",
+          "kind": "function",
+          "signature": "function fetchPdfArrayBufferZeroDisk(normUrl)",
+          "start_line": 3148,
+          "end_line": 3163
+        },
+        {
+          "name": "renderNoipPdfPagesToCanvas",
+          "kind": "function",
+          "signature": "function renderNoipPdfPagesToCanvas(slotKey)",
+          "start_line": 3165,
+          "end_line": 3215
+        },
+        {
+          "name": "hydrateNoipPdfCanvasSlot",
+          "kind": "function",
+          "signature": "function hydrateNoipPdfCanvasSlot(slotKey, p, forceRefresh)",
+          "start_line": 3217,
+          "end_line": 3280
+        },
+        {
+          "name": "changeNoipPdfPage",
+          "kind": "function",
+          "signature": "function changeNoipPdfPage(slotKey, delta)",
+          "start_line": 3282,
+          "end_line": 3288
+        },
+        {
+          "name": "zoomNoipPdfCanvas",
+          "kind": "function",
+          "signature": "function zoomNoipPdfCanvas(slotKey, deltaScale)",
+          "start_line": 3290,
+          "end_line": 3295
+        },
+        {
+          "name": "toggleNoipPdfAllPages",
+          "kind": "function",
+          "signature": "function toggleNoipPdfAllPages(slotKey)",
+          "start_line": 3297,
+          "end_line": 3302
+        },
+        {
+          "name": "buildDirectNoipPdfReaderHtml",
+          "kind": "function",
+          "signature": "function buildDirectNoipPdfReaderHtml(p, isModal)",
+          "start_line": 3304,
+          "end_line": 3372
+        },
+        {
+          "name": "setPdfViewerMode",
+          "kind": "function",
+          "signature": "function setPdfViewerMode(mode, isModal)",
+          "start_line": 3374,
+          "end_line": 3381
+        },
+        {
+          "name": "selectVerifiedLivePdfSample",
+          "kind": "function",
+          "signature": "function selectVerifiedLivePdfSample(url, sampleAppNo, isModal)",
+          "start_line": 3383,
+          "end_line": 3394
+        },
+        {
+          "name": "openDirectNoipPdfModal",
+          "kind": "function",
+          "signature": "function openDirectNoipPdfModal(appNo, explicitUrl)",
+          "start_line": 3396,
+          "end_line": 3403
+        },
+        {
+          "name": "renderDirectNoipPdfModalBody",
+          "kind": "function",
+          "signature": "function renderDirectNoipPdfModalBody()",
+          "start_line": 3405,
+          "end_line": 3418
+        },
+        {
+          "name": "closeDirectNoipPdfModal",
+          "kind": "function",
+          "signature": "function closeDirectNoipPdfModal()",
+          "start_line": 3420,
+          "end_line": 3423
+        },
+        {
+          "name": "getExploitationBucketKey",
+          "kind": "function",
+          "signature": "function getExploitationBucketKey(p)",
+          "start_line": 3485,
+          "end_line": 3495
+        },
+        {
+          "name": "getExploitationPresentation",
+          "kind": "function",
+          "signature": "function getExploitationPresentation(p)",
+          "start_line": 3497,
+          "end_line": 3509
+        },
+        {
+          "name": "evaluateUserExploitationSignals",
+          "kind": "function",
+          "signature": "function evaluateUserExploitationSignals(p)",
+          "start_line": 3511,
+          "end_line": 3574
+        },
+        {
+          "name": "applySavedUserExploitationOverrides",
+          "kind": "function",
+          "signature": "function applySavedUserExploitationOverrides()",
+          "start_line": 3576,
+          "end_line": 3592
+        },
+        {
+          "name": "getStatusPresentation",
+          "kind": "function",
+          "signature": "function getStatusPresentation(p)",
+          "start_line": 3597,
+          "end_line": 3611
+        },
+        {
+          "name": "getCommLabelVi",
+          "kind": "function",
+          "signature": "function getCommLabelVi(code, pOpt)",
+          "start_line": 3613,
+          "end_line": 3619
+        },
+        {
+          "name": "syncExploitDropdownFromState",
+          "kind": "function",
+          "signature": "function syncExploitDropdownFromState()",
+          "start_line": 3621,
+          "end_line": 3624
+        },
+        {
+          "name": "onAdvExploitSelectChange",
+          "kind": "function",
+          "signature": "function onAdvExploitSelectChange()",
+          "start_line": 3626,
+          "end_line": 3632
+        },
+        {
+          "name": "ensureLowercaseSearchCache",
+          "kind": "function",
+          "signature": "function ensureLowercaseSearchCache(p)",
+          "start_line": 3634,
+          "end_line": 3644
+        },
+        {
+          "name": "scoreDossierForUserQuery",
+          "kind": "function",
+          "signature": "function scoreDossierForUserQuery(p, qLc, qTokens, advTitleLc, advAppLc, advNumLc, advOrigin)",
+          "start_line": 3646,
+          "end_line": 3681
+        },
+        {
+          "name": "handleSearchInputDebounce",
+          "kind": "function",
+          "signature": "function handleSearchInputDebounce()",
+          "start_line": 3683,
+          "end_line": 3689
+        },
+        {
+          "name": "clearUserSearch",
+          "kind": "function",
+          "signature": "function clearUserSearch()",
+          "start_line": 3691,
+          "end_line": 3695
+        },
+        {
+          "name": "toggleAdvancedSearchDrawer",
+          "kind": "function",
+          "signature": "function toggleAdvancedSearchDrawer()",
+          "start_line": 3697,
+          "end_line": 3703
+        },
+        {
+          "name": "toggleMobileFilterRail",
+          "kind": "function",
+          "signature": "function toggleMobileFilterRail()",
+          "start_line": 3705,
+          "end_line": 3708
+        },
+        {
+          "name": "applyQuickTopic",
+          "kind": "function",
+          "signature": "function applyQuickTopic(btnEl, queryText, ipcPrefix, commMode)",
+          "start_line": 3710,
+          "end_line": 3722
+        },
+        {
+          "name": "resetAllUserFilters",
+          "kind": "function",
+          "signature": "function resetAllUserFilters()",
+          "start_line": 3724,
+          "end_line": 3742
+        },
+        {
+          "name": "setFacetFilter",
+          "kind": "function",
+          "signature": "function setFacetFilter(kind, val)",
+          "start_line": 3744,
+          "end_line": 3755
+        },
+        {
+          "name": "setUserSearchPage",
+          "kind": "function",
+          "signature": "function setUserSearchPage(pageNum)",
+          "start_line": 3757,
+          "end_line": 3761
+        },
+        {
+          "name": "renderSidebarFacets",
+          "kind": "function",
+          "signature": "function renderSidebarFacets()",
+          "start_line": 3763,
+          "end_line": 3892
+        },
+        {
+          "name": "runUserSearch",
+          "kind": "function",
+          "signature": "function runUserSearch(resetPage)",
+          "start_line": 3894,
+          "end_line": 4107
+        },
+        {
+          "name": "computeStatutoryAnnuityTable",
+          "kind": "function",
+          "signature": "function computeStatutoryAnnuityTable(p)",
+          "start_line": 4112,
+          "end_line": 4139
+        },
+        {
+          "name": "refreshDrawerHeaderBadges",
+          "kind": "function",
+          "signature": "function refreshDrawerHeaderBadges(p)",
+          "start_line": 4141,
+          "end_line": 4154
+        },
+        {
+          "name": "openDossierDrawer",
+          "kind": "function",
+          "signature": "function openDossierDrawer(appNo, initialTab)",
+          "start_line": 4156,
+          "end_line": 4168
+        },
+        {
+          "name": "closeDossierDrawer",
+          "kind": "function",
+          "signature": "function closeDossierDrawer()",
+          "start_line": 4170,
+          "end_line": 4172
+        },
+        {
+          "name": "toggleExploitUpdateForm",
+          "kind": "function",
+          "signature": "function toggleExploitUpdateForm()",
+          "start_line": 4174,
+          "end_line": 4177
+        },
+        {
+          "name": "saveUserExploitationUpdate",
+          "kind": "function",
+          "signature": "function saveUserExploitationUpdate(appNo)",
+          "start_line": 4179,
+          "end_line": 4228
+        },
+        {
+          "name": "switchDrawerTab",
+          "kind": "function",
+          "signature": "function switchDrawerTab(tabName)",
+          "start_line": 4230,
+          "end_line": 4443
+        },
+        {
+          "name": "populateQaPatentSelector",
+          "kind": "function",
+          "signature": "function populateQaPatentSelector()",
+          "start_line": 4455,
+          "end_line": 4468
+        },
+        {
+          "name": "syncQaFromSelectedDossier",
+          "kind": "function",
+          "signature": "function syncQaFromSelectedDossier()",
+          "start_line": 4470,
+          "end_line": 4472
+        },
+        {
+          "name": "askPresetUserQuestion",
+          "kind": "function",
+          "signature": "function askPresetUserQuestion(mode)",
+          "start_line": 4474,
+          "end_line": 4489
+        },
+        {
+          "name": "answerUserLegalQuestion",
+          "kind": "function",
+          "signature": "function answerUserLegalQuestion()",
+          "start_line": 4491,
+          "end_line": 4560
+        },
+        {
+          "name": "runUserPriorArtCheck",
+          "kind": "function",
+          "signature": "function runUserPriorArtCheck()",
+          "start_line": 4562,
+          "end_line": 4622
+        },
+        {
+          "name": "setTransferPage",
+          "kind": "function",
+          "signature": "function setTransferPage(p)",
+          "start_line": 4627,
+          "end_line": 4630
+        },
+        {
+          "name": "renderTransferShowcase",
+          "kind": "function",
+          "signature": "function renderTransferShowcase()",
+          "start_line": 4632,
+          "end_line": 4740
+        },
+        {
+          "name": "setUserGazettePage",
+          "kind": "function",
+          "signature": "function setUserGazettePage(p)",
+          "start_line": 4745,
+          "end_line": 4748
+        },
+        {
+          "name": "renderUserInsightsAndGazette",
+          "kind": "function",
+          "signature": "function renderUserInsightsAndGazette()",
+          "start_line": 4750,
+          "end_line": 4844
+        },
+        {
+          "name": "renderUserGazetteTable",
+          "kind": "function",
+          "signature": "function renderUserGazetteTable()",
+          "start_line": 4846,
+          "end_line": 4904
+        },
+        {
+          "name": "resolveStaticCatalogManifest",
+          "kind": "function",
+          "signature": "function resolveStaticCatalogManifest()",
+          "start_line": 4909,
+          "end_line": 4927
+        },
+        {
+          "name": "refreshAllActiveUserPortalViews",
+          "kind": "function",
+          "signature": "function refreshAllActiveUserPortalViews(resetPage)",
+          "start_line": 4929,
+          "end_line": 4937
+        },
+        {
+          "name": "syncPublicPortalData",
+          "kind": "function",
+          "signature": "function syncPublicPortalData()",
+          "start_line": 4939,
+          "end_line": 5035
+        }
+      ],
+      "dom_ids": [
+        {
+          "id": "siteHeader",
+          "line": 1658
+        },
+        {
+          "id": "brandHomeLink",
+          "line": 1660
+        },
+        {
+          "id": "navBtn-search",
+          "line": 1669
+        },
+        {
+          "id": "navBtn-assistant",
+          "line": 1672
+        },
+        {
+          "id": "navBtn-transfer",
+          "line": 1675
+        },
+        {
+          "id": "navBtn-insights",
+          "line": 1678
+        },
+        {
+          "id": "themeToggleBtn",
+          "line": 1684
+        },
+        {
+          "id": "themeToggleIcon",
+          "line": 1685
+        },
+        {
+          "id": "themeToggleLabel",
+          "line": 1686
+        },
+        {
+          "id": "adminConsoleEntryLink",
+          "line": 1688
+        },
+        {
+          "id": "userView-search",
+          "line": 1698
+        },
+        {
+          "id": "heroLiveCorpusBadge",
+          "line": 1702
+        },
+        {
+          "id": "heroLiveCorpusText",
+          "line": 1704
+        },
+        {
+          "id": "mainSearchForm",
+          "line": 1712
+        },
+        {
+          "id": "userSearchInput",
+          "line": 1717
+        },
+        {
+          "id": "clearSearchBtn",
+          "line": 1724
+        },
+        {
+          "id": "advToggleBtn",
+          "line": 1727
+        },
+        {
+          "id": "submitSearchBtn",
+          "line": 1730
+        },
+        {
+          "id": "advancedSearchDrawer",
+          "line": 1736
+        },
+        {
+          "id": "advTitleInput",
+          "line": 1740
+        },
+        {
+          "id": "advApplicantInput",
+          "line": 1744
+        },
+        {
+          "id": "advNumberInput",
+          "line": 1748
+        },
+        {
+          "id": "advOriginSelect",
+          "line": 1752
+        },
+        {
+          "id": "advExploitSelect",
+          "line": 1760
+        },
+        {
+          "id": "searchFilterRail",
+          "line": 1804
+        },
+        {
+          "id": "onlyWithPdfSwitch",
+          "line": 1808
+        },
+        {
+          "id": "patentTypeFacets",
+          "line": 1817
+        },
+        {
+          "id": "legalStatusFacets",
+          "line": 1824
+        },
+        {
+          "id": "exploitationStatusFacets",
+          "line": 1831
+        },
+        {
+          "id": "ipcSectorFacets",
+          "line": 1838
+        },
+        {
+          "id": "specialLegalFacets",
+          "line": 1845
+        },
+        {
+          "id": "resultsSummaryText",
+          "line": 1852
+        },
+        {
+          "id": "mobileFilterToggleBtn",
+          "line": 1856
+        },
+        {
+          "id": "sortOrderSelect",
+          "line": 1859
+        },
+        {
+          "id": "activeSpecialFilterBanner",
+          "line": 1869
+        },
+        {
+          "id": "patentResultsStream",
+          "line": 1871
+        },
+        {
+          "id": "searchPaginationWrap",
+          "line": 1873
+        },
+        {
+          "id": "userView-assistant",
+          "line": 1881
+        },
+        {
+          "id": "qaPatentSelect",
+          "line": 1897
+        },
+        {
+          "id": "userQaInput",
+          "line": 1917
+        },
+        {
+          "id": "userQaOutput",
+          "line": 1928
+        },
+        {
+          "id": "priorArtUserText",
+          "line": 1938
+        },
+        {
+          "id": "userPriorArtResults",
+          "line": 1948
+        },
+        {
+          "id": "userView-transfer",
+          "line": 1956
+        },
+        {
+          "id": "transferFilterSelect",
+          "line": 1968
+        },
+        {
+          "id": "transferDirectoryList",
+          "line": 1977
+        },
+        {
+          "id": "transferPaginationWrap",
+          "line": 1978
+        },
+        {
+          "id": "transferArticleReader",
+          "line": 1981
+        },
+        {
+          "id": "userView-insights",
+          "line": 1988
+        },
+        {
+          "id": "insightsMetricsStrip",
+          "line": 1996
+        },
+        {
+          "id": "insightsIpcChart",
+          "line": 2002
+        },
+        {
+          "id": "insightsOriginBreakdown",
+          "line": 2008
+        },
+        {
+          "id": "userGazetteVolFilter",
+          "line": 2018
+        },
+        {
+          "id": "userGazetteTableBody",
+          "line": 2039
+        },
+        {
+          "id": "userGazettePaginationWrap",
+          "line": 2042
+        },
+        {
+          "id": "dossierDrawerBackdrop",
+          "line": 2049
+        },
+        {
+          "id": "drawerBadgeCluster",
+          "line": 2053
+        },
+        {
+          "id": "drawerPatentTitle",
+          "line": 2054
+        },
+        {
+          "id": "dTab-overview",
+          "line": 2062
+        },
+        {
+          "id": "dTab-pdf",
+          "line": 2065
+        },
+        {
+          "id": "dTab-claims",
+          "line": 2068
+        },
+        {
+          "id": "dTab-timeline",
+          "line": 2071
+        },
+        {
+          "id": "drawerContentBody",
+          "line": 2076
+        },
+        {
+          "id": "noipPdfModal",
+          "line": 2083
+        },
+        {
+          "id": "noipPdfModalTitle",
+          "line": 2087
+        },
+        {
+          "id": "noipPdfModalSubtitle",
+          "line": 2090
+        },
+        {
+          "id": "noipPdfModalBody",
+          "line": 2096
+        },
+        {
+          "id": "footerDataFreshnessNote",
+          "line": 2107
+        },
+        {
+          "id": "drawerExploitDetailCard",
+          "line": 4252
+        },
+        {
+          "id": "drawerCommSaveMsg",
+          "line": 4281
+        },
+        {
+          "id": "drawerExploitUpdateForm",
+          "line": 4307
+        },
+        {
+          "id": "drawerCommStatusSelect",
+          "line": 4311
+        },
+        {
+          "id": "drawerCommNoteInput",
+          "line": 4321
+        }
+      ],
+      "dom_id_count": 73,
+      "script_blocks": [
+        {
+          "start_line": 2123,
+          "end_line": 5040,
+          "is_js": true
+        }
+      ],
+      "api_calls": [
+        {
+          "path": "/api/commercialization",
+          "line": 4203
+        },
+        {
+          "path": "/api/qa",
+          "line": 4501
+        },
+        {
+          "path": "${base}/manifest.json",
+          "line": 4918
+        },
+        {
+          "path": "${base}/${sh.file}",
+          "line": 4971
+        },
+        {
+          "path": "/api/gazettes",
+          "line": 5025
+        }
+      ]
+    },
+    "admin/index.html": {
+      "sha256": "8fa6414919c68bf28d9b2685d7e9bbb30b22fec9d04dfc922628b7a3c520912c",
+      "bytes": 415184,
+      "lines": 4447,
+      "est_tokens": 120847,
+      "monolith_slice_only": true,
+      "symbols": [
+        {
+          "name": "rebuildAdminPatentLookupMap",
+          "kind": "function",
+          "signature": "function rebuildAdminPatentLookupMap()",
+          "start_line": 1281,
+          "end_line": 1288
+        },
+        {
+          "name": "findAdminPatentByApp",
+          "kind": "function",
+          "signature": "function findAdminPatentByApp(appNo)",
+          "start_line": 1290,
+          "end_line": 1293
+        },
+        {
+          "name": "hasAdminVerifiedNoipPdf",
+          "kind": "function",
+          "signature": "function hasAdminVerifiedNoipPdf(p)",
+          "start_line": 1295,
+          "end_line": 1300
+        },
+        {
+          "name": "getAdminDisplayAbstract",
+          "kind": "function",
+          "signature": "function getAdminDisplayAbstract(p)",
+          "start_line": 1302,
+          "end_line": 1311
+        },
+        {
+          "name": "ensureAdminDossierDetail",
+          "kind": "function",
+          "signature": "function ensureAdminDossierDetail(p)",
+          "start_line": 1313,
+          "end_line": 1357
+        },
+        {
+          "name": "hydrateAdminCatalogShardRows",
+          "kind": "function",
+          "signature": "function hydrateAdminCatalogShardRows(rows, targetList, seenApps)",
+          "start_line": 1359,
+          "end_line": 1425
+        },
+        {
+          "name": "resolveAdminStaticCatalogManifest",
+          "kind": "function",
+          "signature": "function resolveAdminStaticCatalogManifest()",
+          "start_line": 1427,
+          "end_line": 1446
+        },
+        {
+          "name": "buildPaginationControlsHtml",
+          "kind": "function",
+          "signature": "function buildPaginationControlsHtml(currentPage, totalItems, pageSize, pageCallbackFn)",
+          "start_line": 1450,
+          "end_line": 1488
+        },
+        {
+          "name": "configurePdfJsWorker",
+          "kind": "function",
+          "signature": "function configurePdfJsWorker()",
+          "start_line": 1517,
+          "end_line": 1528
+        },
+        {
+          "name": "escapeHtmlAttr",
+          "kind": "function",
+          "signature": "function escapeHtmlAttr(val)",
+          "start_line": 1530,
+          "end_line": 1538
+        },
+        {
+          "name": "normalizeNoipPdfUrl",
+          "kind": "function",
+          "signature": "function normalizeNoipPdfUrl(rawUrl)",
+          "start_line": 1541,
+          "end_line": 1562
+        },
+        {
+          "name": "isOfficialNoipHost",
+          "kind": "function",
+          "signature": "function isOfficialNoipHost(rawUrl)",
+          "start_line": 1564,
+          "end_line": 1579
+        },
+        {
+          "name": "isSimulatedSeedPdfUrl",
+          "kind": "function",
+          "signature": "function isSimulatedSeedPdfUrl(rawUrl)",
+          "start_line": 1581,
+          "end_line": 1585
+        },
+        {
+          "name": "isRealLiferayNoipPdfUrl",
+          "kind": "function",
+          "signature": "function isRealLiferayNoipPdfUrl(rawUrl)",
+          "start_line": 1587,
+          "end_line": 1594
+        },
+        {
+          "name": "openFloatingNoipPdfWindow",
+          "kind": "function",
+          "signature": "function openFloatingNoipPdfWindow(rawUrl)",
+          "start_line": 1596,
+          "end_line": 1613
+        },
+        {
+          "name": "buildStructuredA4SpecificationHtml",
+          "kind": "function",
+          "signature": "function buildStructuredA4SpecificationHtml(p, normUrl, topBannerHtml)",
+          "start_line": 1615,
+          "end_line": 1689
+        },
+        {
+          "name": "hasPdfMagicHeader",
+          "kind": "function",
+          "signature": "function hasPdfMagicHeader(bytes)",
+          "start_line": 1691,
+          "end_line": 1706
+        },
+        {
+          "name": "decodeBase64DataUriToBytes",
+          "kind": "function",
+          "signature": "function decodeBase64DataUriToBytes(contents)",
+          "start_line": 1708,
+          "end_line": 1722
+        },
+        {
+          "name": "racePromisesAny",
+          "kind": "function",
+          "signature": "function racePromisesAny(promises)",
+          "start_line": 1724,
+          "end_line": 1738
+        },
+        {
+          "name": "putBoundedMapCache",
+          "kind": "function",
+          "signature": "function putBoundedMapCache(mapObj, key, val, maxEntries)",
+          "start_line": 1740,
+          "end_line": 1747
+        },
+        {
+          "name": "fetchCandidatePdfBytes",
+          "kind": "function",
+          "signature": "function fetchCandidatePdfBytes(url, modeType, parentSignal, label, timeoutMs)",
+          "start_line": 1749,
+          "end_line": 1777
+        },
+        {
+          "name": "onParentAbort",
+          "kind": "arrow_fn",
+          "signature": "const onParentAbort = (...) =>",
+          "start_line": 1751,
+          "end_line": 1752
+        },
+        {
+          "name": "fetchLiveNoipPdfBytes",
+          "kind": "function",
+          "signature": "function fetchLiveNoipPdfBytes(normUrl, forceRefresh)",
+          "start_line": 1779,
+          "end_line": 1828
+        },
+        {
+          "name": "taskPromise",
+          "kind": "arrow_fn",
+          "signature": "const taskPromise = (...) =>",
+          "start_line": 1788,
+          "end_line": 1820
+        },
+        {
+          "name": "loadPdfJsDocument",
+          "kind": "function",
+          "signature": "function loadPdfJsDocument(bytes)",
+          "start_line": 1830,
+          "end_line": 1839
+        },
+        {
+          "name": "updateNoipSlotToolbarUi",
+          "kind": "function",
+          "signature": "function updateNoipSlotToolbarUi(slotKey)",
+          "start_line": 1841,
+          "end_line": 1859
+        },
+        {
+          "name": "renderNoipPdfPagesToCanvas",
+          "kind": "function",
+          "signature": "function renderNoipPdfPagesToCanvas(slotKey)",
+          "start_line": 1861,
+          "end_line": 1912
+        },
+        {
+          "name": "mountNoipCanvasShell",
+          "kind": "function",
+          "signature": "function mountNoipCanvasShell(slotKey, normUrl, heightClass)",
+          "start_line": 1914,
+          "end_line": 1937
+        },
+        {
+          "name": "scheduleNoipPdfHydration",
+          "kind": "function",
+          "signature": "function scheduleNoipPdfHydration(slotKey, p)",
+          "start_line": 1939,
+          "end_line": 1941
+        },
+        {
+          "name": "hydrateNoipPdfCanvasSlot",
+          "kind": "function",
+          "signature": "function hydrateNoipPdfCanvasSlot(slotKey, p, forceRefresh)",
+          "start_line": 1943,
+          "end_line": 2034
+        },
+        {
+          "name": "noipPdfStepPage",
+          "kind": "function",
+          "signature": "function noipPdfStepPage(slotKey, delta)",
+          "start_line": 2036,
+          "end_line": 2044
+        },
+        {
+          "name": "noipPdfToggleMultiPage",
+          "kind": "function",
+          "signature": "function noipPdfToggleMultiPage(slotKey)",
+          "start_line": 2046,
+          "end_line": 2051
+        },
+        {
+          "name": "noipPdfZoom",
+          "kind": "function",
+          "signature": "function noipPdfZoom(slotKey, action)",
+          "start_line": 2053,
+          "end_line": 2065
+        },
+        {
+          "name": "noipPdfRetryStream",
+          "kind": "function",
+          "signature": "function noipPdfRetryStream(slotKey)",
+          "start_line": 2067,
+          "end_line": 2070
+        },
+        {
+          "name": "noipPdfLoadLocalFile",
+          "kind": "function",
+          "signature": "function noipPdfLoadLocalFile(slotKey, inputEl)",
+          "start_line": 2072,
+          "end_line": 2088
+        },
+        {
+          "name": "buildDirectNoipPdfReaderHtml",
+          "kind": "function",
+          "signature": "function buildDirectNoipPdfReaderHtml(p, isModal)",
+          "start_line": 2090,
+          "end_line": 2260
+        },
+        {
+          "name": "setPdfViewerMode",
+          "kind": "function",
+          "signature": "function setPdfViewerMode(mode)",
+          "start_line": 2262,
+          "end_line": 2273
+        },
+        {
+          "name": "applyCustomDirectPdfUrl",
+          "kind": "function",
+          "signature": "function applyCustomDirectPdfUrl(inputId, isModal)",
+          "start_line": 2275,
+          "end_line": 2296
+        },
+        {
+          "name": "selectVerifiedLivePdfSample",
+          "kind": "function",
+          "signature": "function selectVerifiedLivePdfSample(sampleUrl, sampleAppNo, isModal)",
+          "start_line": 2298,
+          "end_line": 2321
+        },
+        {
+          "name": "openDirectNoipPdfForPatent",
+          "kind": "function",
+          "signature": "function openDirectNoipPdfForPatent(appNo, expandModal)",
+          "start_line": 2323,
+          "end_line": 2332
+        },
+        {
+          "name": "openDirectNoipPdfModal",
+          "kind": "function",
+          "signature": "function openDirectNoipPdfModal(appNoOrEmpty, explicitUrl, explicitTitle)",
+          "start_line": 2334,
+          "end_line": 2342
+        },
+        {
+          "name": "renderDirectPdfModalIfOpen",
+          "kind": "function",
+          "signature": "function renderDirectPdfModalIfOpen()",
+          "start_line": 2344,
+          "end_line": 2367
+        },
+        {
+          "name": "closeDirectNoipPdfModal",
+          "kind": "function",
+          "signature": "function closeDirectNoipPdfModal()",
+          "start_line": 2369,
+          "end_line": 2375
+        },
+        {
+          "name": "foldVn",
+          "kind": "function",
+          "signature": "function foldVn(str)",
+          "start_line": 2381,
+          "end_line": 2384
+        },
+        {
+          "name": "updateAdminHeaderCorpusBadge",
+          "kind": "function",
+          "signature": "function updateAdminHeaderCorpusBadge()",
+          "start_line": 2388,
+          "end_line": 2408
+        },
+        {
+          "name": "syncFromBackend",
+          "kind": "function",
+          "signature": "function syncFromBackend()",
+          "start_line": 2411,
+          "end_line": 2495
+        },
+        {
+          "name": "catalogPromise",
+          "kind": "arrow_fn",
+          "signature": "const catalogPromise = (...) =>",
+          "start_line": 2422,
+          "end_line": 2464
+        },
+        {
+          "name": "backendTelemetryPromise",
+          "kind": "arrow_fn",
+          "signature": "const backendTelemetryPromise = (...) =>",
+          "start_line": 2466,
+          "end_line": 2485
+        },
+        {
+          "name": "switchTab",
+          "kind": "function",
+          "signature": "function switchTab(tabId)",
+          "start_line": 2500,
+          "end_line": 2517
+        },
+        {
+          "name": "renderKpis",
+          "kind": "function",
+          "signature": "function renderKpis()",
+          "start_line": 2519,
+          "end_line": 2548
+        },
+        {
+          "name": "setQuickLucene",
+          "kind": "function",
+          "signature": "function setQuickLucene(q)",
+          "start_line": 2553,
+          "end_line": 2556
+        },
+        {
+          "name": "resetAllFilters",
+          "kind": "function",
+          "signature": "function resetAllFilters()",
+          "start_line": 2558,
+          "end_line": 2565
+        },
+        {
+          "name": "toggleSpecialFilter",
+          "kind": "function",
+          "signature": "function toggleSpecialFilter(sf)",
+          "start_line": 2567,
+          "end_line": 2582
+        },
+        {
+          "name": "setSearchPage",
+          "kind": "function",
+          "signature": "function setSearchPage(pageNum)",
+          "start_line": 2584,
+          "end_line": 2587
+        },
+        {
+          "name": "updateSpecialFilterButtons",
+          "kind": "function",
+          "signature": "function updateSpecialFilterButtons()",
+          "start_line": 2589,
+          "end_line": 2597
+        },
+        {
+          "name": "parseAdminLuceneToken",
+          "kind": "function",
+          "signature": "function parseAdminLuceneToken(rawTok)",
+          "start_line": 2599,
+          "end_line": 2621
+        },
+        {
+          "name": "compileAdminLuceneQuery",
+          "kind": "function",
+          "signature": "function compileAdminLuceneQuery(query)",
+          "start_line": 2623,
+          "end_line": 2647
+        },
+        {
+          "name": "matchCompiledToken",
+          "kind": "function",
+          "signature": "function matchCompiledToken(compiledTok, p)",
+          "start_line": 2649,
+          "end_line": 2681
+        },
+        {
+          "name": "evaluateCompiledLucene",
+          "kind": "function",
+          "signature": "function evaluateCompiledLucene(compiled, p)",
+          "start_line": 2683,
+          "end_line": 2707
+        },
+        {
+          "name": "evaluateLuceneRecord",
+          "kind": "function",
+          "signature": "function evaluateLuceneRecord(query, p)",
+          "start_line": 2709,
+          "end_line": 2711
+        },
+        {
+          "name": "runSearch",
+          "kind": "function",
+          "signature": "function runSearch(resetPage)",
+          "start_line": 2713,
+          "end_line": 2850
+        },
+        {
+          "name": "selectPatent",
+          "kind": "function",
+          "signature": "function selectPatent(appNo)",
+          "start_line": 2852,
+          "end_line": 2856
+        },
+        {
+          "name": "inspectDossierFromAudit",
+          "kind": "function",
+          "signature": "function inspectDossierFromAudit(queryOrAppNo, targetSubTab)",
+          "start_line": 2858,
+          "end_line": 2865
+        },
+        {
+          "name": "switchDetailSubTab",
+          "kind": "function",
+          "signature": "function switchDetailSubTab(subTab)",
+          "start_line": 2867,
+          "end_line": 2870
+        },
+        {
+          "name": "renderPatentDetail",
+          "kind": "function",
+          "signature": "function renderPatentDetail()",
+          "start_line": 2872,
+          "end_line": 3095
+        },
+        {
+          "name": "savePatentCommStatus",
+          "kind": "function",
+          "signature": "function savePatentCommStatus(appNo)",
+          "start_line": 3097,
+          "end_line": 3114
+        },
+        {
+          "name": "askSampleQuestion",
+          "kind": "function",
+          "signature": "function askSampleQuestion(q)",
+          "start_line": 3119,
+          "end_line": 3122
+        },
+        {
+          "name": "runDeterministicNlg",
+          "kind": "function",
+          "signature": "function runDeterministicNlg()",
+          "start_line": 3124,
+          "end_line": 3189
+        },
+        {
+          "name": "setSamplePriorArt",
+          "kind": "function",
+          "signature": "function setSamplePriorArt(txt)",
+          "start_line": 3194,
+          "end_line": 3197
+        },
+        {
+          "name": "runPriorArtSearch",
+          "kind": "function",
+          "signature": "function runPriorArtSearch()",
+          "start_line": 3199,
+          "end_line": 3258
+        },
+        {
+          "name": "triggerAutomatedEtlScan",
+          "kind": "function",
+          "signature": "function triggerAutomatedEtlScan()",
+          "start_line": 3263,
+          "end_line": 3287
+        },
+        {
+          "name": "runFederatedLiveLookup",
+          "kind": "function",
+          "signature": "function runFederatedLiveLookup(overrideAppNo)",
+          "start_line": 3289,
+          "end_line": 3347
+        },
+        {
+          "name": "addManualMissingDossier",
+          "kind": "function",
+          "signature": "function addManualMissingDossier()",
+          "start_line": 3349,
+          "end_line": 3380
+        },
+        {
+          "name": "renderEtlCenter",
+          "kind": "function",
+          "signature": "function renderEtlCenter()",
+          "start_line": 3382,
+          "end_line": 3438
+        },
+        {
+          "name": "openSequentialSyncPanel",
+          "kind": "function",
+          "signature": "function openSequentialSyncPanel()",
+          "start_line": 3444,
+          "end_line": 3449
+        },
+        {
+          "name": "recomputeSyncEtaPreview",
+          "kind": "function",
+          "signature": "function recomputeSyncEtaPreview()",
+          "start_line": 3451,
+          "end_line": 3478
+        },
+        {
+          "name": "saveSequentialSyncConfig",
+          "kind": "function",
+          "signature": "function saveSequentialSyncConfig()",
+          "start_line": 3480,
+          "end_line": 3520
+        },
+        {
+          "name": "triggerSequentialSyncTick",
+          "kind": "function",
+          "signature": "function triggerSequentialSyncTick()",
+          "start_line": 3522,
+          "end_line": 3556
+        },
+        {
+          "name": "renderSequentialSyncSchedulerDashboard",
+          "kind": "function",
+          "signature": "function renderSequentialSyncSchedulerDashboard(skipSyncControls)",
+          "start_line": 3558,
+          "end_line": 3720
+        },
+        {
+          "name": "openBulkBenchmarkPanel",
+          "kind": "function",
+          "signature": "function openBulkBenchmarkPanel()",
+          "start_line": 3722,
+          "end_line": 3726
+        },
+        {
+          "name": "runLiveBulkIngestion",
+          "kind": "function",
+          "signature": "function runLiveBulkIngestion(commitMode)",
+          "start_line": 3728,
+          "end_line": 3761
+        },
+        {
+          "name": "runLiveScaleBenchmark",
+          "kind": "function",
+          "signature": "function runLiveScaleBenchmark(forceRerun)",
+          "start_line": 3763,
+          "end_line": 3777
+        },
+        {
+          "name": "renderBulkBenchmarkDashboard",
+          "kind": "function",
+          "signature": "function renderBulkBenchmarkDashboard()",
+          "start_line": 3779,
+          "end_line": 3914
+        },
+        {
+          "name": "runLiveParserDemo",
+          "kind": "function",
+          "signature": "function runLiveParserDemo()",
+          "start_line": 3916,
+          "end_line": 3935
+        },
+        {
+          "name": "setArticlesPage",
+          "kind": "function",
+          "signature": "function setArticlesPage(pageNum)",
+          "start_line": 3940,
+          "end_line": 3943
+        },
+        {
+          "name": "renderBusinessArticles",
+          "kind": "function",
+          "signature": "function renderBusinessArticles()",
+          "start_line": 3945,
+          "end_line": 4021
+        },
+        {
+          "name": "setGazettePage",
+          "kind": "function",
+          "signature": "function setGazettePage(pageNum)",
+          "start_line": 4026,
+          "end_line": 4029
+        },
+        {
+          "name": "renderGazetteTable",
+          "kind": "function",
+          "signature": "function renderGazetteTable()",
+          "start_line": 4031,
+          "end_line": 4110
+        },
+        {
+          "name": "setCommTablePage",
+          "kind": "function",
+          "signature": "function setCommTablePage(pageNum)",
+          "start_line": 4112,
+          "end_line": 4115
+        },
+        {
+          "name": "renderPatentMapAndCommercialization",
+          "kind": "function",
+          "signature": "function renderPatentMapAndCommercialization()",
+          "start_line": 4117,
+          "end_line": 4252
+        },
+        {
+          "name": "populateMcpSampleArgs",
+          "kind": "function",
+          "signature": "function populateMcpSampleArgs()",
+          "start_line": 4268,
+          "end_line": 4271
+        },
+        {
+          "name": "selectMcpToolFromCard",
+          "kind": "function",
+          "signature": "function selectMcpToolFromCard(toolName)",
+          "start_line": 4273,
+          "end_line": 4277
+        },
+        {
+          "name": "loadMcpDashboard",
+          "kind": "function",
+          "signature": "function loadMcpDashboard()",
+          "start_line": 4279,
+          "end_line": 4300
+        },
+        {
+          "name": "renderMcpCatalogAndTables",
+          "kind": "function",
+          "signature": "function renderMcpCatalogAndTables(data)",
+          "start_line": 4302,
+          "end_line": 4363
+        },
+        {
+          "name": "executeMcpToolSandbox",
+          "kind": "function",
+          "signature": "function executeMcpToolSandbox()",
+          "start_line": 4365,
+          "end_line": 4399
+        },
+        {
+          "name": "generateNewMcpKey",
+          "kind": "function",
+          "signature": "function generateNewMcpKey()",
+          "start_line": 4401,
+          "end_line": 4423
+        },
+        {
+          "name": "navigateToUserPortal",
+          "kind": "function",
+          "signature": "function navigateToUserPortal(evt)",
+          "start_line": 4425,
+          "end_line": 4436
+        }
+      ],
+      "dom_ids": [
+        {
+          "id": "headerSyncBadge",
+          "line": 23
+        },
+        {
+          "id": "btnOpenUserPortalFromAdmin",
+          "line": 36
+        },
+        {
+          "id": "btnQuickScanHeader",
+          "line": 45
+        },
+        {
+          "id": "kpiContainer",
+          "line": 52
+        },
+        {
+          "id": "tabBtn-search",
+          "line": 56
+        },
+        {
+          "id": "tabBtn-nlg",
+          "line": 59
+        },
+        {
+          "id": "tabBtn-etl",
+          "line": 62
+        },
+        {
+          "id": "tabBtn-articles",
+          "line": 65
+        },
+        {
+          "id": "tabBtn-map",
+          "line": 68
+        },
+        {
+          "id": "tabBtn-mcp",
+          "line": 71
+        },
+        {
+          "id": "tabPanel-search",
+          "line": 79
+        },
+        {
+          "id": "searchQueryInput",
+          "line": 86
+        },
+        {
+          "id": "ipcFilterSelect",
+          "line": 91
+        },
+        {
+          "id": "commFilterSelect",
+          "line": 110
+        },
+        {
+          "id": "expandIpcCheckbox",
+          "line": 143
+        },
+        {
+          "id": "expandedIpcNotice",
+          "line": 148
+        },
+        {
+          "id": "specialFilterButtons",
+          "line": 158
+        },
+        {
+          "id": "specialFilterExplainBox",
+          "line": 190
+        },
+        {
+          "id": "searchResultCountLabel",
+          "line": 198
+        },
+        {
+          "id": "patentListPaginationTop",
+          "line": 201
+        },
+        {
+          "id": "patentListContainer",
+          "line": 202
+        },
+        {
+          "id": "patentListPaginationBottom",
+          "line": 203
+        },
+        {
+          "id": "patentDetailPanel",
+          "line": 207
+        },
+        {
+          "id": "tabPanel-nlg",
+          "line": 215
+        },
+        {
+          "id": "nlgQuestionInput",
+          "line": 233
+        },
+        {
+          "id": "nlgOutputContainer",
+          "line": 258
+        },
+        {
+          "id": "priorArtInput",
+          "line": 278
+        },
+        {
+          "id": "priorArtOutputContainer",
+          "line": 297
+        },
+        {
+          "id": "tabPanel-etl",
+          "line": 304
+        },
+        {
+          "id": "btnMainEtlScan",
+          "line": 315
+        },
+        {
+          "id": "etlScanResultBanner",
+          "line": 320
+        },
+        {
+          "id": "sequentialSyncSchedulerSection",
+          "line": 323
+        },
+        {
+          "id": "btnRunSyncTickNow",
+          "line": 342
+        },
+        {
+          "id": "syncIntervalSelect",
+          "line": 352
+        },
+        {
+          "id": "syncMaxJobsSelect",
+          "line": 362
+        },
+        {
+          "id": "syncDelaySecInput",
+          "line": 371
+        },
+        {
+          "id": "btnSaveSyncConfig",
+          "line": 374
+        },
+        {
+          "id": "sequentialSyncDashboardContent",
+          "line": 380
+        },
+        {
+          "id": "bulkBenchmarkSection",
+          "line": 384
+        },
+        {
+          "id": "btnRunBulkWal",
+          "line": 400
+        },
+        {
+          "id": "btnRunLiveBenchmark",
+          "line": 403
+        },
+        {
+          "id": "bulkBenchmarkContent",
+          "line": 408
+        },
+        {
+          "id": "ramCacheStatsBadge",
+          "line": 422
+        },
+        {
+          "id": "federatedAppNoInput",
+          "line": 426
+        },
+        {
+          "id": "federatedLookupOutput",
+          "line": 437
+        },
+        {
+          "id": "newMissingAppNoInput",
+          "line": 450
+        },
+        {
+          "id": "missingQueueContainer",
+          "line": 455
+        },
+        {
+          "id": "rawGazetteSandboxInput",
+          "line": 468
+        },
+        {
+          "id": "rawGazetteSandboxOutput",
+          "line": 470
+        },
+        {
+          "id": "etlLogsTableContainer",
+          "line": 477
+        },
+        {
+          "id": "tabPanel-articles",
+          "line": 485
+        },
+        {
+          "id": "businessArticlesPaginationTop",
+          "line": 500
+        },
+        {
+          "id": "businessArticlesContainer",
+          "line": 501
+        },
+        {
+          "id": "businessArticlesPaginationBottom",
+          "line": 502
+        },
+        {
+          "id": "tabPanel-map",
+          "line": 509
+        },
+        {
+          "id": "ipcMapChartContainer",
+          "line": 518
+        },
+        {
+          "id": "commMapChartContainer",
+          "line": 528
+        },
+        {
+          "id": "gazetteVolSelect",
+          "line": 544
+        },
+        {
+          "id": "gazetteTableContainer",
+          "line": 551
+        },
+        {
+          "id": "commercializationTableContainer",
+          "line": 558
+        },
+        {
+          "id": "tabPanel-mcp",
+          "line": 565
+        },
+        {
+          "id": "newMcpKeyName",
+          "line": 580
+        },
+        {
+          "id": "newMcpKeyBanner",
+          "line": 587
+        },
+        {
+          "id": "mcpToolsCatalogContainer",
+          "line": 593
+        },
+        {
+          "id": "mcpToolSelect",
+          "line": 606
+        },
+        {
+          "id": "mcpApiKeyInput",
+          "line": 619
+        },
+        {
+          "id": "mcpArgsTextarea",
+          "line": 622
+        },
+        {
+          "id": "mcpResponseOutput",
+          "line": 623
+        },
+        {
+          "id": "mcpKeysTableContainer",
+          "line": 631
+        },
+        {
+          "id": "mcpLogsTableContainer",
+          "line": 635
+        },
+        {
+          "id": "noipPdfModal",
+          "line": 644
+        },
+        {
+          "id": "noipPdfModalTitle",
+          "line": 651
+        },
+        {
+          "id": "noipPdfModalFloatingBtn",
+          "line": 656
+        },
+        {
+          "id": "noipPdfModalRawLink",
+          "line": 659
+        },
+        {
+          "id": "noipPdfModalBody",
+          "line": 667
+        },
+        {
+          "id": "detailCommSelect",
+          "line": 2922
+        }
+      ],
+      "dom_id_count": 76,
+      "script_blocks": [
+        {
+          "start_line": 671,
+          "end_line": 4445,
+          "is_js": true
+        }
+      ],
+      "api_calls": [
+        {
+          "path": "${base}/manifest.json",
+          "line": 1437
+        },
+        {
+          "path": "${base}/${sh.file}",
+          "line": 2434
+        },
+        {
+          "path": "/api/patent-map?gazette_limit=250",
+          "line": 2469
+        },
+        {
+          "path": "/api/etl/benchmark",
+          "line": 2478
+        },
+        {
+          "path": "/api/commercialization",
+          "line": 3101
+        },
+        {
+          "path": "/api/ask-nlg",
+          "line": 3130
+        },
+        {
+          "path": "/api/prior-art",
+          "line": 3205
+        },
+        {
+          "path": "/api/etl/scan",
+          "line": 3267
+        },
+        {
+          "path": "/api/federated/lookup?app_no=",
+          "line": 3296
+        },
+        {
+          "path": "/api/missing-queue",
+          "line": 3353
+        },
+        {
+          "path": "/api/sync/config",
+          "line": 3503
+        },
+        {
+          "path": "/api/sync/tick",
+          "line": 3527
+        },
+        {
+          "path": "/api/etl/ingest-latest-gazette",
+          "line": 3732
+        },
+        {
+          "path": "/api/etl/benchmark?force=",
+          "line": 3767
+        },
+        {
+          "path": "/api/etl/parse-live",
+          "line": 3919
+        },
+        {
+          "path": "/api/mcp/status",
+          "line": 4282
+        },
+        {
+          "path": "/api/mcp/call",
+          "line": 4374
+        },
+        {
+          "path": "/api/mcp/status",
+          "line": 4388
+        },
+        {
+          "path": "/api/mcp/keys",
+          "line": 4404
+        }
+      ]
+    },
+    "full-page-embed/index.html": {
+      "sha256": "0abf5aabe3e01b8520434c6c72f02517298cad995a63175418b01c86f8876aab",
+      "bytes": 401433,
+      "lines": 5042,
+      "est_tokens": 117735,
+      "monolith_slice_only": true,
+      "symbols": [
+        {
+          "name": "rebuildPatentLookupMaps",
+          "kind": "function",
+          "signature": "function rebuildPatentLookupMaps()",
+          "start_line": 2656,
+          "end_line": 2666
+        },
+        {
+          "name": "findDossierByApp",
+          "kind": "function",
+          "signature": "function findDossierByApp(appNo)",
+          "start_line": 2668,
+          "end_line": 2671
+        },
+        {
+          "name": "getDossierDisplayAbstract",
+          "kind": "function",
+          "signature": "function getDossierDisplayAbstract(p)",
+          "start_line": 2673,
+          "end_line": 2683
+        },
+        {
+          "name": "ensureDossierDetailFields",
+          "kind": "function",
+          "signature": "function ensureDossierDetailFields(p)",
+          "start_line": 2685,
+          "end_line": 2741
+        },
+        {
+          "name": "hydrateCatalogShardRows",
+          "kind": "function",
+          "signature": "function hydrateCatalogShardRows(rows, targetList, seenApps)",
+          "start_line": 2743,
+          "end_line": 2808
+        },
+        {
+          "name": "escapeHtmlAttr",
+          "kind": "function",
+          "signature": "function escapeHtmlAttr(str)",
+          "start_line": 2838,
+          "end_line": 2845
+        },
+        {
+          "name": "formatReadablePatentTitle",
+          "kind": "function",
+          "signature": "function formatReadablePatentTitle(rawTitle)",
+          "start_line": 2856,
+          "end_line": 2874
+        },
+        {
+          "name": "highlightText",
+          "kind": "function",
+          "signature": "function highlightText(text, rawQuery)",
+          "start_line": 2876,
+          "end_line": 2890
+        },
+        {
+          "name": "navigateToAdminConsole",
+          "kind": "function",
+          "signature": "function navigateToAdminConsole(evt)",
+          "start_line": 2892,
+          "end_line": 2910
+        },
+        {
+          "name": "toggleColorTheme",
+          "kind": "function",
+          "signature": "function toggleColorTheme()",
+          "start_line": 2912,
+          "end_line": 2918
+        },
+        {
+          "name": "updateThemeButtonLabel",
+          "kind": "function",
+          "signature": "function updateThemeButtonLabel(theme)",
+          "start_line": 2920,
+          "end_line": 2925
+        },
+        {
+          "name": "switchUserView",
+          "kind": "function",
+          "signature": "function switchUserView(viewName)",
+          "start_line": 2937,
+          "end_line": 2959
+        },
+        {
+          "name": "buildPaginationControlsHtml",
+          "kind": "function",
+          "signature": "function buildPaginationControlsHtml(currentPage, totalItems, pageSize, pageCallbackFn)",
+          "start_line": 2961,
+          "end_line": 3001
+        },
+        {
+          "name": "normalizeNoipPdfUrl",
+          "kind": "function",
+          "signature": "function normalizeNoipPdfUrl(rawUrl)",
+          "start_line": 3022,
+          "end_line": 3043
+        },
+        {
+          "name": "isOfficialNoipHost",
+          "kind": "function",
+          "signature": "function isOfficialNoipHost(rawUrl)",
+          "start_line": 3045,
+          "end_line": 3060
+        },
+        {
+          "name": "isSimulatedSeedPdfUrl",
+          "kind": "function",
+          "signature": "function isSimulatedSeedPdfUrl(rawUrl)",
+          "start_line": 3062,
+          "end_line": 3066
+        },
+        {
+          "name": "isRealLiferayNoipPdfUrl",
+          "kind": "function",
+          "signature": "function isRealLiferayNoipPdfUrl(rawUrl)",
+          "start_line": 3068,
+          "end_line": 3075
+        },
+        {
+          "name": "hasVerifiedNoipPdf",
+          "kind": "function",
+          "signature": "function hasVerifiedNoipPdf(p)",
+          "start_line": 3077,
+          "end_line": 3082
+        },
+        {
+          "name": "openFloatingNoipPdfWindow",
+          "kind": "function",
+          "signature": "function openFloatingNoipPdfWindow(rawUrl)",
+          "start_line": 3084,
+          "end_line": 3101
+        },
+        {
+          "name": "buildStructuredA4SpecificationHtml",
+          "kind": "function",
+          "signature": "function buildStructuredA4SpecificationHtml(p, normUrl, topBannerHtml)",
+          "start_line": 3103,
+          "end_line": 3146
+        },
+        {
+          "name": "fetchPdfArrayBufferZeroDisk",
+          "kind": "function",
+          "signature": "function fetchPdfArrayBufferZeroDisk(normUrl)",
+          "start_line": 3148,
+          "end_line": 3163
+        },
+        {
+          "name": "renderNoipPdfPagesToCanvas",
+          "kind": "function",
+          "signature": "function renderNoipPdfPagesToCanvas(slotKey)",
+          "start_line": 3165,
+          "end_line": 3215
+        },
+        {
+          "name": "hydrateNoipPdfCanvasSlot",
+          "kind": "function",
+          "signature": "function hydrateNoipPdfCanvasSlot(slotKey, p, forceRefresh)",
+          "start_line": 3217,
+          "end_line": 3280
+        },
+        {
+          "name": "changeNoipPdfPage",
+          "kind": "function",
+          "signature": "function changeNoipPdfPage(slotKey, delta)",
+          "start_line": 3282,
+          "end_line": 3288
+        },
+        {
+          "name": "zoomNoipPdfCanvas",
+          "kind": "function",
+          "signature": "function zoomNoipPdfCanvas(slotKey, deltaScale)",
+          "start_line": 3290,
+          "end_line": 3295
+        },
+        {
+          "name": "toggleNoipPdfAllPages",
+          "kind": "function",
+          "signature": "function toggleNoipPdfAllPages(slotKey)",
+          "start_line": 3297,
+          "end_line": 3302
+        },
+        {
+          "name": "buildDirectNoipPdfReaderHtml",
+          "kind": "function",
+          "signature": "function buildDirectNoipPdfReaderHtml(p, isModal)",
+          "start_line": 3304,
+          "end_line": 3372
+        },
+        {
+          "name": "setPdfViewerMode",
+          "kind": "function",
+          "signature": "function setPdfViewerMode(mode, isModal)",
+          "start_line": 3374,
+          "end_line": 3381
+        },
+        {
+          "name": "selectVerifiedLivePdfSample",
+          "kind": "function",
+          "signature": "function selectVerifiedLivePdfSample(url, sampleAppNo, isModal)",
+          "start_line": 3383,
+          "end_line": 3394
+        },
+        {
+          "name": "openDirectNoipPdfModal",
+          "kind": "function",
+          "signature": "function openDirectNoipPdfModal(appNo, explicitUrl)",
+          "start_line": 3396,
+          "end_line": 3403
+        },
+        {
+          "name": "renderDirectNoipPdfModalBody",
+          "kind": "function",
+          "signature": "function renderDirectNoipPdfModalBody()",
+          "start_line": 3405,
+          "end_line": 3418
+        },
+        {
+          "name": "closeDirectNoipPdfModal",
+          "kind": "function",
+          "signature": "function closeDirectNoipPdfModal()",
+          "start_line": 3420,
+          "end_line": 3423
+        },
+        {
+          "name": "getExploitationBucketKey",
+          "kind": "function",
+          "signature": "function getExploitationBucketKey(p)",
+          "start_line": 3485,
+          "end_line": 3495
+        },
+        {
+          "name": "getExploitationPresentation",
+          "kind": "function",
+          "signature": "function getExploitationPresentation(p)",
+          "start_line": 3497,
+          "end_line": 3509
+        },
+        {
+          "name": "evaluateUserExploitationSignals",
+          "kind": "function",
+          "signature": "function evaluateUserExploitationSignals(p)",
+          "start_line": 3511,
+          "end_line": 3574
+        },
+        {
+          "name": "applySavedUserExploitationOverrides",
+          "kind": "function",
+          "signature": "function applySavedUserExploitationOverrides()",
+          "start_line": 3576,
+          "end_line": 3592
+        },
+        {
+          "name": "getStatusPresentation",
+          "kind": "function",
+          "signature": "function getStatusPresentation(p)",
+          "start_line": 3597,
+          "end_line": 3611
+        },
+        {
+          "name": "getCommLabelVi",
+          "kind": "function",
+          "signature": "function getCommLabelVi(code, pOpt)",
+          "start_line": 3613,
+          "end_line": 3619
+        },
+        {
+          "name": "syncExploitDropdownFromState",
+          "kind": "function",
+          "signature": "function syncExploitDropdownFromState()",
+          "start_line": 3621,
+          "end_line": 3624
+        },
+        {
+          "name": "onAdvExploitSelectChange",
+          "kind": "function",
+          "signature": "function onAdvExploitSelectChange()",
+          "start_line": 3626,
+          "end_line": 3632
+        },
+        {
+          "name": "ensureLowercaseSearchCache",
+          "kind": "function",
+          "signature": "function ensureLowercaseSearchCache(p)",
+          "start_line": 3634,
+          "end_line": 3644
+        },
+        {
+          "name": "scoreDossierForUserQuery",
+          "kind": "function",
+          "signature": "function scoreDossierForUserQuery(p, qLc, qTokens, advTitleLc, advAppLc, advNumLc, advOrigin)",
+          "start_line": 3646,
+          "end_line": 3681
+        },
+        {
+          "name": "handleSearchInputDebounce",
+          "kind": "function",
+          "signature": "function handleSearchInputDebounce()",
+          "start_line": 3683,
+          "end_line": 3689
+        },
+        {
+          "name": "clearUserSearch",
+          "kind": "function",
+          "signature": "function clearUserSearch()",
+          "start_line": 3691,
+          "end_line": 3695
+        },
+        {
+          "name": "toggleAdvancedSearchDrawer",
+          "kind": "function",
+          "signature": "function toggleAdvancedSearchDrawer()",
+          "start_line": 3697,
+          "end_line": 3703
+        },
+        {
+          "name": "toggleMobileFilterRail",
+          "kind": "function",
+          "signature": "function toggleMobileFilterRail()",
+          "start_line": 3705,
+          "end_line": 3708
+        },
+        {
+          "name": "applyQuickTopic",
+          "kind": "function",
+          "signature": "function applyQuickTopic(btnEl, queryText, ipcPrefix, commMode)",
+          "start_line": 3710,
+          "end_line": 3722
+        },
+        {
+          "name": "resetAllUserFilters",
+          "kind": "function",
+          "signature": "function resetAllUserFilters()",
+          "start_line": 3724,
+          "end_line": 3742
+        },
+        {
+          "name": "setFacetFilter",
+          "kind": "function",
+          "signature": "function setFacetFilter(kind, val)",
+          "start_line": 3744,
+          "end_line": 3755
+        },
+        {
+          "name": "setUserSearchPage",
+          "kind": "function",
+          "signature": "function setUserSearchPage(pageNum)",
+          "start_line": 3757,
+          "end_line": 3761
+        },
+        {
+          "name": "renderSidebarFacets",
+          "kind": "function",
+          "signature": "function renderSidebarFacets()",
+          "start_line": 3763,
+          "end_line": 3892
+        },
+        {
+          "name": "runUserSearch",
+          "kind": "function",
+          "signature": "function runUserSearch(resetPage)",
+          "start_line": 3894,
+          "end_line": 4107
+        },
+        {
+          "name": "computeStatutoryAnnuityTable",
+          "kind": "function",
+          "signature": "function computeStatutoryAnnuityTable(p)",
+          "start_line": 4112,
+          "end_line": 4139
+        },
+        {
+          "name": "refreshDrawerHeaderBadges",
+          "kind": "function",
+          "signature": "function refreshDrawerHeaderBadges(p)",
+          "start_line": 4141,
+          "end_line": 4154
+        },
+        {
+          "name": "openDossierDrawer",
+          "kind": "function",
+          "signature": "function openDossierDrawer(appNo, initialTab)",
+          "start_line": 4156,
+          "end_line": 4168
+        },
+        {
+          "name": "closeDossierDrawer",
+          "kind": "function",
+          "signature": "function closeDossierDrawer()",
+          "start_line": 4170,
+          "end_line": 4172
+        },
+        {
+          "name": "toggleExploitUpdateForm",
+          "kind": "function",
+          "signature": "function toggleExploitUpdateForm()",
+          "start_line": 4174,
+          "end_line": 4177
+        },
+        {
+          "name": "saveUserExploitationUpdate",
+          "kind": "function",
+          "signature": "function saveUserExploitationUpdate(appNo)",
+          "start_line": 4179,
+          "end_line": 4228
+        },
+        {
+          "name": "switchDrawerTab",
+          "kind": "function",
+          "signature": "function switchDrawerTab(tabName)",
+          "start_line": 4230,
+          "end_line": 4443
+        },
+        {
+          "name": "populateQaPatentSelector",
+          "kind": "function",
+          "signature": "function populateQaPatentSelector()",
+          "start_line": 4455,
+          "end_line": 4468
+        },
+        {
+          "name": "syncQaFromSelectedDossier",
+          "kind": "function",
+          "signature": "function syncQaFromSelectedDossier()",
+          "start_line": 4470,
+          "end_line": 4472
+        },
+        {
+          "name": "askPresetUserQuestion",
+          "kind": "function",
+          "signature": "function askPresetUserQuestion(mode)",
+          "start_line": 4474,
+          "end_line": 4489
+        },
+        {
+          "name": "answerUserLegalQuestion",
+          "kind": "function",
+          "signature": "function answerUserLegalQuestion()",
+          "start_line": 4491,
+          "end_line": 4560
+        },
+        {
+          "name": "runUserPriorArtCheck",
+          "kind": "function",
+          "signature": "function runUserPriorArtCheck()",
+          "start_line": 4562,
+          "end_line": 4622
+        },
+        {
+          "name": "setTransferPage",
+          "kind": "function",
+          "signature": "function setTransferPage(p)",
+          "start_line": 4627,
+          "end_line": 4630
+        },
+        {
+          "name": "renderTransferShowcase",
+          "kind": "function",
+          "signature": "function renderTransferShowcase()",
+          "start_line": 4632,
+          "end_line": 4740
+        },
+        {
+          "name": "setUserGazettePage",
+          "kind": "function",
+          "signature": "function setUserGazettePage(p)",
+          "start_line": 4745,
+          "end_line": 4748
+        },
+        {
+          "name": "renderUserInsightsAndGazette",
+          "kind": "function",
+          "signature": "function renderUserInsightsAndGazette()",
+          "start_line": 4750,
+          "end_line": 4844
+        },
+        {
+          "name": "renderUserGazetteTable",
+          "kind": "function",
+          "signature": "function renderUserGazetteTable()",
+          "start_line": 4846,
+          "end_line": 4904
+        },
+        {
+          "name": "resolveStaticCatalogManifest",
+          "kind": "function",
+          "signature": "function resolveStaticCatalogManifest()",
+          "start_line": 4909,
+          "end_line": 4927
+        },
+        {
+          "name": "refreshAllActiveUserPortalViews",
+          "kind": "function",
+          "signature": "function refreshAllActiveUserPortalViews(resetPage)",
+          "start_line": 4929,
+          "end_line": 4937
+        },
+        {
+          "name": "syncPublicPortalData",
+          "kind": "function",
+          "signature": "function syncPublicPortalData()",
+          "start_line": 4939,
+          "end_line": 5035
+        }
+      ],
+      "dom_ids": [
+        {
+          "id": "siteHeader",
+          "line": 1658
+        },
+        {
+          "id": "brandHomeLink",
+          "line": 1660
+        },
+        {
+          "id": "navBtn-search",
+          "line": 1669
+        },
+        {
+          "id": "navBtn-assistant",
+          "line": 1672
+        },
+        {
+          "id": "navBtn-transfer",
+          "line": 1675
+        },
+        {
+          "id": "navBtn-insights",
+          "line": 1678
+        },
+        {
+          "id": "themeToggleBtn",
+          "line": 1684
+        },
+        {
+          "id": "themeToggleIcon",
+          "line": 1685
+        },
+        {
+          "id": "themeToggleLabel",
+          "line": 1686
+        },
+        {
+          "id": "adminConsoleEntryLink",
+          "line": 1688
+        },
+        {
+          "id": "userView-search",
+          "line": 1698
+        },
+        {
+          "id": "heroLiveCorpusBadge",
+          "line": 1702
+        },
+        {
+          "id": "heroLiveCorpusText",
+          "line": 1704
+        },
+        {
+          "id": "mainSearchForm",
+          "line": 1712
+        },
+        {
+          "id": "userSearchInput",
+          "line": 1717
+        },
+        {
+          "id": "clearSearchBtn",
+          "line": 1724
+        },
+        {
+          "id": "advToggleBtn",
+          "line": 1727
+        },
+        {
+          "id": "submitSearchBtn",
+          "line": 1730
+        },
+        {
+          "id": "advancedSearchDrawer",
+          "line": 1736
+        },
+        {
+          "id": "advTitleInput",
+          "line": 1740
+        },
+        {
+          "id": "advApplicantInput",
+          "line": 1744
+        },
+        {
+          "id": "advNumberInput",
+          "line": 1748
+        },
+        {
+          "id": "advOriginSelect",
+          "line": 1752
+        },
+        {
+          "id": "advExploitSelect",
+          "line": 1760
+        },
+        {
+          "id": "searchFilterRail",
+          "line": 1804
+        },
+        {
+          "id": "onlyWithPdfSwitch",
+          "line": 1808
+        },
+        {
+          "id": "patentTypeFacets",
+          "line": 1817
+        },
+        {
+          "id": "legalStatusFacets",
+          "line": 1824
+        },
+        {
+          "id": "exploitationStatusFacets",
+          "line": 1831
+        },
+        {
+          "id": "ipcSectorFacets",
+          "line": 1838
+        },
+        {
+          "id": "specialLegalFacets",
+          "line": 1845
+        },
+        {
+          "id": "resultsSummaryText",
+          "line": 1852
+        },
+        {
+          "id": "mobileFilterToggleBtn",
+          "line": 1856
+        },
+        {
+          "id": "sortOrderSelect",
+          "line": 1859
+        },
+        {
+          "id": "activeSpecialFilterBanner",
+          "line": 1869
+        },
+        {
+          "id": "patentResultsStream",
+          "line": 1871
+        },
+        {
+          "id": "searchPaginationWrap",
+          "line": 1873
+        },
+        {
+          "id": "userView-assistant",
+          "line": 1881
+        },
+        {
+          "id": "qaPatentSelect",
+          "line": 1897
+        },
+        {
+          "id": "userQaInput",
+          "line": 1917
+        },
+        {
+          "id": "userQaOutput",
+          "line": 1928
+        },
+        {
+          "id": "priorArtUserText",
+          "line": 1938
+        },
+        {
+          "id": "userPriorArtResults",
+          "line": 1948
+        },
+        {
+          "id": "userView-transfer",
+          "line": 1956
+        },
+        {
+          "id": "transferFilterSelect",
+          "line": 1968
+        },
+        {
+          "id": "transferDirectoryList",
+          "line": 1977
+        },
+        {
+          "id": "transferPaginationWrap",
+          "line": 1978
+        },
+        {
+          "id": "transferArticleReader",
+          "line": 1981
+        },
+        {
+          "id": "userView-insights",
+          "line": 1988
+        },
+        {
+          "id": "insightsMetricsStrip",
+          "line": 1996
+        },
+        {
+          "id": "insightsIpcChart",
+          "line": 2002
+        },
+        {
+          "id": "insightsOriginBreakdown",
+          "line": 2008
+        },
+        {
+          "id": "userGazetteVolFilter",
+          "line": 2018
+        },
+        {
+          "id": "userGazetteTableBody",
+          "line": 2039
+        },
+        {
+          "id": "userGazettePaginationWrap",
+          "line": 2042
+        },
+        {
+          "id": "dossierDrawerBackdrop",
+          "line": 2049
+        },
+        {
+          "id": "drawerBadgeCluster",
+          "line": 2053
+        },
+        {
+          "id": "drawerPatentTitle",
+          "line": 2054
+        },
+        {
+          "id": "dTab-overview",
+          "line": 2062
+        },
+        {
+          "id": "dTab-pdf",
+          "line": 2065
+        },
+        {
+          "id": "dTab-claims",
+          "line": 2068
+        },
+        {
+          "id": "dTab-timeline",
+          "line": 2071
+        },
+        {
+          "id": "drawerContentBody",
+          "line": 2076
+        },
+        {
+          "id": "noipPdfModal",
+          "line": 2083
+        },
+        {
+          "id": "noipPdfModalTitle",
+          "line": 2087
+        },
+        {
+          "id": "noipPdfModalSubtitle",
+          "line": 2090
+        },
+        {
+          "id": "noipPdfModalBody",
+          "line": 2096
+        },
+        {
+          "id": "footerDataFreshnessNote",
+          "line": 2107
+        },
+        {
+          "id": "drawerExploitDetailCard",
+          "line": 4252
+        },
+        {
+          "id": "drawerCommSaveMsg",
+          "line": 4281
+        },
+        {
+          "id": "drawerExploitUpdateForm",
+          "line": 4307
+        },
+        {
+          "id": "drawerCommStatusSelect",
+          "line": 4311
+        },
+        {
+          "id": "drawerCommNoteInput",
+          "line": 4321
+        }
+      ],
+      "dom_id_count": 73,
+      "script_blocks": [
+        {
+          "start_line": 2123,
+          "end_line": 5040,
+          "is_js": true
+        }
+      ],
+      "api_calls": [
+        {
+          "path": "/api/commercialization",
+          "line": 4203
+        },
+        {
+          "path": "/api/qa",
+          "line": 4501
+        },
+        {
+          "path": "${base}/manifest.json",
+          "line": 4918
+        },
+        {
+          "path": "${base}/${sh.file}",
+          "line": 4971
+        },
+        {
+          "path": "/api/gazettes",
+          "line": 5025
+        }
+      ]
+    }
+  }
+}

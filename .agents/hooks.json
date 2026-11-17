@@ -1,0 +1,35 @@
+{
+  "code-handoff-state-guard": {
+    "SessionStart": [
+      {
+        "type": "command",
+        "command": "sh -c 'if [ -f .agents/scripts/check_code_handoff.py ]; then python3 -X utf8 .agents/scripts/check_code_handoff.py --root . --allow-template --quiet-ok; else python3 -X utf8 /shared/user/.gemini/code_handoff_tools/check_code_handoff.py --root . --allow-template --quiet-ok; fi'",
+        "timeout": 10
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "write_file|edit_file|write_to_file|replace_file_content|multi_replace_file_content",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "sh -c 'if [ -f .agents/scripts/code_handoff_guard.py ]; then python3 -X utf8 .agents/scripts/code_handoff_guard.py hook-pre --root .; else python3 -X utf8 /shared/user/.gemini/code_handoff_tools/code_handoff_guard.py hook-pre --root .; fi'",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "write_file|edit_file|write_to_file|replace_file_content|multi_replace_file_content",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "sh -c 'if [ -f .agents/scripts/code_handoff_guard.py ]; then python3 -X utf8 .agents/scripts/code_handoff_guard.py hook-post --root .; else python3 -X utf8 /shared/user/.gemini/code_handoff_tools/code_handoff_guard.py hook-post --root .; fi'",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  }
+}
