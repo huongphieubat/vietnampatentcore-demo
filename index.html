@@ -2124,7 +2124,7 @@ button.exploit-pill:hover {
     // =========================================================================
     // DỮ LIỆU CƠ SỞ & BẢN GHI ĐỒNG BỘ TỪ CỤC SHTT (KHÔNG LƯU FILE PDF NHỊ PHÂN)
     // =========================================================================
-    const SYNC_SCHEDULE_INITIAL_SNAPSHOT = {"updated_at": "2026-11-17 04:51:53", "schedule_config": {"config_id": 1, "scheduler_enabled": 1, "cron_expression": "*/20 * * * *", "gazette_release_cron": "0 1 2,16,26 * *", "daemon_interval_minutes": 20, "min_request_delay_sec": 1.2, "max_jobs_per_tick": 35, "max_retries_per_job": 3, "strategy_mode": "WATERFALL_5_STAGES", "active_stage": "STAGE_5_HISTORICAL_PRE2018_BACKFILL", "last_tick_at": "2026-11-17 04:34:16", "next_scheduled_at": "Tối ưu nhanh nhất & an toàn: Mỗi 20 phút (35 kỳ/nhịp • trễ thích ứng >= 1.2s) & ngày 02, 16, 26 hàng tháng", "total_ticks_executed": 41, "updated_at": "2026-11-17 04:34:16"}, "overall_progress": {"total_checkpoints": 1024, "completed_checkpoints": 889, "remaining_checkpoints": 135, "checkpoint_completion_pct": 86.82, "total_patents_in_db": 98380, "verified_noip_pdf_links_in_db": 44328, "fts5_indexed_documents": 98380, "fts5_enabled": true, "estimated_target_dossiers_full_noip": 255665, "jobs_per_day_at_current_cadence": 2520.0, "eta_stage1_granted_days": 0.0, "eta_stage1_granted_hours": 0.0, "eta_all_4_stages_days": 0.05, "eta_all_4_stages_hours": 1.3, "binary_pdf_storage_mb": 0.0}, "stages": [{"stage_code": "STAGE_1_MONTHLY_GRANTED_HTML", "stage_order": 1, "stage_name_vi": "Giai đoạn 1: Toàn bộ Danh sách Bằng độc quyền hàng tháng (07/2018 → nay)", "portal_source": "ipvietnam.gov.vn/bang-oc-quyen-sang-che/giai-phap-huu-ich-uoc-cap-hang-thang", "format_type": "HTML Table 5 cột + Liferay UUID PDF Links (0 MB)", "target_scope_note": "313 văn bản trên 13 trang Liferay (~38.000–42.000 văn bằng bảo hộ)", "total_jobs": 313, "done_jobs": 313, "remaining_jobs": 0, "next_up_jobs": 0, "retry_jobs": 0, "expected_records": 34765, "synced_records": 44489, "verified_uuid_links": 43945, "job_completion_pct": 100.0}, {"stage_code": "STAGE_2_GAZETTE_TAP_B_Q1", "stage_order": 2, "stage_name_vi": "Giai đoạn 2: Công báo SHCN Tập B - Quyển 1 (CB470 → CB204)", "portal_source": "ipvietnam.gov.vn/cong-bao-so-huu-cong-nghiep1 (Tập B - Quyển 1)", "format_type": "In-RAM PDF Stream -> WIPO ST.9 INID (B1..B7)", "target_scope_note": "267 số Công báo: điền khuyết INID (22),(51),(72),(74),(57) & hiệu lực niên liễm", "total_jobs": 267, "done_jobs": 267, "remaining_jobs": 0, "next_up_jobs": 0, "retry_jobs": 0, "expected_records": 44055, "synced_records": 43582, "verified_uuid_links": 0, "job_completion_pct": 100.0}, {"stage_code": "STAGE_3_GAZETTE_TAP_A_Q1", "stage_order": 3, "stage_name_vi": "Giai đoạn 3: Công báo SHCN Tập A - Quyển 1 (Toàn bộ đơn công bố A1..A4)", "portal_source": "ipvietnam.gov.vn/cong-bao-so-huu-cong-nghiep1 (Tập A - Quyển 1)", "format_type": "In-RAM PDF Stream -> WIPO ST.9 INID (A1..A4)", "target_scope_note": "267 số Công báo: thu thập toàn bộ đơn công bố A1..A4 (2019–2026)", "total_jobs": 267, "done_jobs": 267, "remaining_jobs": 0, "next_up_jobs": 0, "retry_jobs": 0, "expected_records": 90780, "synced_records": 69192, "verified_uuid_links": 0, "job_completion_pct": 100.0}, {"stage_code": "STAGE_4_WEEKLY_VALID_AND_GAP", "stage_order": 4, "stage_name_vi": "Giai đoạn 4: Đơn hợp lệ hàng tuần (.xlsx) & Đối soát khoảng trống số đơn", "portal_source": "ipvietnam.gov.vn/danh-sach-don-chuyen-cong-bo-hang-tuan + Sequence Gap Audit", "format_type": "In-RAM XLSX Parser + Sequence Gap Detector", "target_scope_note": "9 bộ danh sách năm (2019..2026) & rà quét dải số 1-YYYY-xxxxx / 2-YYYY-xxxxx", "total_jobs": 9, "done_jobs": 9, "remaining_jobs": 0, "next_up_jobs": 0, "retry_jobs": 0, "expected_records": 8100, "synced_records": 97285, "verified_uuid_links": 0, "job_completion_pct": 100.0}, {"stage_code": "STAGE_5_HISTORICAL_PRE2018_BACKFILL", "stage_order": 5, "stage_name_vi": "Giai đoạn 5: Quét Lịch sử Trước 2018 (1984–2018 • CB001..CB375 & Hợp tuyển Năm/Quý)", "portal_source": "ipvietnam.gov.vn/cong-bao-so-huu-cong-nghiep1 (CB001..CB375, Hợp tuyển 2001–2018)", "format_type": "In-RAM PDF/ZIP/XLSX/XML + Giải mã TCVN3 (.VnTime) & VNI-Windows (0 MB)", "target_scope_note": "168 kỳ lịch sử: mở khóa toàn bộ Công báo trước 2018–06/2019 (Tập B & Tập A) và đánh dấu hết hạn 20 năm", "total_jobs": 168, "done_jobs": 33, "remaining_jobs": 135, "next_up_jobs": 10, "retry_jobs": 0, "expected_records": 77965, "synced_records": 37767, "verified_uuid_links": 0, "job_completion_pct": 19.64}], "completed_checkpoints_preview": [{"job_key": "S1-313", "stage_code": "STAGE_1_MONTHLY_GRANTED_HTML", "stage_order": 1, "sequence_order": 313, "release_code": "SC-2018-04-S1", "release_title": "Danh sách Bằng độc quyền sáng chế công bố tháng 10/2018", "release_date": "2018-04-25", "portal_page_hint": 13, "target_url": "https://www.ipvietnam.gov.vn/web/guest/bang-oc-quyen-sang-che/giai-phap-huu-ich-uoc-cap-hang-thang/-/asset_publisher/dpbmUWqCBsSG/content/danh-sach-bang-oc-quyen-sang-che-cong-bo-thang-10-2018", "expected_records": 135, "synced_records": 111, "newly_added_records": 111, "enriched_records": 0, "verified_uuid_links": 111, "status": "DONE", "attempt_count": 1, "last_error": null, "last_synced_at": "2026-11-15 11:26:52"}, {"job_key": "S1-312", "stage_code": "STAGE_1_MONTHLY_GRANTED_HTML", "stage_order": 1, "sequence_order": 312, "release_code": "GPHI-2018-05-S3", "release_title": "", "release_date": "2018-05-25", "portal_page_hint": 13, "target_url": "https://www.ipvietnam.gov.vn/web/guest/bang-oc-quyen-sang-che/giai-phap-huu-ich-uoc-cap-hang-thang/-/asset_publisher/dpbmUWqCBsSG/content/danh-sach-bang-oc-quyen-giai-phap-huu-ich-cong-bo-thang-11-2018", "expected_records": 35, "synced_records": 27, "newly_added_records": 27, "enriched_records": 0, "verified_uuid_links": 27, "status": "DONE", "attempt_count": 1, "last_error": null, "last_synced_at": "2026-11-15 11:26:52"}, {"job_key": "S1-311", "stage_code": "STAGE_1_MONTHLY_GRANTED_HTML", "stage_order": 1, "sequence_order": 311, "release_code": "SC-2018-05-S2", "release_title": "Danh sách Bằng độc quyền sáng chế công bố tháng 12/2018", "release_date": "2018-05-25", "portal_page_hint": 13, "target_url": "https://www.ipvietnam.gov.vn/web/guest/bang-oc-quyen-sang-che/giai-phap-huu-ich-uoc-cap-hang-thang/-/asset_publisher/dpbmUWqCBsSG/content/danh-sach-bang-oc-quyen-sang-che-cong-bo-thang-12-2018", "expected_records": 135, "synced_records": 129, "newly_added_records": 129, "enriched_records": 0, "verified_uuid_links": 129, "status": "DONE", "attempt_count": 1, "last_error": null, "last_synced_at": "2026-11-15 11:26:52"}, {"job_key": "S1-310", "stage_code": "STAGE_1_MONTHLY_GRANTED_HTML", "stage_order": 1, "sequence_order": 310, "release_code": "SC-2018-05-S1", "release_title": "Danh sách Bằng độc quyền giải pháp hữu ích công bố tháng 08/2018", "release_date": "2018-05-25", "portal_page_hint": 13, "target_url": "https://www.ipvietnam.gov.vn/web/guest/bang-oc-quyen-sang-che/giai-phap-huu-ich-uoc-cap-hang-thang/-/asset_publisher/dpbmUWqCBsSG/content/danh-sach-bang-oc-quyen-giai-phap-huu-ich-cong-bo-thang-08-2018", "expected_records": 135, "synced_records": 23, "newly_added_records": 23, "enriched_records": 0, "verified_uuid_links": 23, "status": "DONE", "attempt_count": 1, "last_error": null, "last_synced_at": "2026-11-15 11:26:52"}, {"job_key": "S1-309", "stage_code": "STAGE_1_MONTHLY_GRANTED_HTML", "stage_order": 1, "sequence_order": 309, "release_code": "SC-2018-06-S3", "release_title": "Danh sách Bằng độc quyền giải pháp hữu ích công bố tháng 01/2019", "release_date": "2018-06-25", "portal_page_hint": 13, "target_url": "https://www.ipvietnam.gov.vn/web/guest/bang-oc-quyen-sang-che/giai-phap-huu-ich-uoc-cap-hang-thang/-/asset_publisher/dpbmUWqCBsSG/content/danh-sach-bang-oc-quyen-giai-phap-huu-ich-cong-bo-thang-01-2019", "expected_records": 135, "synced_records": 29, "newly_added_records": 29, "enriched_records": 0, "verified_uuid_links": 29, "status": "DONE", "attempt_count": 1, "last_error": null, "last_synced_at": "2026-11-15 11:26:52"}, {"job_key": "S1-308", "stage_code": "STAGE_1_MONTHLY_GRANTED_HTML", "stage_order": 1, "sequence_order": 308, "release_code": "GPHI-2018-06-S2", "release_title": "Danh sách Bằng độc quyền giải pháp hữu ích công bố tháng 09/2018", "release_date": "2018-06-25", "portal_page_hint": 13, "target_url": "https://www.ipvietnam.gov.vn/web/guest/bang-oc-quyen-sang-che/giai-phap-huu-ich-uoc-cap-hang-thang/-/asset_publisher/dpbmUWqCBsSG/content/danh-sach-bang-oc-quyen-giai-phap-huu-ich-cong-bo-thang-09-2018", "expected_records": 35, "synced_records": 37, "newly_added_records": 37, "enriched_records": 0, "verified_uuid_links": 37, "status": "DONE", "attempt_count": 1, "last_error": null, "last_synced_at": "2026-11-15 11:26:52"}], "upcoming_cursor_queue": [{"job_key": "S5-CB361", "stage_code": "STAGE_5_HISTORICAL_PRE2018_BACKFILL", "stage_order": 5, "sequence_order": 34, "release_code": "HIST-CB361-AB", "release_title": "Công báo Lịch sử Số 361 (04/2018) — Hợp nhất Tập B & Tập A Quyển 1 (TCVN3/Unicode)", "release_date": "2018-04-25", "portal_page_hint": 5, "target_url": "https://www.ipvietnam.gov.vn/web/guest/cong-bao-so-huu-cong-nghiep1/-/asset_publisher/vTLYJq8Ak7Gm/content/so-361-thang-04-nam-2018", "expected_records": 420, "synced_records": 0, "newly_added_records": 0, "enriched_records": 0, "verified_uuid_links": 0, "status": "NEXT_UP", "attempt_count": 0, "last_error": null, "last_synced_at": null}, {"job_key": "S5-CB360", "stage_code": "STAGE_5_HISTORICAL_PRE2018_BACKFILL", "stage_order": 5, "sequence_order": 35, "release_code": "HIST-CB360-AB", "release_title": "Công báo Lịch sử Số 360 (03/2018) — Hợp nhất Tập B & Tập A Quyển 1 (TCVN3/Unicode)", "release_date": "2018-03-25", "portal_page_hint": 5, "target_url": "https://www.ipvietnam.gov.vn/web/guest/cong-bao-so-huu-cong-nghiep1/-/asset_publisher/vTLYJq8Ak7Gm/content/so-360-thang-03-nam-2018", "expected_records": 420, "synced_records": 0, "newly_added_records": 0, "enriched_records": 0, "verified_uuid_links": 0, "status": "NEXT_UP", "attempt_count": 0, "last_error": null, "last_synced_at": null}, {"job_key": "S5-CB359", "stage_code": "STAGE_5_HISTORICAL_PRE2018_BACKFILL", "stage_order": 5, "sequence_order": 36, "release_code": "HIST-CB359-AB", "release_title": "Công báo Lịch sử Số 359 (02/2018) — Hợp nhất Tập B & Tập A Quyển 1 (TCVN3/Unicode)", "release_date": "2018-02-25", "portal_page_hint": 5, "target_url": "https://www.ipvietnam.gov.vn/web/guest/cong-bao-so-huu-cong-nghiep1/-/asset_publisher/vTLYJq8Ak7Gm/content/so-359-thang-02-nam-2018", "expected_records": 420, "synced_records": 0, "newly_added_records": 0, "enriched_records": 0, "verified_uuid_links": 0, "status": "NEXT_UP", "attempt_count": 0, "last_error": null, "last_synced_at": null}, {"job_key": "S5-CB358", "stage_code": "STAGE_5_HISTORICAL_PRE2018_BACKFILL", "stage_order": 5, "sequence_order": 37, "release_code": "HIST-CB358-AB", "release_title": "Công báo Lịch sử Số 358 (01/2018) — Hợp nhất Tập B & Tập A Quyển 1 (TCVN3/Unicode)", "release_date": "2018-01-25", "portal_page_hint": 5, "target_url": "https://www.ipvietnam.gov.vn/web/guest/cong-bao-so-huu-cong-nghiep1/-/asset_publisher/vTLYJq8Ak7Gm/content/so-358-thang-01-nam-2018", "expected_records": 420, "synced_records": 0, "newly_added_records": 0, "enriched_records": 0, "verified_uuid_links": 0, "status": "NEXT_UP", "attempt_count": 0, "last_error": null, "last_synced_at": null}, {"job_key": "S5-CB357", "stage_code": "STAGE_5_HISTORICAL_PRE2018_BACKFILL", "stage_order": 5, "sequence_order": 38, "release_code": "HIST-CB357-AB", "release_title": "Công báo Lịch sử Số 357 (12/2017) — Hợp nhất Tập B & Tập A Quyển 1 (TCVN3/Unicode)", "release_date": "2017-12-25", "portal_page_hint": 5, "target_url": "https://www.ipvietnam.gov.vn/web/guest/cong-bao-so-huu-cong-nghiep1/-/asset_publisher/vTLYJq8Ak7Gm/content/so-357-thang-12-nam-2017", "expected_records": 420, "synced_records": 0, "newly_added_records": 0, "enriched_records": 0, "verified_uuid_links": 0, "status": "NEXT_UP", "attempt_count": 0, "last_error": null, "last_synced_at": null}, {"job_key": "S5-CB356", "stage_code": "STAGE_5_HISTORICAL_PRE2018_BACKFILL", "stage_order": 5, "sequence_order": 39, "release_code": "HIST-CB356-AB", "release_title": "Công báo Lịch sử Số 356 (11/2017) — Hợp nhất Tập B & Tập A Quyển 1 (TCVN3/Unicode)", "release_date": "2017-11-25", "portal_page_hint": 5, "target_url": "https://www.ipvietnam.gov.vn/web/guest/cong-bao-so-huu-cong-nghiep1/-/asset_publisher/vTLYJq8Ak7Gm/content/so-356-thang-11-nam-2017", "expected_records": 420, "synced_records": 0, "newly_added_records": 0, "enriched_records": 0, "verified_uuid_links": 0, "status": "NEXT_UP", "attempt_count": 0, "last_error": null, "last_synced_at": null}, {"job_key": "S5-CB355", "stage_code": "STAGE_5_HISTORICAL_PRE2018_BACKFILL", "stage_order": 5, "sequence_order": 40, "release_code": "HIST-CB355-AB", "release_title": "Công báo Lịch sử Số 355 (10/2017) — Hợp nhất Tập B & Tập A Quyển 1 (TCVN3/Unicode)", "release_date": "2017-10-25", "portal_page_hint": 5, "target_url": "https://www.ipvietnam.gov.vn/web/guest/cong-bao-so-huu-cong-nghiep1/-/asset_publisher/vTLYJq8Ak7Gm/content/so-355-thang-10-nam-2017", "expected_records": 420, "synced_records": 0, "newly_added_records": 0, "enriched_records": 0, "verified_uuid_links": 0, "status": "NEXT_UP", "attempt_count": 0, "last_error": null, "last_synced_at": null}, {"job_key": "S5-CB354", "stage_code": "STAGE_5_HISTORICAL_PRE2018_BACKFILL", "stage_order": 5, "sequence_order": 41, "release_code": "HIST-CB354-AB", "release_title": "Công báo Lịch sử Số 354 (09/2017) — Hợp nhất Tập B & Tập A Quyển 1 (TCVN3/Unicode)", "release_date": "2017-09-25", "portal_page_hint": 5, "target_url": "https://www.ipvietnam.gov.vn/web/guest/cong-bao-so-huu-cong-nghiep1/-/asset_publisher/vTLYJq8Ak7Gm/content/so-354-thang-09-nam-2017", "expected_records": 420, "synced_records": 0, "newly_added_records": 0, "enriched_records": 0, "verified_uuid_links": 0, "status": "NEXT_UP", "attempt_count": 0, "last_error": null, "last_synced_at": null}, {"job_key": "S5-CB353", "stage_code": "STAGE_5_HISTORICAL_PRE2018_BACKFILL", "stage_order": 5, "sequence_order": 42, "release_code": "HIST-CB353-AB", "release_title": "Công báo Lịch sử Số 353 (08/2017) — Hợp nhất Tập B & Tập A Quyển 1 (TCVN3/Unicode)", "release_date": "2017-08-25", "portal_page_hint": 5, "target_url": "https://www.ipvietnam.gov.vn/web/guest/cong-bao-so-huu-cong-nghiep1/-/asset_publisher/vTLYJq8Ak7Gm/content/so-353-thang-08-nam-2017", "expected_records": 420, "synced_records": 0, "newly_added_records": 0, "enriched_records": 0, "verified_uuid_links": 0, "status": "NEXT_UP", "attempt_count": 0, "last_error": null, "last_synced_at": null}, {"job_key": "S5-CB352", "stage_code": "STAGE_5_HISTORICAL_PRE2018_BACKFILL", "stage_order": 5, "sequence_order": 43, "release_code": "HIST-CB352-AB", "release_title": "Công báo Lịch sử Số 352 (07/2017) — Hợp nhất Tập B & Tập A Quyển 1 (TCVN3/Unicode)", "release_date": "2017-07-25", "portal_page_hint": 5, "target_url": "https://www.ipvietnam.gov.vn/web/guest/cong-bao-so-huu-cong-nghiep1/-/asset_publisher/vTLYJq8Ak7Gm/content/so-352-thang-07-nam-2017", "expected_records": 420, "synced_records": 0, "newly_added_records": 0, "enriched_records": 0, "verified_uuid_links": 0, "status": "NEXT_UP", "attempt_count": 0, "last_error": null, "last_synced_at": null}], "sequence_gap_audit": {"total_series_buckets": 41, "total_observed_dossiers": 98373, "estimated_cumulative_filings_in_active_years": 162833, "overall_series_coverage_pct": 60.41, "newly_enqueued_gap_samples": 0, "top_buckets": [{"series_bucket": "2-2026", "observed_count": 640, "min_seq": "00002", "max_seq": "01070", "uncollected_in_observed_span": 429, "coverage_of_max_seq_pct": 59.81}, {"series_bucket": "2-2025", "observed_count": 915, "min_seq": "00001", "max_seq": "01234", "uncollected_in_observed_span": 319, "coverage_of_max_seq_pct": 74.15}, {"series_bucket": "2-2024", "observed_count": 799, "min_seq": "00001", "max_seq": "00894", "uncollected_in_observed_span": 95, "coverage_of_max_seq_pct": 89.37}, {"series_bucket": "2-2023", "observed_count": 755, "min_seq": "00001", "max_seq": "00835", "uncollected_in_observed_span": 80, "coverage_of_max_seq_pct": 90.42}, {"series_bucket": "2-2022", "observed_count": 560, "min_seq": "00001", "max_seq": "00602", "uncollected_in_observed_span": 42, "coverage_of_max_seq_pct": 93.02}, {"series_bucket": "2-2021", "observed_count": 539, "min_seq": "00002", "max_seq": "00595", "uncollected_in_observed_span": 55, "coverage_of_max_seq_pct": 90.59}, {"series_bucket": "2-2020", "observed_count": 604, "min_seq": "00001", "max_seq": "00674", "uncollected_in_observed_span": 70, "coverage_of_max_seq_pct": 89.61}, {"series_bucket": "2-2019", "observed_count": 917, "min_seq": "00001", "max_seq": "09000", "uncollected_in_observed_span": 8083, "coverage_of_max_seq_pct": 10.19}, {"series_bucket": "2-2018", "observed_count": 559, "min_seq": "00001", "max_seq": "08188", "uncollected_in_observed_span": 7629, "coverage_of_max_seq_pct": 6.83}, {"series_bucket": "2-2017", "observed_count": 272, "min_seq": "00005", "max_seq": "00875", "uncollected_in_observed_span": 599, "coverage_of_max_seq_pct": 31.09}, {"series_bucket": "2-2016", "observed_count": 215, "min_seq": "00002", "max_seq": "00478", "uncollected_in_observed_span": 262, "coverage_of_max_seq_pct": 44.98}, {"series_bucket": "2-2015", "observed_count": 152, "min_seq": "00004", "max_seq": "00449", "uncollected_in_observed_span": 294, "coverage_of_max_seq_pct": 33.85}]}}; // END_SYNC_SNAPSHOT
+    const SYNC_SCHEDULE_INITIAL_SNAPSHOT = {"updated_at": "2026-11-17 17:06:42", "schedule_config": {"config_id": 1, "scheduler_enabled": 1, "cron_expression": "*/20 * * * *", "gazette_release_cron": "0 1 2,16,26 * *", "daemon_interval_minutes": 20, "min_request_delay_sec": 1.2, "max_jobs_per_tick": 35, "max_retries_per_job": 3, "strategy_mode": "WATERFALL_5_STAGES", "active_stage": "STAGE_5_HISTORICAL_PRE2018_BACKFILL", "last_tick_at": "2026-11-17 11:53:55", "next_scheduled_at": "Tối ưu nhanh nhất & an toàn: Mỗi 20 phút (35 kỳ/nhịp • trễ thích ứng >= 1.2s) & ngày 02, 16, 26 hàng tháng", "total_ticks_executed": 58, "updated_at": "2026-11-17 15:34:08"}, "overall_progress": {"total_checkpoints": 1024, "completed_checkpoints": 1024, "remaining_checkpoints": 0, "checkpoint_completion_pct": 100.0, "total_patents_in_db": 124761, "verified_noip_pdf_links_in_db": 44328, "fts5_indexed_documents": 124761, "fts5_enabled": true, "estimated_target_dossiers_full_noip": 255665, "jobs_per_day_at_current_cadence": 2520.0, "eta_stage1_granted_days": 0.0, "eta_stage1_granted_hours": 0.0, "eta_all_4_stages_days": 0.0, "eta_all_4_stages_hours": 0.0, "binary_pdf_storage_mb": 0.0}, "stages": [{"stage_code": "STAGE_1_MONTHLY_GRANTED_HTML", "stage_order": 1, "stage_name_vi": "Giai đoạn 1: Toàn bộ Danh sách Bằng độc quyền hàng tháng (07/2018 → nay)", "portal_source": "ipvietnam.gov.vn/bang-oc-quyen-sang-che/giai-phap-huu-ich-uoc-cap-hang-thang", "format_type": "HTML Table 5 cột + Liferay UUID PDF Links (0 MB)", "target_scope_note": "313 văn bản trên 13 trang Liferay (~38.000–42.000 văn bằng bảo hộ)", "total_jobs": 313, "done_jobs": 313, "remaining_jobs": 0, "next_up_jobs": 0, "retry_jobs": 0, "expected_records": 34765, "synced_records": 44489, "verified_uuid_links": 43945, "job_completion_pct": 100.0}, {"stage_code": "STAGE_2_GAZETTE_TAP_B_Q1", "stage_order": 2, "stage_name_vi": "Giai đoạn 2: Công báo SHCN Tập B - Quyển 1 (CB470 → CB204)", "portal_source": "ipvietnam.gov.vn/cong-bao-so-huu-cong-nghiep1 (Tập B - Quyển 1)", "format_type": "In-RAM PDF Stream -> WIPO ST.9 INID (B1..B7)", "target_scope_note": "267 số Công báo: điền khuyết INID (22),(51),(72),(74),(57) & hiệu lực niên liễm", "total_jobs": 267, "done_jobs": 267, "remaining_jobs": 0, "next_up_jobs": 0, "retry_jobs": 0, "expected_records": 44055, "synced_records": 43582, "verified_uuid_links": 0, "job_completion_pct": 100.0}, {"stage_code": "STAGE_3_GAZETTE_TAP_A_Q1", "stage_order": 3, "stage_name_vi": "Giai đoạn 3: Công báo SHCN Tập A - Quyển 1 (Toàn bộ đơn công bố A1..A4)", "portal_source": "ipvietnam.gov.vn/cong-bao-so-huu-cong-nghiep1 (Tập A - Quyển 1)", "format_type": "In-RAM PDF Stream -> WIPO ST.9 INID (A1..A4)", "target_scope_note": "267 số Công báo: thu thập toàn bộ đơn công bố A1..A4 (2019–2026)", "total_jobs": 267, "done_jobs": 267, "remaining_jobs": 0, "next_up_jobs": 0, "retry_jobs": 0, "expected_records": 90780, "synced_records": 69192, "verified_uuid_links": 0, "job_completion_pct": 100.0}, {"stage_code": "STAGE_4_WEEKLY_VALID_AND_GAP", "stage_order": 4, "stage_name_vi": "Giai đoạn 4: Đơn hợp lệ hàng tuần (.xlsx) & Đối soát khoảng trống số đơn", "portal_source": "ipvietnam.gov.vn/danh-sach-don-chuyen-cong-bo-hang-tuan + Sequence Gap Audit", "format_type": "In-RAM XLSX Parser + Sequence Gap Detector", "target_scope_note": "9 bộ danh sách năm (2019..2026) & rà quét dải số 1-YYYY-xxxxx / 2-YYYY-xxxxx", "total_jobs": 9, "done_jobs": 9, "remaining_jobs": 0, "next_up_jobs": 0, "retry_jobs": 0, "expected_records": 8100, "synced_records": 97285, "verified_uuid_links": 0, "job_completion_pct": 100.0}, {"stage_code": "STAGE_5_HISTORICAL_PRE2018_BACKFILL", "stage_order": 5, "stage_name_vi": "Giai đoạn 5: Quét Lịch sử Trước 2018 (1984–2018 • CB001..CB375 & Hợp tuyển Năm/Quý)", "portal_source": "ipvietnam.gov.vn/cong-bao-so-huu-cong-nghiep1 (CB001..CB375, Hợp tuyển 2001–2018)", "format_type": "In-RAM PDF/ZIP/XLSX/XML + Giải mã TCVN3 (.VnTime) & VNI-Windows (0 MB)", "target_scope_note": "168 kỳ lịch sử: mở khóa toàn bộ Công báo trước 2018–06/2019 (Tập B & Tập A) và đánh dấu hết hạn 20 năm", "total_jobs": 168, "done_jobs": 168, "remaining_jobs": 0, "next_up_jobs": 0, "retry_jobs": 0, "expected_records": 77965, "synced_records": 124164, "verified_uuid_links": 0, "job_completion_pct": 100.0}], "completed_checkpoints_preview": [{"job_key": "S1-313", "stage_code": "STAGE_1_MONTHLY_GRANTED_HTML", "stage_order": 1, "sequence_order": 313, "release_code": "SC-2018-04-S1", "release_title": "Danh sách Bằng độc quyền sáng chế công bố tháng 10/2018", "release_date": "2018-04-25", "portal_page_hint": 13, "target_url": "https://www.ipvietnam.gov.vn/web/guest/bang-oc-quyen-sang-che/giai-phap-huu-ich-uoc-cap-hang-thang/-/asset_publisher/dpbmUWqCBsSG/content/danh-sach-bang-oc-quyen-sang-che-cong-bo-thang-10-2018", "expected_records": 135, "synced_records": 111, "newly_added_records": 111, "enriched_records": 0, "verified_uuid_links": 111, "status": "DONE", "attempt_count": 1, "last_error": null, "last_synced_at": "2026-11-15 11:26:52"}, {"job_key": "S1-312", "stage_code": "STAGE_1_MONTHLY_GRANTED_HTML", "stage_order": 1, "sequence_order": 312, "release_code": "GPHI-2018-05-S3", "release_title": "", "release_date": "2018-05-25", "portal_page_hint": 13, "target_url": "https://www.ipvietnam.gov.vn/web/guest/bang-oc-quyen-sang-che/giai-phap-huu-ich-uoc-cap-hang-thang/-/asset_publisher/dpbmUWqCBsSG/content/danh-sach-bang-oc-quyen-giai-phap-huu-ich-cong-bo-thang-11-2018", "expected_records": 35, "synced_records": 27, "newly_added_records": 27, "enriched_records": 0, "verified_uuid_links": 27, "status": "DONE", "attempt_count": 1, "last_error": null, "last_synced_at": "2026-11-15 11:26:52"}, {"job_key": "S1-311", "stage_code": "STAGE_1_MONTHLY_GRANTED_HTML", "stage_order": 1, "sequence_order": 311, "release_code": "SC-2018-05-S2", "release_title": "Danh sách Bằng độc quyền sáng chế công bố tháng 12/2018", "release_date": "2018-05-25", "portal_page_hint": 13, "target_url": "https://www.ipvietnam.gov.vn/web/guest/bang-oc-quyen-sang-che/giai-phap-huu-ich-uoc-cap-hang-thang/-/asset_publisher/dpbmUWqCBsSG/content/danh-sach-bang-oc-quyen-sang-che-cong-bo-thang-12-2018", "expected_records": 135, "synced_records": 129, "newly_added_records": 129, "enriched_records": 0, "verified_uuid_links": 129, "status": "DONE", "attempt_count": 1, "last_error": null, "last_synced_at": "2026-11-15 11:26:52"}, {"job_key": "S1-310", "stage_code": "STAGE_1_MONTHLY_GRANTED_HTML", "stage_order": 1, "sequence_order": 310, "release_code": "SC-2018-05-S1", "release_title": "Danh sách Bằng độc quyền giải pháp hữu ích công bố tháng 08/2018", "release_date": "2018-05-25", "portal_page_hint": 13, "target_url": "https://www.ipvietnam.gov.vn/web/guest/bang-oc-quyen-sang-che/giai-phap-huu-ich-uoc-cap-hang-thang/-/asset_publisher/dpbmUWqCBsSG/content/danh-sach-bang-oc-quyen-giai-phap-huu-ich-cong-bo-thang-08-2018", "expected_records": 135, "synced_records": 23, "newly_added_records": 23, "enriched_records": 0, "verified_uuid_links": 23, "status": "DONE", "attempt_count": 1, "last_error": null, "last_synced_at": "2026-11-15 11:26:52"}, {"job_key": "S1-309", "stage_code": "STAGE_1_MONTHLY_GRANTED_HTML", "stage_order": 1, "sequence_order": 309, "release_code": "SC-2018-06-S3", "release_title": "Danh sách Bằng độc quyền giải pháp hữu ích công bố tháng 01/2019", "release_date": "2018-06-25", "portal_page_hint": 13, "target_url": "https://www.ipvietnam.gov.vn/web/guest/bang-oc-quyen-sang-che/giai-phap-huu-ich-uoc-cap-hang-thang/-/asset_publisher/dpbmUWqCBsSG/content/danh-sach-bang-oc-quyen-giai-phap-huu-ich-cong-bo-thang-01-2019", "expected_records": 135, "synced_records": 29, "newly_added_records": 29, "enriched_records": 0, "verified_uuid_links": 29, "status": "DONE", "attempt_count": 1, "last_error": null, "last_synced_at": "2026-11-15 11:26:52"}, {"job_key": "S1-308", "stage_code": "STAGE_1_MONTHLY_GRANTED_HTML", "stage_order": 1, "sequence_order": 308, "release_code": "GPHI-2018-06-S2", "release_title": "Danh sách Bằng độc quyền giải pháp hữu ích công bố tháng 09/2018", "release_date": "2018-06-25", "portal_page_hint": 13, "target_url": "https://www.ipvietnam.gov.vn/web/guest/bang-oc-quyen-sang-che/giai-phap-huu-ich-uoc-cap-hang-thang/-/asset_publisher/dpbmUWqCBsSG/content/danh-sach-bang-oc-quyen-giai-phap-huu-ich-cong-bo-thang-09-2018", "expected_records": 35, "synced_records": 37, "newly_added_records": 37, "enriched_records": 0, "verified_uuid_links": 37, "status": "DONE", "attempt_count": 1, "last_error": null, "last_synced_at": "2026-11-15 11:26:52"}], "upcoming_cursor_queue": [], "sequence_gap_audit": {"total_series_buckets": 56, "total_observed_dossiers": 124761, "estimated_cumulative_filings_in_active_years": 148085, "overall_series_coverage_pct": 84.25, "newly_enqueued_gap_samples": 0, "top_buckets": [{"series_bucket": "2-2026", "observed_count": 621, "min_seq": "00002", "max_seq": "01070", "uncollected_in_observed_span": 448, "coverage_of_max_seq_pct": 58.04}, {"series_bucket": "2-2025", "observed_count": 814, "min_seq": "00001", "max_seq": "01234", "uncollected_in_observed_span": 420, "coverage_of_max_seq_pct": 65.96}, {"series_bucket": "2-2024", "observed_count": 712, "min_seq": "00001", "max_seq": "00894", "uncollected_in_observed_span": 182, "coverage_of_max_seq_pct": 79.64}, {"series_bucket": "2-2023", "observed_count": 707, "min_seq": "00001", "max_seq": "00835", "uncollected_in_observed_span": 128, "coverage_of_max_seq_pct": 84.67}, {"series_bucket": "2-2022", "observed_count": 542, "min_seq": "00001", "max_seq": "00602", "uncollected_in_observed_span": 60, "coverage_of_max_seq_pct": 90.03}, {"series_bucket": "2-2021", "observed_count": 532, "min_seq": "00002", "max_seq": "00595", "uncollected_in_observed_span": 62, "coverage_of_max_seq_pct": 89.41}, {"series_bucket": "2-2020", "observed_count": 586, "min_seq": "00001", "max_seq": "00674", "uncollected_in_observed_span": 88, "coverage_of_max_seq_pct": 86.94}, {"series_bucket": "2-2019", "observed_count": 539, "min_seq": "00001", "max_seq": "00600", "uncollected_in_observed_span": 61, "coverage_of_max_seq_pct": 89.83}, {"series_bucket": "2-2018", "observed_count": 485, "min_seq": "00001", "max_seq": "00557", "uncollected_in_observed_span": 72, "coverage_of_max_seq_pct": 87.07}, {"series_bucket": "2-2017", "observed_count": 365, "min_seq": "00001", "max_seq": "00436", "uncollected_in_observed_span": 71, "coverage_of_max_seq_pct": 83.72}, {"series_bucket": "2-2016", "observed_count": 437, "min_seq": "00001", "max_seq": "00478", "uncollected_in_observed_span": 41, "coverage_of_max_seq_pct": 91.42}, {"series_bucket": "2-2015", "observed_count": 396, "min_seq": "00001", "max_seq": "00450", "uncollected_in_observed_span": 54, "coverage_of_max_seq_pct": 88.0}]}}; // END_SYNC_SNAPSHOT
 
     const IPC_SECTOR_NAMES = {
       "A61K": "Y dược & Chế phẩm sinh học",
@@ -2877,16 +2877,26 @@ button.exploit-pill:hover {
       const safe = escapeHtmlAttr(text);
       const q = String(rawQuery || "").trim();
       if (!q || q.length < 2) return safe;
-      const tokens = q.split(/\s+/).filter(t => t.length >= 2 && !t.includes(":")).slice(0, 4);
+      const tokens = q
+        .split(/\s+/)
+        .filter(t => t.length >= 2 && !t.includes(":"))
+        .slice(0, 4)
+        .map(tk => escapeHtmlAttr(tk))
+        .filter(tk => tk.length >= 2 && !/^(?:amp|lt|gt|quot|#39)$/i.test(tk));
       if (!tokens.length) return safe;
-      let out = safe;
-      for (const tk of tokens) {
-        const escRe = tk.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-        try {
-          out = out.replace(new RegExp(`(${escRe})`, "gi"), '<mark class="hl">$1</mark>');
-        } catch (e) {}
+      const pattern = tokens
+        .sort((a, b) => b.length - a.length)
+        .map(tk => tk.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"))
+        .join("|");
+      try {
+        const re = new RegExp(`(${pattern})`, "gi");
+        return safe.replace(/(&(?:amp|lt|gt|quot|#39);)/gi, "\x00$1\x00").split("\x00").map(seg => {
+          if (/^&(?:amp|lt|gt|quot|#39);$/i.test(seg)) return seg;
+          return seg.replace(re, '<mark class="hl">$1</mark>');
+        }).join("");
+      } catch (e) {
+        return safe;
       }
-      return out;
     }
 
     function navigateToAdminConsole(evt) {
@@ -3028,6 +3038,7 @@ button.exploit-pill:hover {
 
       try {
         const parsed = new URL(u);
+        if (!(parsed.protocol === "https:" || parsed.protocol === "http:")) return "";
         const host = parsed.hostname.toLowerCase();
         if ((host === "ipvietnam.gov.vn" || host === "www.ipvietnam.gov.vn") && parsed.protocol === "http:") {
           parsed.protocol = "https:";
@@ -3038,7 +3049,7 @@ button.exploit-pill:hover {
         parsed.hash = "";
         return parsed.toString();
       } catch (e) {
-        return u.replace(/([?&])download=(?:true|1)(&|$)/gi, "$1").replace(/[?&]$/, "");
+        return "";
       }
     }
 
@@ -3046,7 +3057,9 @@ button.exploit-pill:hover {
       const norm = normalizeNoipPdfUrl(rawUrl);
       if (!norm) return false;
       try {
-        const host = new URL(norm).hostname.toLowerCase();
+        const parsed = new URL(norm);
+        if (!(parsed.protocol === "https:" || parsed.protocol === "http:")) return false;
+        const host = parsed.hostname.toLowerCase();
         return [
           "ipvietnam.gov.vn",
           "www.ipvietnam.gov.vn",
@@ -3083,20 +3096,24 @@ button.exploit-pill:hover {
 
     function openFloatingNoipPdfWindow(rawUrl) {
       const norm = normalizeNoipPdfUrl(rawUrl);
-      const targetUrl = (norm && !isSimulatedSeedPdfUrl(norm)) ? (norm + "#view=FitH&toolbar=1") : NOIP_MONTHLY_PORTAL_URL;
+      const safeUrl = (norm && isOfficialNoipHost(norm) && !isSimulatedSeedPdfUrl(norm))
+        ? (norm + "#view=FitH&toolbar=1")
+        : NOIP_MONTHLY_PORTAL_URL;
+      if (!/^https?:/i.test(safeUrl)) return;
       const w = Math.min(1120, Math.floor((window.screen.availWidth || 1280) * 0.86));
       const h = Math.min(880, Math.floor((window.screen.availHeight || 900) * 0.88));
       const left = Math.max(20, Math.floor(((window.screen.availWidth || 1280) - w) / 2));
       const top = Math.max(20, Math.floor(((window.screen.availHeight || 900) - h) / 2));
       const win = window.open(
-        targetUrl,
+        safeUrl,
         "VNPatentDirectNoipReader",
         `popup=yes,width=${w},height=${h},left=${left},top=${top},resizable=yes,scrollbars=yes,toolbar=yes,location=yes`
       );
-      if (win) {
-        try { win.focus(); } catch (e) {}
+      try { if (win) win.opener = null; } catch (e) {}
+      if (!win) {
+        window.open(safeUrl, "_blank", "noopener,noreferrer");
       } else {
-        window.open(targetUrl, "_blank", "noopener,noreferrer");
+        try { win.focus(); } catch (e) {}
       }
     }
 
@@ -3138,7 +3155,7 @@ button.exploit-pill:hover {
 
             <div style="margin-top: 16px; padding-top: 12px; border-top: 1px solid var(--border-subtle);">
               <strong style="font-family: var(--font-sans); font-size: 13.5px;">Yêu cầu bảo hộ:</strong>
-              ${claims.map(c => `<p style="margin: 8px 0 0;"><strong>Điểm ${c.claim_number}:</strong> ${escapeHtmlAttr(c.claim_text_vi)}</p>`).join("")}
+              ${claims.map(c => `<p style="margin: 8px 0 0;"><strong>Điểm ${escapeHtmlAttr(c.claim_number)}:</strong> ${escapeHtmlAttr(c.claim_text_vi)}</p>`).join("")}
             </div>
           </div>
         </div>
@@ -3312,7 +3329,7 @@ button.exploit-pill:hover {
 
       const sampleChips = VERIFIED_NOIP_LIVE_PDFS.slice(0, 4).map(s => {
         const active = normalizeNoipPdfUrl(s.url) === normUrl;
-        return `<button type="button" class="topic-chip ${active ? 'active' : ''}" onclick="selectVerifiedLivePdfSample('${escapeHtmlAttr(s.url)}', '${s.app_no || ''}', ${isModal ? 'true' : 'false'})">${escapeHtmlAttr(s.label)}</button>`;
+        return `<button type="button" class="topic-chip ${active ? 'active' : ''}" onclick="selectVerifiedLivePdfSample('${escapeHtmlAttr(s.url)}', '${escapeHtmlAttr(s.app_no || '')}', ${isModal ? 'true' : 'false'})">${escapeHtmlAttr(s.label)}</button>`;
       }).join("");
 
       const topControls = `
@@ -3873,7 +3890,7 @@ button.exploit-pill:hover {
       document.getElementById("ipcSectorFacets").innerHTML = topIpcs.map(([code, cnt]) => {
         const label = IPC_SECTOR_NAMES[code] ? `${code} — ${IPC_SECTOR_NAMES[code]}` : `Nhóm ${code}`;
         return `
-          <button type="button" class="facet-btn ${filterIpcPrefix === code ? 'active' : ''}" onclick="setFacetFilter('ipc', '${code}')">
+          <button type="button" class="facet-btn ${filterIpcPrefix === code ? 'active' : ''}" onclick="setFacetFilter('ipc', '${escapeHtmlAttr(code)}')">
             <span style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${escapeHtmlAttr(label)}</span>
             <span class="facet-count">${cnt.toLocaleString("vi-VN")}</span>
           </button>
@@ -3883,7 +3900,7 @@ button.exploit-pill:hover {
       document.getElementById("specialLegalFacets").innerHTML = Object.entries(FRIENDLY_LEGAL_FILTERS).map(([code, meta]) => {
         const cnt = specialCounts[code] || 0;
         return `
-          <button type="button" class="facet-btn ${filterSpecialCode === code ? 'active' : ''}" onclick="setFacetFilter('special', '${code}')">
+          <button type="button" class="facet-btn ${filterSpecialCode === code ? 'active' : ''}" onclick="setFacetFilter('special', '${escapeHtmlAttr(code)}')">
             <span>${escapeHtmlAttr(meta.shortLabel)}</span>
             <span class="facet-count">${cnt.toLocaleString("vi-VN")}</span>
           </button>
@@ -3922,7 +3939,7 @@ button.exploit-pill:hover {
             <div style="font-weight:700; margin-bottom:2px;">${escapeHtmlAttr(m.title)}</div>
             <div style="color:var(--text-secondary); font-size:12.5px;">${escapeHtmlAttr(m.desc)}</div>
           </div>
-          <button type="button" class="btn-secondary" style="height:30px; font-size:12px;" onclick="setFacetFilter('special', '${filterSpecialCode}')">Bỏ lọc</button>
+          <button type="button" class="btn-secondary" style="height:30px; font-size:12px;" onclick="setFacetFilter('special', '${escapeHtmlAttr(filterSpecialCode)}')">Bỏ lọc</button>
         `;
       } else if (filterCommMode && EXPLOITATION_STATUS_META[filterCommMode]) {
         const em = EXPLOITATION_STATUS_META[filterCommMode];
@@ -3932,7 +3949,7 @@ button.exploit-pill:hover {
             <div style="font-weight:700; margin-bottom:2px;">${escapeHtmlAttr(em.bannerTitle)}</div>
             <div style="color:var(--text-secondary); font-size:12.5px;">${escapeHtmlAttr(em.detailDesc)}</div>
           </div>
-          <button type="button" class="btn-secondary" style="height:30px; font-size:12px;" onclick="setFacetFilter('exploit', '${filterCommMode}')">Bỏ lọc</button>
+          <button type="button" class="btn-secondary" style="height:30px; font-size:12px;" onclick="setFacetFilter('exploit', '${escapeHtmlAttr(filterCommMode)}')">Bỏ lọc</button>
         `;
       } else {
         bannerEl.classList.add("hidden");
@@ -4050,12 +4067,12 @@ button.exploit-pill:hover {
           <article class="patent-card">
             <div class="card-meta-top">
               <div class="badge-cluster">
-                <span class="status-pill ${st.cls}">${st.label}</span>
-                <button type="button" class="exploit-pill ${ex.cls}" onclick="setFacetFilter('exploit', '${ex.bucketKey}')" title="Nhấp để lọc theo trạng thái khai thác: ${escapeHtmlAttr(ex.shortLabel)}">
+                <span class="status-pill ${escapeHtmlAttr(st.cls)}">${escapeHtmlAttr(st.label)}</span>
+                <button type="button" class="exploit-pill ${escapeHtmlAttr(ex.cls)}" onclick="setFacetFilter('exploit', '${escapeHtmlAttr(ex.bucketKey)}')" title="Nhấp để lọc theo trạng thái khai thác: ${escapeHtmlAttr(ex.shortLabel)}">
                   <span class="exploit-dot" aria-hidden="true"></span>
                   <span>${escapeHtmlAttr(ex.shortLabel)}</span>
                 </button>
-                ${p.grant_no ? `<span class="id-tag grant-highlight">Bằng ${typeLabel === 'Giải pháp hữu ích' ? 'GPHI' : 'SC'} #${escapeHtmlAttr(p.grant_no)}</span>` : `<span class="id-tag">${typeLabel}</span>`}
+                ${p.grant_no ? `<span class="id-tag grant-highlight">Bằng ${escapeHtmlAttr(typeLabel === 'Giải pháp hữu ích' ? 'GPHI' : 'SC')} #${escapeHtmlAttr(p.grant_no)}</span>` : `<span class="id-tag">${escapeHtmlAttr(typeLabel)}</span>`}
                 <span class="id-tag">Đơn ${escapeHtmlAttr(p.application_no)}</span>
               </div>
               <span class="date-meta">
@@ -4143,8 +4160,8 @@ button.exploit-pill:hover {
       const st = getStatusPresentation(p);
       const ex = getExploitationPresentation(p);
       document.getElementById("drawerBadgeCluster").innerHTML = `
-        <span class="status-pill ${st.cls}">${st.label}</span>
-        <span class="exploit-pill ${ex.cls}">
+        <span class="status-pill ${escapeHtmlAttr(st.cls)}">${escapeHtmlAttr(st.label)}</span>
+        <span class="exploit-pill ${escapeHtmlAttr(ex.cls)}">
           <span class="exploit-dot" aria-hidden="true"></span>
           <span>${escapeHtmlAttr(ex.shortLabel)}</span>
         </span>
@@ -4381,13 +4398,13 @@ button.exploit-pill:hover {
         const claims = p.claims || [];
         body.innerHTML = `
           <div class="surface-panel">
-            <h4 style="margin:0 0 6px; font-size:15.5px;">Phạm vi Yêu cầu bảo hộ (${claims.length} điểm)</h4>
+            <h4 style="margin:0 0 6px; font-size:15.5px;">Phạm vi Yêu cầu bảo hộ (${escapeHtmlAttr(claims.length)} điểm)</h4>
             <p class="panel-sub">Phạm vi quyền sở hữu công nghiệp đối với sáng chế được xác định theo các điểm yêu cầu bảo hộ dưới đây.</p>
             <div style="display:flex; flex-direction:column; gap:10px;">
               ${claims.map(c => `
                 <div style="padding:13px 15px; border-radius:9px; border:1px solid var(--border-subtle); background:var(--bg-canvas); margin-left:${c.claim_type === 'DEPENDENT' ? '20px' : '0'};">
                   <div style="display:flex; justify-content:space-between; margin-bottom:4px; font-size:12px; font-weight:700; color:var(--brand-text);">
-                    <span>Điểm ${c.claim_number} (${c.claim_type === 'INDEPENDENT' ? 'Điểm độc lập' : 'Điểm phụ thuộc'})</span>
+                    <span>Điểm ${escapeHtmlAttr(c.claim_number)} (${c.claim_type === 'INDEPENDENT' ? 'Điểm độc lập' : 'Điểm phụ thuộc'})</span>
                   </div>
                   <div style="font-size:13.5px;">${escapeHtmlAttr(c.claim_text_vi)}</div>
                 </div>
@@ -4428,7 +4445,7 @@ button.exploit-pill:hover {
                 <tbody>
                   ${annuities.slice(0, 10).map(a => `
                     <tr>
-                      <td class="mono">Năm thứ ${a.year_number}</td>
+                      <td class="mono">Năm thứ ${escapeHtmlAttr(a.year_number)}</td>
                       <td class="mono">${escapeHtmlAttr(a.due_date)}</td>
                       <td class="mono">${escapeHtmlAttr(a.grace_deadline_6m)}</td>
                       <td class="mono">${Number(a.estimated_fee_vnd || 0).toLocaleString("vi-VN")} đ</td>

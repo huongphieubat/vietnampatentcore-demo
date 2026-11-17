@@ -1,0 +1,11 @@
+{
+  "created_at": "2026-11-17T17:40:52+00:00",
+  "branch": "main",
+  "file_sha256": {
+    "admin.html": "2cb937192d2a391c8f5a766663880b117310391d0a19aaef5b0e48e70678ab50",
+    "index.html": "ead021c74c39ab94b024f1b8983b08531c814b70466a71cfbcc6daa2e6b8f5ce",
+    "vietnampatentcore_fullpage_embed.html": "ead021c74c39ab94b024f1b8983b08531c814b70466a71cfbcc6daa2e6b8f5ce",
+    "admin/index.html": "2cb937192d2a391c8f5a766663880b117310391d0a19aaef5b0e48e70678ab50",
+    "full-page-embed/index.html": "ead021c74c39ab94b024f1b8983b08531c814b70466a71cfbcc6daa2e6b8f5ce"
+  }
+}
