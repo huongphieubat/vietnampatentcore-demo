@@ -1,11 +1,11 @@
 {
   "schema_version": "1.0",
-  "generated_at": "2026-11-17T04:18:25+00:00",
+  "generated_at": "2026-11-17T04:56:49+00:00",
   "root": "/home/antigravity/huongphieubat/vietnampatentcore-demo",
   "summary": {
     "indexed_files": 5,
     "total_lines": 24020,
-    "total_est_tokens": 594899,
+    "total_est_tokens": 592634,
     "total_symbols": 410,
     "monolith_files_count": 5,
     "monolith_slice_only_files": [
@@ -18,10 +18,10 @@
   },
   "files": {
     "admin.html": {
-      "sha256": "8fa6414919c68bf28d9b2685d7e9bbb30b22fec9d04dfc922628b7a3c520912c",
-      "bytes": 415184,
+      "sha256": "d9c6a6599275141a10be870576d6ee9d95672695ed14d6624d06f79ad1c64334",
+      "bytes": 413661,
       "lines": 4447,
-      "est_tokens": 120847,
+      "est_tokens": 120394,
       "monolith_slice_only": true,
       "symbols": [
         {
@@ -1098,10 +1098,10 @@
       ]
     },
     "index.html": {
-      "sha256": "0abf5aabe3e01b8520434c6c72f02517298cad995a63175418b01c86f8876aab",
-      "bytes": 401433,
+      "sha256": "105781096862b85bbdb32a034d0f73a5661f02b7d04cf0bd35d69844a50a31aa",
+      "bytes": 399910,
       "lines": 5042,
-      "est_tokens": 117735,
+      "est_tokens": 117282,
       "monolith_slice_only": true,
       "symbols": [
         {
@@ -1935,10 +1935,10 @@
       ]
     },
     "vietnampatentcore_fullpage_embed.html": {
-      "sha256": "0abf5aabe3e01b8520434c6c72f02517298cad995a63175418b01c86f8876aab",
-      "bytes": 401433,
+      "sha256": "105781096862b85bbdb32a034d0f73a5661f02b7d04cf0bd35d69844a50a31aa",
+      "bytes": 399910,
       "lines": 5042,
-      "est_tokens": 117735,
+      "est_tokens": 117282,
       "monolith_slice_only": true,
       "symbols": [
         {
@@ -2772,10 +2772,10 @@
       ]
     },
     "admin/index.html": {
-      "sha256": "8fa6414919c68bf28d9b2685d7e9bbb30b22fec9d04dfc922628b7a3c520912c",
-      "bytes": 415184,
+      "sha256": "d9c6a6599275141a10be870576d6ee9d95672695ed14d6624d06f79ad1c64334",
+      "bytes": 413661,
       "lines": 4447,
-      "est_tokens": 120847,
+      "est_tokens": 120394,
       "monolith_slice_only": true,
       "symbols": [
         {
@@ -3852,10 +3852,10 @@
       ]
     },
     "full-page-embed/index.html": {
-      "sha256": "0abf5aabe3e01b8520434c6c72f02517298cad995a63175418b01c86f8876aab",
-      "bytes": 401433,
+      "sha256": "105781096862b85bbdb32a034d0f73a5661f02b7d04cf0bd35d69844a50a31aa",
+      "bytes": 399910,
       "lines": 5042,
-      "est_tokens": 117735,
+      "est_tokens": 117282,
       "monolith_slice_only": true,
       "symbols": [
         {
